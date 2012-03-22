@@ -9,8 +9,6 @@ app = module.exports = express.createServer()
 
 
 # Configuration
-
-
 # TODO convert configuration to coffeescript
 app.configure ->
   app.set('views', __dirname + '/views');
@@ -32,6 +30,7 @@ app.configure 'production', ->
   return
 
 app.register '.coffee', coffeekup.adapters.express
+
 
 # Routes
 app.get '/', routes.index
