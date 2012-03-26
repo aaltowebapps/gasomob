@@ -36,5 +36,4 @@ app.register '.coffee', coffeekup.adapters.express
 app.get '/', routes.index
 
 app.listen 3000
-
-console.log "Listening on 3000..."
+console.log "Express server listening on port %d", app.address().port

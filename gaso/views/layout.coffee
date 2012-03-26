@@ -33,7 +33,8 @@ html ->
 
   body ->
     div 'data-role': 'page', ->
-      header ->
+      header 'data-role': 'header', ->
+        h1 'Gaso!'
         a href: '/', title: 'Home', -> 'Home'
 
       div id: 'content', 'data-role': 'content', ->

@@ -7,7 +7,9 @@
     "socket.io": "*",
     "coffee-script": "*",
     "coffeekup": "0.3.0",
-    "stylus": ">= 0.0.1"
+    "stylus": ">= 0.0.1",
+    "underscore": "*",
+    "plates": "0.4.5"
   },
   "devDependencies": {
     "api-easy": "0.3.2",
