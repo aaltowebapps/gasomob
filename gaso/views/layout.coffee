@@ -25,11 +25,8 @@ html ->
 
     # Lib scripts
     script src: 'http://code.jquery.com/jquery-1.7.1.min.js'
+    text assets.js 'clientinit'
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
-
-    # Example "inline" coffeescript
-    coffeescript ->
-
 
   body ->
     div 'data-role': 'page', ->
@@ -44,5 +41,5 @@ html ->
     footer 'data-role': 'footer', ->
       p -> a href: '/privacy', -> 'Privacy Policy'
 
-    # Own scripts to the end of <body>?
-    #script src: '/javascripts/app.js'
+    # Own scripts to the end of <body>
+    text assets.js 'clientapp'

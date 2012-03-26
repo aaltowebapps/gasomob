@@ -9,7 +9,8 @@
     "coffeekup": "0.3.0",
     "stylus": ">= 0.0.1",
     "underscore": "*",
-    "plates": "0.4.5"
+    "plates": "0.4.5",
+    "connect-assets": "2.1.9"
   },
   "devDependencies": {
     "api-easy": "0.3.2",
@@ -18,7 +19,7 @@
   },
   "scripts": {
     "test": "vows --spec",
-    "start": "coffee app.coffee"
+    "start": "gaso"
   },
   "name": "gaso"
 }
