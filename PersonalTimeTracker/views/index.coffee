@@ -1,4 +1,0 @@
-p	id: "foo"
-	"tsippadai"
-
-		
