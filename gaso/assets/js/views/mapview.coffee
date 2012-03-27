@@ -1,4 +1,0 @@
-###
-mapview.coffee
-###
-

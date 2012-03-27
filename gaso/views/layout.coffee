@@ -55,6 +55,7 @@ html ->
 
     
     # Own scripts to the end of <body>
-    #text assets.js 'models/usermodel'
+    #text assets.js 'models/user'
     text assets.js 'views/usersettingsview'
-    text assets.js 'clientapp'
+    text assets.js 'util'
+    text assets.js 'main'
