@@ -1,1 +1,0 @@
-# client side coffeescript, will be compiled to js
