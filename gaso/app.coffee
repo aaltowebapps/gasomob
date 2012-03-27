@@ -13,7 +13,6 @@ global.assets = assets =
 # Create server
 app = module.exports = express.createServer()
 
-
 # Configure server
 app.configure ->
   app.set 'views', "#{__dirname}/views"
@@ -45,7 +44,6 @@ app.configure 'production', ->
 
 # Register CoffeeKup template-engine to Express
 app.register '.coffee', coffeekup.adapters.express
-
 
 # Routes
 app.get '/', routes.index

@@ -15,3 +15,13 @@
 
 ### Start in production-mode
 1. `gaso`
+
+## Tips
+
+To avoid need of re-running node app after each change use `nodemon`
+  1. `npm install nodemon -g`
+  1. `nodemon app.coffee`
+
+### Known problems with nodemon
+  1. nodemon (at least v.0.6.12) won't work in windows with normal syntax
+  1. -> this works: `nodemon -x .\node_modules\.bin\coffee.cmd app.coffee`

@@ -23,10 +23,26 @@ html ->
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
 
+
     # Lib scripts
+    script src: 'http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js'
+
+
+    # Libs: Backbone
+    script src: 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js'
+    script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.1/backbone-min.js'
+    script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js'
+
+
+    # Libs: jQuery and jQuery Mobile
     script src: 'http://code.jquery.com/jquery-1.7.1.min.js'
+
+    # ...but override some stuff before jQuery mobile is included
     text assets.js 'clientinit'
+    text '\n'
+
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
+
 
   body ->
     div 'data-role': 'page', ->
@@ -38,8 +54,7 @@ html ->
         @body
 
     
-    footer 'data-role': 'footer', ->
-      p -> a href: '/privacy', -> 'Privacy Policy'
-
     # Own scripts to the end of <body>
+    #text assets.js 'models/usermodel'
+    text assets.js 'views/usersettingsview'
     text assets.js 'clientapp'

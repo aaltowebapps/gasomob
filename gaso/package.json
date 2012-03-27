@@ -9,6 +9,7 @@
     "coffeekup": "0.3.0",
     "stylus": ">= 0.0.1",
     "underscore": "*",
+    "backbone": "*",
     "plates": "0.4.5",
     "connect-assets": "2.1.9"
   },
