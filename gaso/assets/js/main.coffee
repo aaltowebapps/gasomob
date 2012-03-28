@@ -28,6 +28,9 @@ class AppRouter extends Backbone.Router
     @changePage new StationsListPage(model: @stations)
 
 
+  settings: ->
+    @changePage new UserSettingsPage
+
   showMap: ->
     @changePage new MapPage(model: @stations)
 
@@ -67,7 +70,8 @@ class AppRouter extends Backbone.Router
 
 # Init app on document.ready
 $ -> 
-  tpl.loadTemplates ['user-settings', 'foobar'], ->
+  tpl.loadTemplates ['user-settings-page', 'foobar'], ->
+    console.log 'Templates loaded'
     app = new AppRouter
     Backbone.history.start()
     return
