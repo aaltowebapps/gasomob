@@ -1,8 +1,7 @@
 ###
 Map page
 ###
-
-class MapPage extends Backbone.View
+class window.MapPage extends Backbone.View
 
   initialize: ->
     @template = _.template tpl.get 'map-page'
