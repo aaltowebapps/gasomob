@@ -2,10 +2,11 @@
   Coffeekup template for default page layout.
 ###
 
-# Format html-output to human-readable form with indents and line breaks.
+# Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true
 
-# The template
+@templatesversion = 1
+
 doctype 5
 html ->
   head ->
@@ -45,6 +46,7 @@ html ->
 
 
   body ->
+    # TODO remove this 'demo-page', when template handling and navigation is done?
     div 'data-role': 'page', ->
       header 'data-role': 'header', ->
         h1 'Gaso!'
@@ -53,9 +55,11 @@ html ->
       div id: 'content', 'data-role': 'content', ->
         @body
 
+
+    div id: 'tplver', 'data-ver': @templatesversion
     
     # Own scripts to the end of <body>
     #text assets.js 'models/user'
-    text assets.js 'views/usersettingsview'
+    text assets.js 'views/usersettingspage'
     text assets.js 'util'
     text assets.js 'main'

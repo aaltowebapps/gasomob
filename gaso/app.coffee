@@ -45,8 +45,10 @@ app.configure 'production', ->
 # Register CoffeeKup template-engine to Express
 app.register '.coffee', coffeekup.adapters.express
 
+
 # Routes
 app.get '/', routes.index
+app.get '/templates', routes.templates
 
 app.listen 3000
 console.log "Express server listening on port %d", app.address().port
