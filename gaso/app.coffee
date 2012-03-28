@@ -3,6 +3,7 @@ coffeekup = require 'coffeekup'
 express   = require 'express'
 routes    = require './routes'
 stylus    = require 'stylus'
+io        = require 'socket.io'
 c_assets  = require 'connect-assets'
 
 # Define global context for connect-assets
@@ -45,10 +46,19 @@ app.configure 'production', ->
 # Register CoffeeKup template-engine to Express
 app.register '.coffee', coffeekup.adapters.express
 
-
 # Routes
 app.get '/', routes.index
 app.get '/templates', routes.templates
 
 app.listen 3000
 console.log "Express server listening on port %d", app.address().port
+
+# Socket configuration for socket.io
+io = io.listen app
+
+io.sockets.on 'connection', (socket) ->
+  socket.emit 'news',
+    hello: 'world'
+
+  socket.on 'my other event', (data) ->
+    console.log data
