@@ -4,8 +4,8 @@
 class AppRouter extends Backbone.Router
 
   routes:
-    # Initial page
-    ""                      : "showmap"
+    # Home-page
+    ""                      : "showMap"
     # Other pages
     "list"                  : "showList"
     "map"                   : "showMap"
@@ -50,6 +50,7 @@ class AppRouter extends Backbone.Router
 
 
   changePage: (page) ->
+    console.log 'Change to page', page
     $p = $(page.el)
     $p.attr 'data-role', 'page'
     page.render()
