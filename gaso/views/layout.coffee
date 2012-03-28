@@ -59,10 +59,5 @@ html ->
 
     div id: 'tplver', 'data-ver': @templatesversion
     
-    # Own scripts to the end of <body>
-    text assets.js 'models/station'
-    text assets.js 'models/stationslist'
-    text assets.js 'models/user'
-    text assets.js 'views/usersettingspage'
-    text assets.js 'util'
-    text assets.js 'main'
+    # Include rest of own scripts, ie. other but 'clientinit'
+    text assets.js 'application' # See /assets/application.coffee
