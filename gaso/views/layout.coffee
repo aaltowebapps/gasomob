@@ -43,6 +43,8 @@ html ->
     text '\n'
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
 
+    # Libs: Socket.io
+    script src: '/socket.io/socket.io.js'
 
   body ->
     # TODO remove this 'demo-page', when template handling and navigation is done?
