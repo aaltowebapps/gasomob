@@ -5,7 +5,7 @@
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true
 
-@templatesversion = 1
+@templatesversion = 2
 
 doctype 5
 html ->
