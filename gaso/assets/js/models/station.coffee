@@ -5,15 +5,15 @@ class window.Station extends Backbone.Model
   brand: ''
   name:  ''
 
-  @location
+  @location:
   	lat: 0
   	lon: 0
 
-  @prices
+  @prices:
   	diesel: 0
   	E10: 0
   	octane_98: 0
  
-  @services
+  @services:
   	air: true
   	store: true
