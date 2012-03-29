@@ -71,7 +71,7 @@ class AppRouter extends Backbone.Router
 
 # Init app on document.ready
 $ -> 
-  tpl.loadTemplates ['user-settings-page', 'foobar'], ->
+  tpl.loadTemplates ['user-settings-page', 'map-page'], ->
     console.log 'Templates loaded'
     app = new AppRouter
     Backbone.history.start()
