@@ -8,6 +8,7 @@
 div id: 'map-page', ->
   header 'data-role': 'header', ->
     h1 'Map'
+  div id: 'map_canvas'
 
 
 # Navigation bar -template

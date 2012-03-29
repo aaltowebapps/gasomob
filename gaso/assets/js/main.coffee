@@ -76,5 +76,6 @@ $ ->
     console.log 'Templates loaded'
     app = new AppRouter
     Backbone.history.start()
+    app.navigate("map", {trigger: true})
     return
   return
