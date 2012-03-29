@@ -43,8 +43,12 @@ html ->
     text '\n'
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     
+    # Libs: Google Maps
+    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true&callback=initialize'
     
 
+    # Libs: Socket.io
+    script src: '/socket.io/socket.io.js'
 
   body ->
     # TODO remove this 'demo-page', when template handling and navigation is done?
@@ -58,15 +62,6 @@ html ->
 
 
     div id: 'tplver', 'data-ver': @templatesversion
-    
-    # Libs: Google Maps
-    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true&callback=initialize'
-    
-    # Own scripts to the end of <body>
-    text assets.js 'models/station'
-    text assets.js 'models/stationslist'
-    text assets.js 'models/user'
-    text assets.js 'views/usersettingspage'
-    text assets.js 'util'
-    text assets.js 'main'
-    text assets.js 'map'
+
+    # Include rest of own scripts, ie. other but 'clientinit'
+    text assets.js 'application' # See /assets/application.coffee

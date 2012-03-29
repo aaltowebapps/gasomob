@@ -1,9 +1,6 @@
 ###
 usersettingsview.coffee
 ###
-
-#= require '/assets/models/usermodel'
-
 class UserSettingsPage extends Backbone.View
   @model: User
 
