@@ -49,13 +49,10 @@ html ->
     # Libs: Socket.io
     script src: '/socket.io/socket.io.js'
 
-  body ->
-    # TODO remove this 'demo-page', when template handling and navigation is done?
-    header 'data-role': 'header', ->
-      h1 'Gaso!'
-      a href: '/', title: 'Home', -> 'Home'
-
-    div id: 'tplver', 'data-ver': @templatesversion
-
+    coffeescript ->
+      window.tmplVer = 1
     # Include rest of own scripts, ie. other but 'clientinit'
     text assets.js 'application' # See /assets/application.coffee
+
+  body ->
+    # No body content, content will be rendered on client using client-side templates.

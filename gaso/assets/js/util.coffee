@@ -5,7 +5,7 @@ window.tpl =
 
 
   getAvailableTemplatesVersion: ->
-    $('#tplver').data('ver')
+    window.tmplVer
 
 
   useCachedTemplates: ->

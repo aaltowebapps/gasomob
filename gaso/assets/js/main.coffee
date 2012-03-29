@@ -51,7 +51,7 @@ class AppRouter extends Backbone.Router
 
 
   changePage: (page) ->
-    console.log 'Change to page', page, page.el
+    console.log 'Change to page', page
     $p = $(page.el)
     $p.attr 'data-role', 'page'
     page.render()
@@ -70,12 +70,10 @@ class AppRouter extends Backbone.Router
     return
 
 
-# Init app on document.ready
-$ -> 
-  tpl.loadTemplates ['user-settings-page', 'map-page'], ->
-    console.log 'Templates loaded'
-    app = new AppRouter
-    Backbone.history.start()
-    app.navigate("map", {trigger: true})
-    return
+# Init app
+tpl.loadTemplates ['user-settings-page', 'map-page'], ->
+  console.log 'Templates loaded'
+  app = new AppRouter
+  Backbone.history.start()
+  #app.navigate("map", {trigger: true})
   return
