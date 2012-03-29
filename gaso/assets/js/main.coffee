@@ -21,6 +21,7 @@ class AppRouter extends Backbone.Router
 
     @firstPage = true
     @stations = new StationsList
+    @user = new User
     return
 
 
@@ -29,17 +30,17 @@ class AppRouter extends Backbone.Router
 
 
   settings: ->
-    @changePage new UserSettingsPage
+    @changePage new UserSettingsPage(model: @user)
 
   showMap: ->
-    @changePage new MapPage(model: @stations)
+    @changePage new MapPage(@stations, @user)
 
 
   stationDetails: (id) ->
     new Station(id:id).fetch
       success: (data) =>
-        # TODO we might want to show station details in a dialog, popup or similar, instead of another page?
-        @changePage new StationDetailsView(model: data)
+        # TODO we might want to show station details in a dialog, popup or similar, instead of another pagechangePage
+        @? new StationDetailsView(model: data)
 
   
   refuel: (id) ->
@@ -50,7 +51,7 @@ class AppRouter extends Backbone.Router
 
 
   changePage: (page) ->
-    console.log 'Change to page', page
+    console.log 'Change to page', page, page.el
     $p = $(page.el)
     $p.attr 'data-role', 'page'
     page.render()
