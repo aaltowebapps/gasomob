@@ -48,8 +48,8 @@ app.register '.coffee', coffeekup.adapters.express
 
 # Routes
 app.get '/', routes.index
+app.get '/map', routes.index
 app.get '/templates', routes.templates
-app.get '/map', routes.map
 
 app.listen 3000
 console.log "Express server listening on port %d", app.address().port
