@@ -42,6 +42,10 @@ html ->
     text assets.js 'clientinit'
     text '\n'
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
+    
+    # Libs: Google Maps
+    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true&callback=initialize'
+    
 
     # Libs: Socket.io
     script src: '/socket.io/socket.io.js'
@@ -58,6 +62,6 @@ html ->
 
 
     div id: 'tplver', 'data-ver': @templatesversion
-    
+
     # Include rest of own scripts, ie. other but 'clientinit'
     text assets.js 'application' # See /assets/application.coffee

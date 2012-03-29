@@ -13,3 +13,10 @@ exports.index = (req, res) ->
 exports.templates = (req, res) ->
   res.render 'templates', layout: false
   return
+
+###
+ GET map
+###
+exports.map = (req, res) ->
+  res.render 'map'
+  return
