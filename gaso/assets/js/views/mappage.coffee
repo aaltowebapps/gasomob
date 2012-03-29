@@ -10,5 +10,6 @@ class MapPage extends Backbone.View
   render: (eventName) ->
     $(@el).html @template @model.toJSON()
     #@listView = ...
+    #map = new google.maps.Map(document.getElementById("map_canvas"), myOptions)
     return @
 
