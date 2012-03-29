@@ -48,6 +48,7 @@ app.register '.coffee', coffeekup.adapters.express
 
 # Routes
 app.get '/', routes.index
+app.get '/list', routes.index
 app.get '/map', routes.index
 app.get '/templates', routes.templates
 
