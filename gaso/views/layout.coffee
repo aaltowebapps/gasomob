@@ -44,9 +44,8 @@ html ->
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     
     # Libs: Google Maps
-    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true&callback=initialize'
+    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
     
-
     # Libs: Socket.io
     script src: '/socket.io/socket.io.js'
 
