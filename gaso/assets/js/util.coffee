@@ -15,7 +15,9 @@ window.tpl =
         @.templates = JSON.parse cache
       catch err
         console.error err
-    return @.templates.ver == @.getAvailableTemplatesVersion()
+    #return @.templates.ver == @.getAvailableTemplatesVersion()
+    #TODO take in use for production!
+    return false
 
 
   # Recursively pre-load all the templates for the app.
