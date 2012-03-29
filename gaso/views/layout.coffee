@@ -51,14 +51,9 @@ html ->
 
   body ->
     # TODO remove this 'demo-page', when template handling and navigation is done?
-    div 'data-role': 'page', ->
-      header 'data-role': 'header', ->
-        h1 'Gaso!'
-        a href: '/', title: 'Home', -> 'Home'
-
-      div id: 'content', 'data-role': 'content', ->
-        @body
-
+    header 'data-role': 'header', ->
+      h1 'Gaso!'
+      a href: '/', title: 'Home', -> 'Home'
 
     div id: 'tplver', 'data-ver': @templatesversion
 
