@@ -20,6 +20,6 @@ div id: 'user-settings-page', ->
 
 
 # Stations list template
-div id: 'stations-list', ->
+div id: 'list-page', ->
   header 'data-role': 'header', ->
   	h1 'E10 near you'

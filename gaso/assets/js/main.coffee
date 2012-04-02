@@ -48,7 +48,7 @@ class AppRouter extends Backbone.Router
 
 
   showList: ->
-    @changePage new StationsListPage(collection: @stations)
+    @changePage new StationsListPage(@stations, @user)
 
   settings: ->
     @changePage new UserSettingsPage(model: @user)
