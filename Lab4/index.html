@@ -22,12 +22,39 @@
           var viewport_width = $(window).width();
           var content_height = viewport_height - header.outerHeight() - footer.outerHeight();
 
-          var drawloc = function(lat, lon) {
+          var lat;
+          var lon;
+
+          var drawloc = function() {
             ctx.clearRect(0, 0, 400, 50);
             ctx.save();
             ctx.scale(1.3, 1.3);
             ctx.fillText(lat + ', ' + lon, 20, 20);
             ctx.restore();
+          }
+
+          var saveloc = function(latitude, longitude) {
+            lat = latitude;
+            lon = longitude;
+          }
+
+          var getbg = function() {
+
+          var placeIDs = [];
+
+          $.ajax({
+                  type: 'GET',
+                  dataType: 'jsonp',
+                  cache: false,
+                  url: 'https://api.instagram.com/v1/locations/search?lat=' + lat + '&lng=' + lon + '&client_id=ffc1e462cbc8442d9247ea1b32fb45e1',
+                  success: function(data) {
+                    $.each(data.data, function(key, value) {
+                      placeIDs.push(value.id); 
+                    });
+
+                    console.log(placeIDs);
+                  }
+              });
           }
 
           /* Trim margin/border/padding height */
@@ -38,13 +65,16 @@
 
           //Get location ASAP, regardless of accuracy
           navigator.geolocation.getCurrentPosition(function(position) {
-            drawloc(position.coords.latitude, position.coords.longitude);
+            saveloc(position.coords.latitude, position.coords.longitude);
+            drawloc();
+            getbg();
           });
 
           //Watch for location changes, request high accuracy
           var wpid = navigator.geolocation.watchPosition(
             function(position) { 
-              drawloc(position.coords.latitude, position.coords.longitude);
+              saveloc(position.coords.latitude, position.coords.longitude);
+              drawloc();
             }, 
             function(error) { 
               show_error(error.code, error.message);
