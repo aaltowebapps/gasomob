@@ -12,7 +12,7 @@ post '/uploadBase64' do
 
   puts request.env["HTTP_X_FILE_NAME"]
   
-  File.open("public/"+request.env["HTTP_X_FILE_NAME"], "w") do |f| 
+  File.open("public/"+request.env["HTTP_X_FILE_NAME"], "wb") do |f| 
     #logger.info Base64.encode64(raw);
     f.puts Base64.decode64(raw);   
   end 
