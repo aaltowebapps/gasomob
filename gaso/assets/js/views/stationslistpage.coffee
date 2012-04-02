@@ -1,12 +1,13 @@
 ###
 Stations list
 ###
-class StationsListPage extends Backbone.View
+class window.StationsListPage extends Backbone.View
 
-  initialize: ->
+  constructor: (@collection) ->
     @template = _.template tpl.get 'stations-list'
+    # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
+    @setElement $('<div id="page-list"/>')
 
   render: (eventName) ->
-    $(@el).html @template @model.toJSON()
+    $(@el).html @template @collection.toJSON()
     return @
-  

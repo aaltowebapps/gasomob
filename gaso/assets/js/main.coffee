@@ -17,17 +17,38 @@ class AppRouter extends Backbone.Router
   initialize: ->
     $(document).on 'click', '.back', (event) ->
         window.history.back()
-        return false
+        e.preventDefault()
 
     @firstPage = true
-    @stations = new StationsList
+    
+    dummyStations = [
+      (new Station (
+        'name': 'Testiasema',
+        'location':
+          'latitude': '60.167',
+          'longitude': '24.955'
+      )),
+      (new Station (
+        'name': 'Toinen mesta',
+        'location':
+          'latitude': '60.169696',
+          'longitude': '24.938536'
+      )),
+      (new Station (
+        'name': 'Kolmas mesta',
+        'location':
+          'latitude': '60.16968',
+          'longitude': '24.945'
+      ))]
+    
+    @stations = new StationsList(dummyStations)
+    
     @user = new User
     return
 
 
   showList: ->
-    @changePage new StationsListPage(model: @stations)
-
+    @changePage new StationsListPage(collection: @stations)
 
   settings: ->
     @changePage new UserSettingsPage(model: @user)
@@ -71,9 +92,8 @@ class AppRouter extends Backbone.Router
 
 
 # Init app
-tpl.loadTemplates ['user-settings-page', 'map-page'], ->
+tpl.loadTemplates ['user-settings-page', 'map-page', 'list-page'], ->
   console.log 'Templates loaded'
   app = new AppRouter
   Backbone.history.start()
   #app.navigate("map", {trigger: true})
-  return
