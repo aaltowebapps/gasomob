@@ -3,6 +3,5 @@
 #= require models/station
 #= require models/stationslist
 #= require models/user
-#= require views/usersettingspage
-#= require views/mappage
+#= require_tree views
 #= require main
