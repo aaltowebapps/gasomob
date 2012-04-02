@@ -81,6 +81,8 @@
           canvas.width = viewport_width;
           canvas.height = content_height;
 
+
+
           //Get location ASAP, regardless of accuracy
           navigator.geolocation.getCurrentPosition(function(position) {
             saveloc(position.coords.latitude, position.coords.longitude);
@@ -105,6 +107,9 @@
             e.preventDefault();
           });
           $("#save_local").bind("click", function(e) {
+            imageurl = ctx.canvas.toDataURL('image/png');
+            imageblob = dataURItoBlob(imageurl);
+            saveImgLocally(imageblob);
             e.preventDefault();
           });
           $("#save_server").bind("click", function(e) {
@@ -175,7 +180,77 @@
               ctx.fill();
             });
           }
-        })
+
+
+          /*
+           * TASK 5, save canvas locally.
+           */
+          function dataURItoBlob(dataURI, callback) {
+              // convert base64 to raw binary data held in a string
+              // doesn't handle URLEncoded DataURIs
+
+              var byteString;
+              if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+                  byteString = atob(dataURI.split(',')[1]);
+              } else {
+                  byteString = unescape(dataURI.split(',')[1]);
+              }
+
+              // separate out the mime component
+              var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+              // write the bytes of the string to an ArrayBuffer
+              var ab = new ArrayBuffer(byteString.length);
+              var ia = new Uint8Array(ab);
+              for (var i = 0; i < byteString.length; i++) {
+                  ia[i] = byteString.charCodeAt(i);
+              }
+
+              // write the ArrayBuffer to a blob, and you're done
+              var BlobBuilder = window.WebKitBlobBuilder || window.MozBlobBuilder;
+              var bb = new BlobBuilder();
+              bb.append(ab);
+              return bb.getBlob(mimeString);
+          }
+
+
+          var imgnum = 0;
+          function saveImgLocally(imgblob) {
+
+            var requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+            function onError(e) {
+              console.log('Error', e);
+            }
+
+
+            window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
+              requestFileSystem(PERSISTENT, grantedBytes, function(fs) {
+                // Save only to a couple of files
+                var filename = 'img'+(imgnum++ % 2)+'.png';
+                fs.root.getFile(filename, {create: true}, function(fileEntry) {
+                  fileEntry.createWriter(function(fileWriter) {
+
+                    fileWriter.onwriteend = function(e) {
+                      console.log('Write completed.');
+                    };
+
+                    fileWriter.onerror = function(e) {
+                      console.log('Write failed: ' + e.toString());
+                    };
+
+                    console.log("Write blob to file", filename, imgblob);
+                    // On windows env e.g Chrome writes files to
+                    // C:\Users\<user>\AppData\Local\Google\Chrome\User Data\Default\File System\<xxx>\<y>\<zz>
+                    fileWriter.write(imgblob);
+
+                  }, onError);
+                }, onError);
+              }, onError);
+            }, onError);
+
+          };
+        });
       //]]>
     </script>
   </head>
