@@ -9,9 +9,11 @@ end
 
 post '/uploadBase64' do
   raw = request.env["rack.input"].read.split(',')[1]
+
   puts request.env["HTTP_X_FILE_NAME"]
   
   File.open("public/"+request.env["HTTP_X_FILE_NAME"], "w") do |f| 
+    #logger.info Base64.encode64(raw);
     f.puts Base64.decode64(raw);   
   end 
 end

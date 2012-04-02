@@ -106,8 +106,8 @@
             e.preventDefault();
           });
           $("#save_local").bind("click", function(e) {
-            imageurl = ctx.canvas.toDataURL('image/png');
-            imageblob = dataURItoBlob(imageurl);
+            var imageurl = ctx.canvas.toDataURL('image/png');
+            var imageblob = dataURItoBlob(imageurl);
             saveImgLocally(imageblob);
             e.preventDefault();
           });
@@ -116,6 +116,19 @@
             e.preventDefault();
           });
           $("#save_server").bind("click", function(e) {
+            var imageurl = ctx.canvas.toDataURL('image/png');
+            var fname = getFileName();
+            console.log("upload", fname);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/uploadBase64', true);
+            xhr.onload = function(e) {
+              console.log("upload done", this.status, this);
+            };
+            xhr.setRequestHeader("X-File-Name", fname);
+            //xhr.setRequestHeader("Content-Type", "application/octet-stream");
+            // Trying with different mime-type...
+            xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+            xhr.send(imageurl); //XHR2
             e.preventDefault();
           });
           
@@ -216,8 +229,12 @@
               return bb.getBlob(mimeString);
           }
 
-
           var imgnum = 0;
+          function getFileName() {
+            return 'img'+(imgnum++ % 2)+'.png';
+          }
+
+
           function saveImgLocally(imgblob) {
 
             var requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -230,7 +247,7 @@
             window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
               requestFileSystem(PERSISTENT, grantedBytes, function(fs) {
                 // Save only to a couple of files
-                var filename = 'img'+(imgnum++ % 2)+'.png';
+                var filename = getFileName();
                 fs.root.getFile(filename, {create: true}, function(fileEntry) {
                   fileEntry.createWriter(function(fileWriter) {
 
