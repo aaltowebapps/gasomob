@@ -8,7 +8,7 @@
     <link href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.6.4.min.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js" type="text/javascript"></script>
-    <title>Lab4 Template</title>
+    <title>GasoPhoto</title>
     <script type="text/javascript">
       //<![CDATA[
         $(function() {
@@ -21,11 +21,36 @@
           var viewport_height = $(window).height();
           var viewport_width = $(window).width();
           var content_height = viewport_height - header.outerHeight() - footer.outerHeight();
+
+          var drawloc = function(lat, lon) {
+            ctx.clearRect(0, 0, 400, 50);
+            ctx.save();
+            ctx.scale(1.3, 1.3);
+            ctx.fillText(lat + ', ' + lon, 20, 20);
+            ctx.restore();
+          }
+
           /* Trim margin/border/padding height */
           content_height -= (content.outerHeight() - content.height());
           
           canvas.width = viewport_width;
           canvas.height = content_height;
+
+          //Get location ASAP, regardless of accuracy
+          navigator.geolocation.getCurrentPosition(function(position) {
+            drawloc(position.coords.latitude, position.coords.longitude);
+          });
+
+          //Watch for location changes, request high accuracy
+          var wpid = navigator.geolocation.watchPosition(
+            function(position) { 
+              drawloc(position.coords.latitude, position.coords.longitude);
+            }, 
+            function(error) { 
+              show_error(error.code, error.message);
+            },
+            {enableHighAccuracy:true, maximumAge:30000, timeout:27000}
+          );
 
           $("#refresh").bind("click", function(e) {
             e.preventDefault();
@@ -108,7 +133,7 @@
   <body>
     <div data-role="page" id="home">
       <div data-role="header">
-        <h1>Lab4 template</h1>
+        <h1>GasoPhoto</h1>
       </div>
       <div data-role="content">
         <canvas id="canvas"></canvas>
