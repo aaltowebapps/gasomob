@@ -20,7 +20,29 @@ class AppRouter extends Backbone.Router
         return false
 
     @firstPage = true
-    @stations = new StationsList
+    
+    dummyStations = [
+      (new Station (
+        'name': 'Testiasema',
+        'location':
+          'latitude': '60.167',
+          'longitude': '24.955'
+      )),
+      (new Station (
+        'name': 'Toinen mesta',
+        'location':
+          'latitude': '60.169696',
+          'longitude': '24.938536'
+      )),
+      (new Station (
+        'name': 'Kolmas mesta',
+        'location':
+          'latitude': '60.16968',
+          'longitude': '24.945'
+      ))]
+    
+    @stations = new StationsList(dummyStations)
+    
     @user = new User
     return
 
