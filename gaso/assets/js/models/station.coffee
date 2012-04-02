@@ -2,6 +2,11 @@
 Station
 ###
 class window.Station extends Backbone.Model
+  initialize: (stationData) ->
+    @markerOptions = {}
+    @markerOptions.position = new google.maps.LatLng(stationData.location['latitude'], stationData.location['longitude'])
+    @markerOptions.title = stationData.name
+  
   brand: ''
   name:  ''
 

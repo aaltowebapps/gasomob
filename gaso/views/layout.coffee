@@ -15,6 +15,7 @@ html ->
     title "#{@title} | Gaso" if @title?
     meta(name: 'description', content: @description) if @description?
     meta name: 'viewport', content:'width=device-width, initial-scale=1'
+    meta name: 'apple-mobile-web-app-capable', content: 'yes'
     
     link(rel: 'canonical', href: @canonical) if @canonical?
 

@@ -12,5 +12,11 @@ class window.MapPage extends Backbone.View
   render: (eventName) ->
     $(@el).html @template @model.toJSON()
     @map = new google.maps.Map(@$el.find("#map-canvas")[0], @user.myOptions)
+    _.each @model.models, 
+      ((station) ->
+        marker = new google.maps.Marker(station.markerOptions)
+        marker.setMap(@map)
+      ), 
+      @
     return @
 
