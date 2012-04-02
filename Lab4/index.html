@@ -87,7 +87,6 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             saveloc(position.coords.latitude, position.coords.longitude);
             drawloc();
-            getnearbyphoto();
           });
 
           //Watch for location changes, request high accuracy
@@ -110,6 +109,10 @@
             imageurl = ctx.canvas.toDataURL('image/png');
             imageblob = dataURItoBlob(imageurl);
             saveImgLocally(imageblob);
+            e.preventDefault();
+          });
+          $("#get_photo").bind("click", function(e) {
+            getnearbyphoto();
             e.preventDefault();
           });
           $("#save_server").bind("click", function(e) {
@@ -270,6 +273,9 @@
             </li>
             <li>
               <a href="#home" id="save_local">Save locally</a>
+            </li>
+            <li>
+              <a href="#home" id="get_photo">Get Instagram</a>
             </li>
             <li>
               <a href="#home" id="save_server">Save to server</a>
