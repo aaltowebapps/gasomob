@@ -36,6 +36,71 @@
           $("#save_server").bind("click", function(e) {
             e.preventDefault();
           });
+          
+          var ball_acceleration_right = 0;
+          var ball_acceleration_up = 0;
+          var ball_position_x = canvas.width/2;
+          var ball_position_y = canvas.height/2;
+          var ball_speed_x = 0;
+          var ball_speed_y = 0;
+          if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function(event) {
+              ball_acceleration_up += event.beta*2;
+              ball_speed_y += ball_acceleration_up/10;
+              ball_position_y += ball_speed_y/10;
+              ball_acceleration_right += event.gamma*2;
+              ball_speed_x += ball_acceleration_right/10;
+              ball_position_x += ball_speed_x/10;
+              
+              if (ball_speed_x < -150) {
+                ball_speed_x = -150;
+              } else if (ball_speed_x > 150) {
+                ball_speed_x = 150;
+              }
+              if (ball_speed_y < -150) {
+                ball_speed_y = -150;
+              } else if (ball_speed_y > 150) {
+                ball_speed_y = 150;
+              }
+              
+              if (ball_acceleration_right < -10) {
+                ball_acceleration_right = -10;
+              } else if (ball_acceleration_right > 10) {
+                ball_acceleration_right = 10;
+              }
+              if (ball_acceleration_up < -10) {
+                ball_acceleration_up = -10;
+              } else if (ball_acceleration_up > 10) {
+                ball_acceleration_up = 10;
+              }
+              
+              if (ball_position_x < 5) {
+                ball_position_x = 5;
+                ball_speed_x = -ball_speed_x*0.8;
+                ball_acceleration_right = 0;
+              } else if (ball_position_x > canvas.width-5) {
+                ball_position_x = canvas.width-5;
+                ball_speed_x = -ball_speed_x*0.8;
+                ball_acceleration_right = 0;
+              }
+              if (ball_position_y < 5) {
+                ball_position_y = 5;
+                ball_speed_y = -ball_speed_y*0.8;
+                ball_acceleration_top = 0;
+              } else if (ball_position_y > canvas.height-5) {
+                ball_position_y = canvas.height-5;
+                ball_speed_y = -ball_speed_y*0.8;
+                ball_acceleration_top = 0;
+              }
+              
+              ctx.fillStyle = "rgb(0, 150, 0)";
+              ctx.beginPath();
+              ctx.arc(ball_position_x, ball_position_y, 5, 0, Math.PI*2, true)
+              ctx.closePath();
+              ctx.stroke();
+              ctx.fill();
+            });
+          }
         })
       //]]>
     </script>
