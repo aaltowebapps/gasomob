@@ -38,23 +38,41 @@
             lon = longitude;
           }
 
-          var getbg = function() {
+          var getnearbyphoto = function() {
+            var placeIDs = [];
 
-          var placeIDs = [];
+            // Save the Instagram IDs of nearby places to var placeIDs.
+            $.ajax({
+                type: 'GET',
+                dataType: 'jsonp',
+                cache: false,
+                url: 'https://api.instagram.com/v1/locations/search?lat=' + lat + '&lng=' + lon + '&client_id=ffc1e462cbc8442d9247ea1b32fb45e1',
+                success: function(data) {
+                  $.each(data.data, function(key, value) {
+                    placeIDs.push(value.id);
+                  });
+                  console.log(placeIDs);
 
-          $.ajax({
-                  type: 'GET',
-                  dataType: 'jsonp',
-                  cache: false,
-                  url: 'https://api.instagram.com/v1/locations/search?lat=' + lat + '&lng=' + lon + '&client_id=ffc1e462cbc8442d9247ea1b32fb45e1',
-                  success: function(data) {
-                    $.each(data.data, function(key, value) {
-                      placeIDs.push(value.id); 
+                  // Get a photo for a place ID
+                  $.ajax({
+                        type: 'GET',
+                        dataType: 'jsonp',
+                        cache: false,
+                        url: 'https://api.instagram.com/v1/locations/' + placeIDs[0] + '/media/recent/?client_id=ffc1e462cbc8442d9247ea1b32fb45e1',
+                        success: function(data) {
+                          // Set photo as background
+                          var img = new Image();
+
+                          //wait until the image has loaded
+                          img.onload = function () {
+                            ctx.drawImage(this, 0, 0);
+                          };
+
+                          img.src = data.data[0].images.standard_resolution.url;
+                        }
                     });
-
-                    console.log(placeIDs);
                   }
-              });
+            });
           }
 
           /* Trim margin/border/padding height */
@@ -67,7 +85,7 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             saveloc(position.coords.latitude, position.coords.longitude);
             drawloc();
-            getbg();
+            getnearbyphoto();
           });
 
           //Watch for location changes, request high accuracy
