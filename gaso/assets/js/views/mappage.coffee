@@ -10,13 +10,24 @@ class window.MapPage extends Backbone.View
 
 
   render: (eventName) ->
-    $(@el).html @template @model.toJSON()
+    @$el.html @template @model.toJSON()
     @map = new google.maps.Map(@$el.find("#map-canvas")[0], @user.myOptions)
+
     _.each @model.models, 
       ((station) ->
         marker = new google.maps.Marker(station.markerOptions)
         marker.setMap(@map)
       ), 
       @
+
+    # Redraw map on jQM page change, otherwise it won't fill the screen.
+    ###
+     TODO the transition between pages here is still clunky. Maybe we could force
+     gMaps to draw initial map larger instead of the small box
+     in the top-left corner of the screen?
+    ###
+    @$el.on 'pageshow', (event) =>
+      console.log 'pageshow'
+      google.maps.event.trigger @map, 'resize'
     return @
 

@@ -12,7 +12,7 @@ $doc.bind 'mobileinit', (event) ->
   # Remove page from DOM when it's being replaced
   $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
     console.log "Remove page", @
-    $(@).remove
+    $(@).remove()
     return
 
   return

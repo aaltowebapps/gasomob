@@ -3,9 +3,9 @@
 ###
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
-@.format = true
+@.format = true unless process.env.NODE_ENV is 'production'
 
-@templatesversion = 3
+@templatesversion = if process.env.NODE_ENV is 'production' then 1 else 0
 
 doctype 5
 html ->
@@ -50,8 +50,7 @@ html ->
     # Libs: Socket.io
     script src: '/socket.io/socket.io.js'
 
-    coffeescript ->
-      window.tmplVer = 1
+    script -> "tmplVer = #{@templatesversion};"
     # Include rest of own scripts, ie. other but 'clientinit'
     text assets.js 'application' # See /assets/application.coffee
 

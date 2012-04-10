@@ -1,5 +1,5 @@
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
-@.format = true
+@.format = true unless process.env.NODE_ENV is 'production'
 
 # NOTE! If you update templates, update the 'templatesversion' in layout.coffee
 # TODO some automatic system for template version detection?
