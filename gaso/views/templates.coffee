@@ -11,7 +11,7 @@ div id: 'map-page', ->
   #  h1 'Map'
   div 'data-role': 'content', ->
     div id: 'map-canvas'
-    partial 'navigation'
+  partial 'navigation'
 
 
 # User settings page -template
