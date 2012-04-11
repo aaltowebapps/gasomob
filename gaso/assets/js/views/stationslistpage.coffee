@@ -4,7 +4,7 @@ Stations list
 class window.StationsListPage extends Backbone.View
 
   constructor: (@collection) ->
-    @template = _.template tpl.get 'list-page'
+    @template = _.template Gaso.util.getTemplate 'list-page'
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
     @setElement $('<div id="page-list"/>')
 

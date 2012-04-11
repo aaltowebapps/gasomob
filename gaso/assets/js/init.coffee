@@ -1,7 +1,7 @@
 
 
 # Init app
-tpl.loadTemplates ['user-settings-page', 'map-page', 'list-page'], ->
+Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page'], ->
   console.log 'Templates loaded'
   app = new AppRouter
   Backbone.history.start()

@@ -4,7 +4,7 @@ Map page
 class window.MapPage extends Backbone.View
 
   constructor: (@model, @user) ->
-    @template = _.template tpl.get 'map-page'
+    @template = _.template Gaso.util.getTemplate 'map-page'
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
     @setElement $('<div id="page-map"/>')
 
