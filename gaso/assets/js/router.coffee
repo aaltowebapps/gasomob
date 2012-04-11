@@ -72,6 +72,7 @@ class window.AppRouter extends Backbone.Router
         @changePage new StationDetailsView(model: data, refuel: true)
 
 
+  # Routing tricks for changing pages with jQM.
   changePage: (page) ->
     console.log 'Change to page', page
     $p = $(page.el)
