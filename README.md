@@ -1,6 +1,7 @@
 
 ## Installation to local machine
 
+1. Install MongoDB
 1. Install nodejs
 1. Clone repository to your computer
 1. `cd gaso`

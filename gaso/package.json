@@ -11,7 +11,8 @@
     "underscore": "*",
     "backbone": "*",
     "plates": "0.4.5",
-    "connect-assets": "2.1.9"
+    "connect-assets": "2.1.9",
+    "mongoose": "*"
   },
   "devDependencies": {
     "api-easy": "0.3.2",
