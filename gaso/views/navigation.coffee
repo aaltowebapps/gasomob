@@ -1,5 +1,5 @@
 # Navigation bar
-footer data-id: 'gasonav' id: 'footer', 'data-role': 'footer', 'data-position': 'fixed', 'data-transition': 'slide', 'data-tap-toggle': 'false', ->
+footer 'data-id': 'gasonav', id: 'footer', 'data-role': 'footer', 'data-position': 'fixed', 'data-transition': 'slide', 'data-tap-toggle': 'false', ->
   div 'data-role': 'navbar', ->
     ul ->
       li ->

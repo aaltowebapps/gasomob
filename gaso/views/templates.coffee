@@ -16,11 +16,15 @@ div id: 'map-page', ->
 
 # User settings page -template
 div id: 'user-settings-page', ->
-  header 'data-role': 'header'
+  header 'data-role': 'header', ->
+    h1 'Settings'
+  div 'data-role': 'content', ->
+    # TODO content
+  partial 'navigation'
 
 
 # Stations list template
-div id: 'list-page', 'data-role':'page', 'data-theme':'a', ->
+div id: 'list-page', ->
   header 'data-role': 'header', ->
     h1 'E10 near you'
   div 'data-role': 'content', ->

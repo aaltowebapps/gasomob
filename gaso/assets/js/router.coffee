@@ -1,7 +1,9 @@
+
+
 ###
-  Main initialization for clientside
+  Router(/controller) for client side.
 ###
-class window.AppRouter extends Backbone.Router
+class Gaso.AppRouter extends Backbone.Router
 
   routes:
     # Home-page
@@ -17,59 +19,69 @@ class window.AppRouter extends Backbone.Router
 
   initialize: ->
     $(document).on 'click', '.back', (event) ->
-        window.history.back()
-        e.preventDefault()
+      window.history.back()
+      e.preventDefault()
 
     @firstPage = true
     
     dummyStations = [
-      (new Station (
+      (new Gaso.Station (
         'name': 'Testiasema',
         'location':
           'latitude': '60.167',
           'longitude': '24.955'
       )),
-      (new Station (
+      (new Gaso.Station (
         'name': 'Toinen mesta',
         'location':
           'latitude': '60.169696',
           'longitude': '24.938536'
       )),
-      (new Station (
+      (new Gaso.Station (
         'name': 'Kolmas mesta',
         'location':
           'latitude': '60.16968',
           'longitude': '24.945'
       ))]
     
-    @stations = new StationsList(dummyStations)
+    # Init models.
+    #TODO hmm should we put these into Gaso.models... or not?
+    @stations     = new Gaso.StationsList(dummyStations)
+    @user         = new Gaso.User()
+    @user.fetch()
     
-    @user = new User
+    # Init views.
+    #TODO hmm should we put these into Gaso.views... or not?
+    @listPage     = new Gaso.StationsListPage(@stations, @user)
+    @settingsPage = new Gaso.UserSettingsPage(@stations, @user)
+    @mapPage      = new Gaso.MapPage(@stations, @user)
+
     return
 
 
   showList: ->
-    @changePage new StationsListPage(@stations, @user)
+    @changePage @listPage
 
   settings: ->
-    @changePage new UserSettingsPage(model: @user)
+    @changePage @settingsPage
 
   showMap: ->
-    @changePage new MapPage(@stations, @user)
+    @changePage @mapPage
 
 
   stationDetails: (id) ->
-    new Station(id:id).fetch
+    new Gaso.Station(id:id).fetch
       success: (data) =>
         # TODO we might want to show station details in a dialog, popup or similar, instead of another pagechangePage
-        @? new StationDetailsView(model: data)
+        @? new Gaso.StationDetailsView(model: data)
 
   
   refuel: (id) ->
-    new Station(id:id).fetch
+    new Gaso.Station(id:id).fetch
       success: (data) =>
+        console.log "Fetched station data", data
         # TODO we might want to show station details in a dialog, popup or similar, instead of another page?
-        @changePage new StationDetailsView(model: data, refuel: true)
+        @changePage new Gaso.StationDetailsView(model: data, refuel: true)
 
 
   # Routing tricks for changing pages with jQM.

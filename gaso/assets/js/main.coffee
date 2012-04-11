@@ -1,12 +1,12 @@
 
-# Gaso namespace structure.
+# Define own "Gaso" namespace and base structurefor the app.
 class Gaso
   ###
     Public stuff
   ###
-  models: {} # Model constructors.
-  views: {} # View constructors.
-  app: {} # Dynamic data of the running app.
+  models: {} # Backbone Models, to be defined/initialized.
+  views: {} # Backbone Views, to be defined/initialized.
+  app: {} # Running app and other data, to be defined/initialized.
   util: # Utilities: template handling etc.
 
     # Recursively pre-load all the templates for the app.
@@ -73,5 +73,5 @@ class Gaso
     return tmplVer && _templates.ver == tmplVer
 
 
-# Expose Gaso to window scope
-window.Gaso = new Gaso
+# Expose Gaso to window scope.
+window.Gaso = new Gaso()

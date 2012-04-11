@@ -1,7 +1,7 @@
 ###
 Map page
 ###
-class window.MapPage extends Backbone.View
+class Gaso.MapPage extends Backbone.View
 
   constructor: (@model, @user) ->
     @template = _.template Gaso.util.getTemplate 'map-page'
@@ -11,7 +11,7 @@ class window.MapPage extends Backbone.View
 
   render: (eventName) ->
     @$el.html @template @model.toJSON()
-    @map = new google.maps.Map(@$el.find("#map-canvas")[0], @user.myOptions)
+    @map = new google.maps.Map @$el.find("#map-canvas")[0], @user.getGoogleMapSettings()
 
     _.each @model.models, 
       ((station) ->
@@ -27,7 +27,7 @@ class window.MapPage extends Backbone.View
      in the top-left corner of the screen?
     ###
     @$el.on 'pageshow', (event) =>
-      console.log 'pageshow'
       google.maps.event.trigger @map, 'resize'
+
     return @
 

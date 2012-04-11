@@ -1,11 +1,10 @@
 ###
 usersettingsview.coffee
 ###
-class UserSettingsPage extends Backbone.View
-  @model: User
-
-  initialize: ->
-    @template = _.template Gaso.util.getTemplate 'user-settings'
+class Gaso.UserSettingsPage extends Backbone.View
+  constructor: (@model, @user) ->
+    @template = _.template Gaso.util.getTemplate 'user-settings-page'
+    @setElement $('<div id="page-user-settings"/>')
 
   render: (eventName) ->
     $(@el).html @template @model.toJSON()

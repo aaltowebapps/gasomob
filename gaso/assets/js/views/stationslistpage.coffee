@@ -1,7 +1,7 @@
 ###
 Stations list
 ###
-class window.StationsListPage extends Backbone.View
+class Gaso.StationsListPage extends Backbone.View
 
   constructor: (@collection) ->
     @template = _.template Gaso.util.getTemplate 'list-page'

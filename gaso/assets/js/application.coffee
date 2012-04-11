@@ -2,7 +2,7 @@
 #= require main
 #= require models/station
 #= require models/stationslist
-#= require models/user
+#= require_tree models
 #= require_tree views
 #= require router
 #= require init

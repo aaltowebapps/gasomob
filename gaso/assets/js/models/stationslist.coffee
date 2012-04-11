@@ -1,5 +1,6 @@
 ###
 StationsList
 ###
-class window.StationsList extends Backbone.Collection
-  @model: Station
+class Gaso.StationsList extends Backbone.Collection
+  @model: Gaso.Station
+  urlRoot: 'stations'

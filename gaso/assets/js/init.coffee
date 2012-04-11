@@ -1,8 +1,9 @@
+###
+  Main initialization for client side.
+###
 
-
-# Init app
+# Load templates and init app on callback.
 Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page'], ->
   console.log 'Templates loaded'
-  app = new AppRouter
+  Gaso.app.router = new Gaso.AppRouter()
   Backbone.history.start()
-  #app.navigate("map", {trigger: true})

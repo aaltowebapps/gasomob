@@ -35,17 +35,18 @@ html ->
     # Libs: Socket.io
     script src: '/socket.io/socket.io.js'
 
-    # Libs: Backbone
+    # Libs: Backbone and related stuff
     script src: 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js'
     #script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.1/backbone-min.js'
     script src: '/javascripts/lib/backbone.js'
     script src: '/javascripts/lib/backbone.iosync.js'
     script src: '/javascripts/lib/backbone.iobind.js'
-    script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js'
+    #script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js'
+    script src: '/javascripts/lib/backbone.localStorage.js'
 
     # Libs: jQuery Mobile
     # ...but override some stuff before jQuery mobile is included
-    text assets.js 'clientinit'
+    text assets.js 'mobileinit'
     text '\n'
     script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     
@@ -54,7 +55,7 @@ html ->
 
     script -> "tmplVer = #{@templatesversion};"
     
-    # Include rest of own scripts, ie. other but 'clientinit'
+    # Include rest of own scripts, ie. other but 'mobileinit'
     text assets.js 'application' # See /assets/application.coffee
 
   body ->
