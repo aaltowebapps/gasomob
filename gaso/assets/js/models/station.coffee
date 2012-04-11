@@ -2,23 +2,33 @@
 Station
 ###
 class window.Station extends Backbone.Model
-  initialize: (stationData) ->
-    @markerOptions = {}
-    @markerOptions.position = new google.maps.LatLng(stationData.location['latitude'], stationData.location['longitude'])
-    @markerOptions.title = stationData.name
-  
+  urlRoot: 'station'
+  noIoBind: false
+  socket: window.socket
+
   brand: ''
   name:  ''
 
-  @location:
+  location:
   	lat: 0
   	lon: 0
 
-  @prices:
+  prices:
   	diesel: 0
   	E10: 0
   	octane_98: 0
  
-  @services:
+  services:
   	air: true
   	store: true
+
+
+  initialize: (stationData) ->
+    @markerOptions = {}
+    @markerOptions.position = new google.maps.LatLng(stationData.location['latitude'], stationData.location['longitude'])
+    @markerOptions.title = stationData.name
+
+
+  cleanup: ->
+    @ioUnbindAll()
+    return @

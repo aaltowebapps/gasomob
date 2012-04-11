@@ -4,4 +4,5 @@
 #= require models/stationslist
 #= require models/user
 #= require_tree views
+#= require router
 #= require main
