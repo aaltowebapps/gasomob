@@ -1,7 +1,7 @@
 ###
   Main initialization for clientside
 ###
-class AppRouter extends Backbone.Router
+class window.AppRouter extends Backbone.Router
 
   routes:
     # Home-page
