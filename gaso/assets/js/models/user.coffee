@@ -16,6 +16,7 @@ class Gaso.User extends Backbone.Model
       zoom: 14
       mapTypeId: 'ROADMAP'
 
+
   getGoogleMapSettings: ->
     stngs = @get('mapSettings')
 

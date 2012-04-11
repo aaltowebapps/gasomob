@@ -24,32 +24,13 @@ class Gaso.AppRouter extends Backbone.Router
 
     @firstPage = true
     
-    dummyStations = [
-      (new Gaso.Station (
-        'name': 'Testiasema',
-        'location':
-          'latitude': '60.167',
-          'longitude': '24.955'
-      )),
-      (new Gaso.Station (
-        'name': 'Toinen mesta',
-        'location':
-          'latitude': '60.169696',
-          'longitude': '24.938536'
-      )),
-      (new Gaso.Station (
-        'name': 'Kolmas mesta',
-        'location':
-          'latitude': '60.16968',
-          'longitude': '24.945'
-      ))]
-    
     # Init models.
     #TODO hmm should we put these into Gaso.models... or not?
-    @stations     = new Gaso.StationsList(dummyStations)
+    @stations     = new Gaso.StationsList()
+    @stations.fetch(add: true)
     @user         = new Gaso.User()
     @user.fetch()
-    
+
     # Init views.
     #TODO hmm should we put these into Gaso.views... or not?
     @listPage     = new Gaso.StationsListPage(@stations, @user)

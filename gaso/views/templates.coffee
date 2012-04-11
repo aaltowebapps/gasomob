@@ -2,7 +2,6 @@
 @.format = true unless process.env.NODE_ENV is 'production'
 
 # NOTE! If you update templates, update the 'templatesversion' in layout.coffee
-# TODO some automatic system for template version detection?
 
 
 # Map page -template

@@ -2,5 +2,6 @@
 StationsList
 ###
 class Gaso.StationsList extends Backbone.Collection
-  @model: Gaso.Station
-  urlRoot: 'stations'
+  model: Gaso.Station
+  url: 'stations'
+  socket: window.socket

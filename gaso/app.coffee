@@ -3,8 +3,12 @@ coffeekup = require 'coffeekup'
 express   = require 'express'
 routes    = require './routes'
 stylus    = require 'stylus'
-io        = require 'socket.io'
 c_assets  = require 'connect-assets'
+socketio  = require 'socket.io'
+
+# Persistence
+mongoose  = require 'mongoose'
+mongoose.connect('mongodb://localhost/gasodb');
 
 # Define global context for connect-assets
 global.assets = assets = 
@@ -47,6 +51,50 @@ app.configure 'production', ->
 app.register '.coffee', coffeekup.adapters.express
 
 
+# Sockets configuration for socket.io
+io = socketio.listen app
+
+io.sockets.on 'connection', (socket) ->
+  ###
+  socket.emit 'news',
+    hello: 'world'
+  ###
+
+  ###
+    stations:read
+    Called when we .fetch() our collection in the client-side router.
+  ###
+  socket.on 'stations:read', (data, callback) ->
+    list = [];
+    console.log "Get stations by", data
+
+    # Dummy stations
+    list = [
+      'name': 'Testiasema',
+      'location':
+        'latitude': '60.167'
+        'longitude': '24.955'
+    ,
+      'name': 'Toinen mesta'
+      'location':
+        'latitude': '60.169696'
+        'longitude': '24.938536'
+    ,
+      'name': 'Kolmas mesta'
+      'location':
+        'latitude': '60.16968'
+        'longitude': '24.945'
+    ]
+
+    ###
+    TODO fetch from db
+    db.each 'station', (station) ->
+      list.push(station._attributes);
+    ###
+
+    callback(null, list);
+
+
 # Routes
 app.get '/', routes.index
 app.get '/templates', routes.templates
@@ -55,12 +103,3 @@ app.get '/templates', routes.templates
 app.listen 3000
 console.log "Express server listening on port %d", app.address().port
 
-# Socket configuration for socket.io
-io = io.listen app
-
-io.sockets.on 'connection', (socket) ->
-  socket.emit 'news',
-    hello: 'world'
-
-  socket.on 'my other event', (data) ->
-    console.log data

@@ -2,7 +2,6 @@
 Station
 ###
 class Gaso.Station extends Backbone.Model
-  urlRoot: 'station'
   noIoBind: false
   socket: window.socket
 
