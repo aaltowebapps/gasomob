@@ -1,12 +1,20 @@
 
 # Define own "Gaso" namespace and base structurefor the app.
-class Gaso
+class GasoApp
   ###
-    Public stuff
+    Public stuff.
   ###
   models: {} # Backbone Models, to be defined/initialized.
   views: {} # Backbone Views, to be defined/initialized.
   app: {} # Running app and other data, to be defined/initialized.
+  log: (args...) ->
+    console.log args... unless productionEnv
+  error: (args...) ->
+    if productionEnv
+      alert args.join ""
+    else
+      console.log args...
+
   util: # Utilities: template handling etc.
 
     # Recursively pre-load all the templates for the app.
@@ -20,7 +28,7 @@ class Gaso
 
       _loadTemplate = (index) =>
         name = names[index];
-        console.log "Loading template: #{name}"
+        Gaso.log "Loading template: #{name}"
 
         html = $templates.find("##{name}").html()
         _templates.tpls[name] = html if html
@@ -30,7 +38,7 @@ class Gaso
           _loadTemplate index
         else 
           localStorage.setItem 'Templates', JSON.stringify _templates
-          console.log 'Templates cached'
+          Gaso.log 'Templates cached'
           callback()
 
       $.get "templates", (data) ->
@@ -42,6 +50,22 @@ class Gaso
     # Get template by name from hash of preloaded templates
     getTemplate: (name) ->
       _templates.tpls[name]
+
+
+    ###
+     Async method to get current device location.
+     @param callback Result handler function (error, position).
+    ###
+    getDevicePosition: (callback, options) ->
+      _getGeoLocation 'getCurrentPosition', options, callback
+
+    ###
+     Async method to monitor changes in device location.
+     @param callback Result handler function (error, position).
+    ###
+    watchDevicePosition: (callback, options) ->
+      _getGeoLocation 'watchPosition', options, callback
+
 
   ###
     Private stuff
@@ -73,5 +97,23 @@ class Gaso
     return tmplVer && _templates.ver == tmplVer
 
 
+  # Common async helper method for accessing HTML5 geolocation.
+  _getGeoLocation = (funcName, options, callback) ->
+    # Default settings below, can be modified with options-argument.
+    defaults =
+      enableHighAccuracy: true
+      maximumAge: 30000
+      timeout: 27000
+    settings = _.extend defaults, options
+
+    # Run function, return possible identifier.
+    navigator.geolocation[funcName] (position) ->
+      callback null, position
+      return
+    , (err) ->
+      callback err
+      return
+    , settings
+
 # Expose Gaso to window scope.
-window.Gaso = new Gaso()
+window.Gaso = new GasoApp()

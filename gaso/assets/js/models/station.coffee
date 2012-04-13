@@ -5,29 +5,34 @@ class Gaso.Station extends Backbone.Model
   noIoBind: false
   socket: window.socket
 
-  brand: ''
-  name:  ''
+  defaults:
+    brand: ''
+    name:  ''
+    address: ''
 
-  location:
-  	lat: 0
-  	lon: 0
+    geoPosition:
+    	lat: 0
+    	lon: 0
 
-  prices:
-  	diesel: 0
-  	E10: 0
-  	octane_98: 0
- 
-  services:
-  	air: true
-  	store: true
+    prices:
+    	diesel: 0
+    	E10: 0
+    	octane_98: 0
+   
+    services:
+    	air: true
+    	store: true
 
 
   initialize: (stationData) ->
-    @markerOptions = {}
-    @markerOptions.position = new google.maps.LatLng(stationData.location['latitude'], stationData.location['longitude'])
-    @markerOptions.title = stationData.name
+    @set 'id', stationData.id
+    pos = 
+      lat: stationData.location.latitude
+      lon: stationData.location.longitude
+    @set 'geoPosition', pos
+    @set 'name', stationData.name
 
 
-  cleanup: ->
+  cleanupModel: =>
     @ioUnbindAll()
     return @

@@ -70,20 +70,23 @@ io.sockets.on 'connection', (socket) ->
 
     # Dummy stations
     list = [
-      'name': 'Testiasema',
+      id: 1
+      'name': 'Testiasema'
       'location':
-        'latitude': '60.167'
-        'longitude': '24.955'
+        'latitude': 60.167
+        'longitude': 24.955
     ,
+      id: 2
       'name': 'Toinen mesta'
       'location':
-        'latitude': '60.169696'
-        'longitude': '24.938536'
+        'latitude': 60.169696
+        'longitude': 24.938536
     ,
+      id: 3
       'name': 'Kolmas mesta'
       'location':
-        'latitude': '60.16968'
-        'longitude': '24.945'
+        'latitude': 60.16968
+        'longitude': 24.945
     ]
 
     ###
