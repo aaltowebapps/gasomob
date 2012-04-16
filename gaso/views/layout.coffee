@@ -6,6 +6,7 @@ productionEnv = process.env.NODE_ENV is 'production'
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
+@.format = true
 
 @templatesversion = if productionEnv then 2 else 0
 
@@ -47,10 +48,14 @@ html ->
     script src: '/javascripts/lib/backbone.iosync.js'
     script src: '/javascripts/lib/backbone.iobind.js'
 
-    if productionEnv
-      script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js'
-    else
-      script src: '/javascripts/lib/backbone.localStorage.js'
+    # FIXME Can't atm use a minimified cdn version of backbone.localstorage in production,
+    # because it clashes with our own minimified code.
+    # How can we prevent the variable clash during js minimization?
+    # if productionEnv
+    #   script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js'
+    # else
+    #   script src: '/javascripts/lib/backbone.localStorage.js'
+    script src: '/javascripts/lib/backbone.localStorage.js'
 
     # More libs: jQuery Mobile
     # ...but override some own initialization stuff before jQuery mobile is included.
