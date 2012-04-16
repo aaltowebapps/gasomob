@@ -31,16 +31,19 @@ div id: 'list-page', ->
       # Dummy list items
       li ->
         a 'href':'#', ->
+          img src:'images/stationlogos/abc_100.png'
           h2 ->       
             '1,234'
           h3 ->
             'Station 1'
       li ->
         a 'href':'#', ->
+          img src:'images/stationlogos/st1_100.png'
           h2 ->       
             '1,234'
           h3 ->
             'Station 2'
-    form ->
-      input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100'
+    div 'data-role':'fieldcontain', ->
+      form 'id':'filterslider', ->
+        input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
   partial 'navigation'
