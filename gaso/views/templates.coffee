@@ -36,6 +36,8 @@ div id: 'list-page', ->
             '1,234'
           h3 ->
             'Station 1'
+          p class:'ui-li-aside distance', ->
+            "10 km"
       li ->
         a 'href':'#', ->
           img src:'images/stationlogos/st1_100.png'
@@ -43,14 +45,16 @@ div id: 'list-page', ->
             '1,234'
           h3 ->
             'Station 2'
-    div 'data-role':'fieldcontain', ->
-      table 'id':'slidertable', ->
+          p class:'ui-li-aside distance', ->
+            "20 km"
+    div 'data-role':'fieldcontain', 'id':'slider', 'class':'ui-bar', 'class':'ui-bar-d', ->
+      table ->
         tr ->
-          td 'class':'slidericon', ->
+          td class:'slidericon', ->
             "€"
           td ->
-            form 'id':'filterslider', ->
+            form id:'filterslider', ->
             input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
-          td 'class':'slidericon', ->
+          td class:'slidericon', ->
             "km"
   partial 'navigation'

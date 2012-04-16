@@ -15,15 +15,33 @@
 
 // LIST PAGE
 
-#page-list #slidertable
-  width 100%	
+#page-list li h2
+  font-size: 1.2em
+
+#page-list li .distance
+  font-size: 2em
+  padding-right 25px
+
+#page-list #slider
+  position absolute
+  bottom 30px
+  left 0
+  height 50px
+  width 100%
+  padding-top 12px
+
+#page-list #slider table
+  text-align center
+  font-weight bold
+  width 100%
 
 // Hide text box from slider. Can't be done with jqm parameters. :(
 #page-list input.ui-slider-input
-  display: none
+  display none
 
 #page-list div.ui-slider
-  width 90%
+  margin 0
+  width 100%
 
-#page-list #slidertable .slidericon
-  width: 30px;
+#page-list #slider table .slidericon
+  width 40px;
