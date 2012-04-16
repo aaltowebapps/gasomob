@@ -51,10 +51,10 @@ div id: 'list-page', ->
       table ->
         tr ->
           td class:'slidericon', ->
-            "€"
+            img src:'images/euro.png', alt:'€'
           td ->
             form id:'filterslider', ->
             input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
           td class:'slidericon', ->
-            "km"
+            img src:'images/distance.png', alt:'km'
   partial 'navigation'

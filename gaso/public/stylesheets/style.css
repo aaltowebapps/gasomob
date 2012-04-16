@@ -19,11 +19,11 @@
 }
 #page-list #slider {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   left: 0;
   height: 50px;
   width: 100%;
-  padding-top: 12px;
+  padding: 6px 0 14px;
 }
 #page-list #slider table {
   text-align: center;
@@ -35,7 +35,9 @@
 }
 #page-list div.ui-slider {
   margin: 0;
-  width: 100%;
+  width: 90%;
+  margin-bottom: 6px;
+  padding: 5px;
 }
 #page-list #slider table .slidericon {
   width: 40px;
