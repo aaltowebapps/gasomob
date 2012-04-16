@@ -44,6 +44,13 @@ div id: 'list-page', ->
           h3 ->
             'Station 2'
     div 'data-role':'fieldcontain', ->
-      form 'id':'filterslider', ->
-        input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+      table 'id':'slidertable', ->
+        tr ->
+          td 'class':'slidericon', ->
+            "€"
+          td ->
+            form 'id':'filterslider', ->
+            input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+          td 'class':'slidericon', ->
+            "km"
   partial 'navigation'

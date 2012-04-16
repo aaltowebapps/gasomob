@@ -10,3 +10,15 @@
 .ui-icon-drop {
   background: url("../images/drop18.png") no-repeat rgba(0,0,0,0.40) !important;
 }
+#page-list #slidertable {
+  width: 100%;
+}
+#page-list input.ui-slider-input {
+  display: none;
+}
+#page-list div.ui-slider {
+  width: 90%;
+}
+#page-list #slidertable .slidericon {
+  width: 30px;
+}
