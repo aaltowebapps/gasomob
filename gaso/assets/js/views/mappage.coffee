@@ -11,10 +11,7 @@ class Gaso.MapPage extends Backbone.View
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
     @setElement $('<div id="page-map"/>')
 
-    # Bind events
-    @stations.on 'add', @addStationMarker
-    # TODO handle station remove
-    @user.on 'change:mapCenter', @changeMapLocation
+
 
 
   render: =>
@@ -30,6 +27,13 @@ class Gaso.MapPage extends Backbone.View
     for station in @stations.models
       @addStationMarker station
 
+    @bindEvents()
+
+    return @
+
+  bindEvents: ->
+    # Bind events
+
     # Redraw map on jQM page change, otherwise it won't fill the screen.
     ###
      TODO the transition between pages here is still clunky. Maybe we could force
@@ -40,7 +44,9 @@ class Gaso.MapPage extends Backbone.View
     @$el.on 'pageshow.mappage', (event) =>
       google.maps.event.trigger @map, 'resize'
 
-    return @
+    @stations.on 'add', @addStationMarker
+    # TODO handle station remove
+    @user.on 'change:mapCenter', @changeMapLocation
 
 
   getInitialMapSettings: =>
@@ -66,7 +72,6 @@ class Gaso.MapPage extends Backbone.View
 
 
   addStationMarker: (station) =>
-    # TODO could improve this to only remove "deprecated" stationMarkers and update the existing ones as needed.
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
 
 

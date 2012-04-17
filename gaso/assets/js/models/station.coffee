@@ -8,7 +8,10 @@ class Gaso.Station extends Backbone.Model
   defaults:
     brand: ''
     name:  ''
-    address: ''
+
+    street: ''
+    city: ''
+    zip: ''
 
     geoPosition:
     	lat: 0
@@ -16,8 +19,8 @@ class Gaso.Station extends Backbone.Model
 
     prices:
     	diesel: 0
-    	E10: 0
-    	octane_98: 0
+    	"95E10": 0
+    	"98E5": 0
    
     services:
     	air: true

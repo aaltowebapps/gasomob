@@ -8,6 +8,25 @@ class Gaso.StationsListPage extends Backbone.View
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
     @setElement $('<div id="page-list"/>')
 
+
   render: (eventName) ->
-    $(@el).html @template @collection.toJSON()
+    @$el.html @template @collection.toJSON()
+    @$list = @$el.find 'ul#list-stations'
+
+    # Create list items from stations.
+    for station in @collection.models
+      @addStationListItem station
+
+    @bindEvents()
+
     return @
+
+
+  bindEvents: ->
+    @collection.on 'add', (data) =>
+      @addStationListItem data
+      @$list.listview 'refresh'
+
+
+  addStationListItem: (station) =>
+    @$list.append new Gaso.StationListItem(model: station).render().el

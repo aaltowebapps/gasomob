@@ -1,5 +1,5 @@
-#map-canvas,
 #page-map,
+#map-canvas,
 #page-map .ui-content {
   width: 100%;
   height: 100%;
@@ -13,12 +13,24 @@
 #page-list #slidertable {
   width: 100%;
 }
+#page-list #slidertable .slidericon {
+  width: 30px;
+}
 #page-list input.ui-slider-input {
   display: none;
 }
 #page-list div.ui-slider {
   width: 90%;
 }
-#page-list #slidertable .slidericon {
-  width: 30px;
-}
+/*
+  // Include station icons with css
+  size = 50
+  span.ui-icon-station
+    width (size)px
+    height (size)px
+  stations = abc shell nesteoil seo teboil st1
+  for s in stations
+    span.ui-icon-{s}
+      path = "../images/stationlogos/%s_%s.png" % (s size)
+      background url(path)
+*/

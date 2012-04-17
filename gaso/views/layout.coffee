@@ -7,7 +7,7 @@ productionEnv = process.env.NODE_ENV is 'production'
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
 
-@templatesversion = if productionEnv then 2 else 0
+templatesversion = if productionEnv then 2 else 0
 
 doctype 5
 html ->
@@ -68,7 +68,7 @@ html ->
     # Libs: Google Maps
     script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
 
-    script -> "productionEnv = #{productionEnv}; tmplVer = #{@templatesversion};"
+    script -> "productionEnv = #{productionEnv}; tmplVer = #{templatesversion};"
     
     # Include rest of own scripts, ie. other but 'mobileinit'
     text assets.js 'application' # See /assets/application.coffee
