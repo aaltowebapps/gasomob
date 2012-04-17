@@ -56,16 +56,30 @@ div id: 'list-page', ->
       # Dummy list items
       li ->
         a 'href':'#', ->
+          img src:'images/stationlogos/abc_100.png'
           h2 ->       
             '1,234'
           h3 ->
             'Station 1'
+          p class:'ui-li-aside distance', ->
+            "10 km"
       li ->
         a 'href':'#', ->
+          img src:'images/stationlogos/st1_100.png'
           h2 ->       
             '1,234'
           h3 ->
             'Station 2'
-    form ->
-      input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100'
+          p class:'ui-li-aside distance', ->
+            "20 km"
+    div 'data-role':'fieldcontain', 'id':'slider', 'class':'ui-bar', 'class':'ui-bar-d', ->
+      table ->
+        tr ->
+          td class:'slidericon', ->
+            img src:'images/euro.png', alt:'€'
+          td ->
+            form id:'filterslider', ->
+            input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+          td class:'slidericon', ->
+            img src:'images/distance.png', alt:'km'
   partial 'navigation'
