@@ -21,6 +21,31 @@ div id: 'user-settings-page', ->
     # TODO content
   partial 'navigation'
 
+# Station details page template
+div id: 'station-details', ->
+  header 'data-role': 'header', 'data-add-back-btn': true, ->
+    h1 'Details'
+  div 'data-role': 'content', ->
+    h2 @name or 'Aseman nimi'
+    p @address or 'Osoite 123, 00100 Helsinki'
+    table ->
+      tr ->
+        td 'E10:'
+        td ->
+          input type: 'text', value: '0.00'
+      tr ->
+        td '98:'
+        td ->
+          input type: 'text', value: '0.00'
+      tr ->
+        td 'Diesel:'
+        td ->
+          input type: 'text', value: '0.00'
+      tr ->
+        td ''
+        td ->
+          input type: 'submit', value: 'Save'
+    # TODO content
 
 # Stations list template
 div id: 'list-page', ->

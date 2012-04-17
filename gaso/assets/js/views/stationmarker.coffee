@@ -13,4 +13,10 @@ class Gaso.StationMarker extends Backbone.View
     @marker = new google.maps.Marker(opts)
 
     #TODO bind event listeners for handling marker InfoWindows etc
+    google.maps.event.addListener(@marker, 'click', @showInfo)
+    
     return @
+  
+  showInfo: =>  
+    console.log(Gaso.app.router)
+    Gaso.app.router.navigate "stations/2", trigger: true

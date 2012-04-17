@@ -51,14 +51,17 @@ class Gaso.AppRouter extends Backbone.Router
 
 
   stationDetails: (id) ->
-    new Gaso.Station(id:id).fetch
+    newStation = new Gaso.Station(id:id)
+    newStation.collection = @stations
+    newStation.fetch
       success: (data) =>
-        # TODO we might want to show station details in a dialog, popup or similar, instead of another pagechangePage
-        @? new Gaso.StationDetailsView(model: data)
+        @changePage new Gaso.StationDetailsView(model: data)
 
   
   refuel: (id) ->
-    new Gaso.Station(id:id).fetch
+    newStation = new Gaso.Station(id:id)
+    newStation.collection = @stations
+    newStation.fetch
       success: (data) =>
         Gaso.log "Fetched station data", data
         # TODO we might want to show station details in a dialog, popup or similar, instead of another page?

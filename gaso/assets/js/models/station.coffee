@@ -26,12 +26,12 @@ class Gaso.Station extends Backbone.Model
 
   initialize: (stationData) ->
     @set 'id', stationData.id
-    pos = 
-      lat: stationData.location.latitude
-      lon: stationData.location.longitude
+    if (stationData.location?)
+      pos = 
+        lat: stationData.location.latitude
+        lon: stationData.location.longitude
     @set 'geoPosition', pos
     @set 'name', stationData.name
-
 
   cleanupModel: =>
     @ioUnbindAll()
