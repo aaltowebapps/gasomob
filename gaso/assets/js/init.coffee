@@ -9,11 +9,13 @@ _.templateSettings =
   escape      : /<%-([\s\S]+?)%>/g
 
 # Initialize socket for data syncing.
-window.socket = io.connect 'http://localhost'
+window.socket = io.connect '/'
 
 # Load templates and init app on callback.
 Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page', 'station-list-item', 'station-details'], ->
   Gaso.log 'Templates loaded'
   #Gaso.log Gaso.util.getTemplate 'station-details'
-  Gaso.app.router = new Gaso.AppRouter()
-  Backbone.history.start()
+  
+  $ -> # Start application after document is ready
+    Gaso.app.router = new Gaso.AppRouter()
+    Backbone.history.start()
