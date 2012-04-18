@@ -40,8 +40,8 @@ html ->
       script src: 'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.1/backbone-min.js'
     else 
       script src: '/javascripts/lib/json2.js'
-      script src: '/javascripts/lib/jquery-1.7.1.min.js'
-      script src: '/javascripts/lib/underscore-min.js'
+      script src: '/javascripts/lib/jquery-1.7.1.js'
+      script src: '/javascripts/lib/underscore.js'
       script src: '/javascripts/lib/backbone.js'
 
     script src: '/javascripts/lib/backbone.iosync.js'
@@ -64,7 +64,7 @@ html ->
       script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     else
       script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
-    
+
     # Libs: Google Maps
     script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
 
