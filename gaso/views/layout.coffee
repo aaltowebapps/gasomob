@@ -7,7 +7,7 @@ productionEnv = process.env.NODE_ENV is 'production'
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
 
-templatesversion = if productionEnv then 2 else 0
+templatesversion = if productionEnv then 3 else 0
 
 doctype 5
 html ->

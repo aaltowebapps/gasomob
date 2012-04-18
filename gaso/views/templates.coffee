@@ -77,7 +77,7 @@ script type: 'text/template', id: 'list-page', ->
     # Slider for affecting stations searching/ranking.
     # TODO change filter to partial and include it into map page also?
   gasofooter ->
-    div id: 'ranking-slider', 'data-role':'fieldcontain', 'class':'ui-bar', 'class': 'ui-bar-a', ->
+    div id: 'ranking-slider', 'data-role':'fieldcontain', class: 'ui-bar ui-bar-a', ->
       table id: 'slidertable', ->
         tr ->
           td class : 'slidericon', ->

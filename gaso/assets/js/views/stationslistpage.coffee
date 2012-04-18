@@ -12,6 +12,9 @@ class Gaso.StationsListPage extends Backbone.View
   render: (eventName) ->
     @$el.html @template @collection.toJSON()
     @$list = @$el.find 'ul#list-stations'
+    # TODO tried to get rid of FOUC with slider, when moving from map page to list page. no success yet
+    # @$el.trigger('create')
+    # @$el.find('#ranking-slider').fadeIn()
 
     # Create list items from stations.
     for station in @collection.models
