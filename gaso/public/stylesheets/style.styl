@@ -43,26 +43,26 @@ for s in stations
     margin 0
     padding 5px 10px
     #slidertable
-      text-align center
-      font-weight bold
       width 100%
+      #filterslider
+        padding 0 25px 0 15px
       .slidericon
         width 40px
-
+        padding 0 5px
+    // Hide text box from slider. Can't be done with jqm parameters.
+    .ui-slider-input
+      display none
   #footer
     border-top 1px solid #999
 
-  // Hide text box from slider. Can't be done with jqm parameters.
-  input.ui-slider-input
-    display none
-
   div.ui-slider
     margin 0
-    width 90%
-    margin-bottom 6px
-    padding 5px
+    width 100%
+    padding 5px 0
   .ui-slider-handle
-    // TODO do we need to add some custom style for slider handle? (It seems to get out of place at least on my windows Chrome --markus)
+    width 50px
+    top -3px
+    margin 0 -25px
 
   // Other stuff related to list
   .ui-li-aside
