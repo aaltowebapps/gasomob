@@ -9,6 +9,7 @@ class Gaso.StationMarker extends Backbone.View
       map: @map
       title: @model.get 'name'
       position: new google.maps.LatLng(pos.lat, pos.lon)
+      icon: "images/stationlogos/#{@model.get 'brand'}_50.png"
 
     @marker = new google.maps.Marker(opts)
 
@@ -18,5 +19,5 @@ class Gaso.StationMarker extends Backbone.View
     return @
   
   showInfo: =>  
-    console.log(Gaso.app.router)
-    Gaso.app.router.navigate "stations/2", trigger: true
+    # TODO should we rather first show google maps info bubble and then allow user to go to refuel page from there?
+    Gaso.app.router.navigate "stations/#{@model.get 'id'}", trigger: true
