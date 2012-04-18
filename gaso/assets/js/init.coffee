@@ -12,7 +12,8 @@ _.templateSettings =
 window.socket = io.connect 'http://localhost'
 
 # Load templates and init app on callback.
-Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page', 'station-list-item'], ->
+Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page', 'station-list-item', 'station-details'], ->
   Gaso.log 'Templates loaded'
+  #Gaso.log Gaso.util.getTemplate 'station-details'
   Gaso.app.router = new Gaso.AppRouter()
   Backbone.history.start()

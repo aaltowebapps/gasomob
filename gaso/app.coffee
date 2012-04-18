@@ -71,7 +71,10 @@ io.sockets.on 'connection', (socket) ->
     # Dummy stations
     list = [
       id: 1
-      'name': 'Testiasema'
+      name: 'Testiasema'
+      street: 'Perälänkuja 5'
+      city: 'Espoo'
+      zip: '00400'
       brand: 'abc'
       'location':
         'latitude': 60.167
@@ -82,7 +85,10 @@ io.sockets.on 'connection', (socket) ->
         "98E5"  : 1.375
     ,
       id: 2
-      'name': 'Toinen mesta'
+      name: 'Toinen mesta'
+      street: 'Usvatie 2'
+      city: 'Espoo'
+      zip: '00530'
       brand: 'nesteoil'
       'location':
         'latitude': 60.169696
@@ -93,7 +99,10 @@ io.sockets.on 'connection', (socket) ->
         "98E5"  : 1.345
     ,
       id: 3
-      'name': 'Kolmas mesta'
+      name: 'Kolmas mesta'
+      street: 'Mikäsenytolikatu 45'
+      city: 'Espoo'
+      zip: '00430'
       brand: 'shell'
       'location':
         'latitude': 60.16968

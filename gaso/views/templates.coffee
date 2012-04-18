@@ -36,6 +36,35 @@ script type: 'text/template', id: 'user-settings-page', ->
     partial 'navigation'
 
 
+# Station details page -template
+script type: 'text/template', id: 'station-details', ->
+  header 'data-role': 'header', 'data-add-back-btn': true, ->
+    h1 '{{ name }}'
+  div 'data-role': 'content', ->
+    div class: 'ui-icon-station ui-icon-{{ brand }}'
+    h2 '{{ street }}'
+    h3 '{{ zip }} {{ city }}'
+    table ->
+      tr ->
+        td '95E10:'
+        td ->
+          input type: 'text', value: '{{ prices["95E10"] }}'
+      tr ->
+        td '98E5:'
+        td ->
+          input type: 'text', value: '{{ prices["98E5"] }}'
+      tr ->
+        td 'Diesel:'
+        td ->
+          input type: 'text', value: '{{ prices.diesel }}'
+      tr ->
+        td ''
+        td ->
+          input type: 'submit', value: 'Save'
+    # TODO content
+  gasofooter ->
+    partial 'navigation'
+
 # Stations list page -template
 script type: 'text/template', id: 'list-page', ->
   header 'data-role': 'header', ->
@@ -45,17 +74,19 @@ script type: 'text/template', id: 'list-page', ->
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
       li id: 'stations-nearby', 'data-role': 'list-divider', 'Nearby'
       # List items will be added using 'station-list-item'-template
-  gasofooter ->
     # Slider for affecting stations searching/ranking.
     # TODO change filter to partial and include it into map page also?
-    div id: 'ranking-slider', 'data-role':'fieldcontain', ->
-      table 'id':'slidertable', ->
+  gasofooter ->
+    div id: 'ranking-slider', 'data-role':'fieldcontain', 'class':'ui-bar', 'class': 'ui-bar-a', ->
+      table id: 'slidertable', ->
         tr ->
-          td 'class':'slidericon', -> "€"
+          td class : 'slidericon', ->
+            img src: 'images/euro.png', alt:'€'
           td ->
-            form 'id':'filterslider', ->
+            form id: 'filterslider', ->
               input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
-          td 'class':'slidericon', "km"
+          td class : 'slidericon', ->
+            img src:'images/distance.png', alt:'km'
     partial 'navigation'
 
 
@@ -63,11 +94,15 @@ script type: 'text/template', id: 'list-page', ->
   COLLECTION TEMPLATES
 ###
 
+# ...
+
 ###
   MODEL TEMPLATES
 ###
+
+# Stations-list list-item
 script type: 'text/template', id: 'station-list-item', ->
-  a 'href' : '#stations/{{ id }}/refill', ->
+  a 'href' : '#stations/{{ id }}/refuel', ->
     img src: "../images/stationlogos/{{ brand }}_100.png"
     # alternative approach:
     # span class: 'ui-icon ui-icon-station ui-icon-{{ brand }}'
@@ -89,3 +124,5 @@ script type: 'text/template', id: 'station-list-item', ->
         span '{{ key }}: {{ item }}'
         text '<% }); %>'
         ###
+    p class: 'ui-li-aside distance', "{{ distance }} km"
+

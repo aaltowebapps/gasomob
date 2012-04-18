@@ -1,5 +1,28 @@
+/* NAVIGATION */
+// Custom jQM icons
+.ui-icon-drop
+  background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
 
-// MAP PAGE
+
+
+/* COMMON */
+// Experimenting with stylus for defining station icons as bg images. Works, but still would need custom positioning for lists.
+// Img-tags in lists with jqm work out of the box so lets go there with that, at least for now.
+size = 100
+.ui-icon-station
+  float right
+  //margin 1em
+  width (size)px
+  height (size)px
+stations = abc shell nesteoil seo teboil st1
+for s in stations
+  .ui-icon-{s}
+    path = "../images/stationlogos/%s_%s.png" % (s size)
+    background url(path) no-repeat
+/* /COMMON */
+
+
+/* MAP PAGE */
 #page-map
 #map-canvas
 #page-map .ui-content
@@ -9,37 +32,43 @@
   padding 0
   min-height 380px
   min-width 280px
+/* /MAP PAGE */
 
 
-// Custom jQM icons
-.ui-icon-drop
-  background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
 
-
-// LIST PAGE
+/* LIST PAGE */
 #page-list
   // Slider-related styles
-  #slidertable
-    width 100%  
-    .slidericon
-      width 30px
+  #ranking-slider
+    margin 0
+    padding 5px 10px
+    #slidertable
+      text-align center
+      font-weight bold
+      width 100%
+      .slidericon
+        width 40px
+
+  #footer
+    border-top 1px solid #999
+
   // Hide text box from slider. Can't be done with jqm parameters.
   input.ui-slider-input
     display none
+
   div.ui-slider
+    margin 0
     width 90%
+    margin-bottom 6px
+    padding 5px
   .ui-slider-handle
     // TODO do we need to add some custom style for slider handle? (It seems to get out of place at least on my windows Chrome --markus)
 
-/*
-  // Include station icons with css
-  size = 50
-  span.ui-icon-station
-    width (size)px
-    height (size)px
-  stations = abc shell nesteoil seo teboil st1
-  for s in stations
-    span.ui-icon-{s}
-      path = "../images/stationlogos/%s_%s.png" % (s size)
-      background url(path)
-*/
+  // Other stuff related to list
+  .ui-li-aside
+    width 20%
+
+  li .distance
+    font-size 2em
+    padding-right 25px
+/* /LIST PAGE */

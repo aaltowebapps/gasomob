@@ -51,18 +51,21 @@ class Gaso.AppRouter extends Backbone.Router
 
 
   stationDetails: (id) ->
-    new Gaso.Station(id:id).fetch
-      success: (data) =>
-        # TODO we might want to show station details in a dialog, popup or similar, instead of another pagechangePage
-        @? new Gaso.StationDetailsView(model: data)
+    # For now just handle as refuel, we might do something else with this later.
+    @refuel id
 
   
-  refuel: (id) ->
-    new Gaso.Station(id:id).fetch
-      success: (data) =>
-        Gaso.log "Fetched station data", data
-        # TODO we might want to show station details in a dialog, popup or similar, instead of another page?
-        @changePage new Gaso.StationDetailsView(model: data, refuel: true)
+  refuel: (id) =>
+    station = @stations.get(id)
+    if station?
+      @changePage new Gaso.StationDetailsView(model: station, refuel: true)
+    else
+      Gaso.log 'TODO Station not loaded, redirecting to listing for now'
+      # TODO fetch station in the background and e.g. and change to page after callback.
+      # This can happen if landing directly to station details page or to an unknown id.
+      @navigate "list",
+        trigger: true
+        replace: true
 
 
   # Routing tricks for changing pages with jQM.
