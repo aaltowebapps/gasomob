@@ -31,7 +31,7 @@ script type: 'text/template', id: 'menu-page', ->
   header 'data-role': 'header', ->
     h1 'Menu'
   div 'data-role': 'content', ->
-    ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', ->
+    ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', 'data-dividertheme': 'a', ->
       li 'data-role': 'list-divider', ->
         'Find gas near you'
       li ->
