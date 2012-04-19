@@ -38,7 +38,7 @@ script type: 'text/template', id: 'user-settings-page', ->
 
 # Station details page -template
 script type: 'text/template', id: 'station-details', ->
-  header 'data-role': 'header', 'data-add-back-btn': true, ->
+  header 'data-role': 'header', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
     div class: 'ui-icon-station ui-icon-{{ brand }}'
