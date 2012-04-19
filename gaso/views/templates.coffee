@@ -26,6 +26,28 @@ script type: 'text/template', id: 'map-page', ->
     partial 'navigation'
 
 
+# Menu template
+script type: 'text/template', id: 'menu-page', ->
+  header 'data-role': 'header', ->
+    h1 'Menu'
+  div 'data-role': 'content', ->
+    ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', ->
+      li 'data-role': 'list-divider', ->
+        'Find gas near you'
+      li ->
+        a href:'#map'
+          'Map view'
+      li ->
+        a href:'#list'
+          'List view'
+      li 'data-role': 'list-divider', ->
+        'Settings'
+      li ->
+        a href:'#settings', 'data-transition':'slide', ->
+          'User settings'
+  gasofooter ->
+    partial 'navigation'
+
 # User settings page -template
 script type: 'text/template', id: 'user-settings-page', ->
   header 'data-role': 'header', ->
@@ -38,7 +60,7 @@ script type: 'text/template', id: 'user-settings-page', ->
 
 # Station details page -template
 script type: 'text/template', id: 'station-details', ->
-  header 'data-role': 'header', 'data-add-back-btn': true, ->
+  header 'data-role': 'header', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
     div class: 'ui-icon-station ui-icon-{{ brand }}'
@@ -48,20 +70,31 @@ script type: 'text/template', id: 'station-details', ->
       tr ->
         td '95E10:'
         td ->
-          input type: 'text', value: '{{ prices["95E10"] }}'
+          input id: '95E10Price', type: 'text', value: '{{ prices["95E10"] }}'
       tr ->
         td '98E5:'
         td ->
-          input type: 'text', value: '{{ prices["98E5"] }}'
+          input id: '98E5Price', type: 'text', value: '{{ prices["98E5"] }}'
       tr ->
         td 'Diesel:'
         td ->
-          input type: 'text', value: '{{ prices.diesel }}'
+          input id: 'dieselPrice', type: 'text', value: '{{ prices.diesel }}'
       tr ->
         td ''
         td ->
-          input type: 'submit', value: 'Save'
-    # TODO content
+          input id: 'saveButton', type: 'submit', value: 'Save'
+    div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
+      h3 'Comments (comment count)'
+      div class: 'comment', ->
+        table ->
+          tr ->
+            td class: 'comment-title', ->
+              h4 'Comment title'
+            td class: 'comment-author', ->
+              'Comment author'
+          tr ->
+            td class: 'comment-content', ->
+              'Comment content'
   gasofooter ->
     partial 'navigation'
 
