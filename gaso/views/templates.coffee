@@ -26,6 +26,15 @@ script type: 'text/template', id: 'map-page', ->
     partial 'navigation'
 
 
+# Menu template
+script type: 'text/template', id: 'menu-page', ->
+  header 'data-role': 'header', ->
+    h1 'Menu'
+  div 'data-role': 'content', ->
+    # TODO content
+  gasofooter ->
+    partial 'navigation'
+
 # User settings page -template
 script type: 'text/template', id: 'user-settings-page', ->
   header 'data-role': 'header', ->

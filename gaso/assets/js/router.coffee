@@ -12,6 +12,7 @@ class Gaso.AppRouter extends Backbone.Router
     # Other pages
     "map"                   : "showMap"
     "list"                  : "showList"
+    "menu"                  : "showMenu"
     "settings"              : "settings"
     "stations/:id"          : "stationDetails"
     "stations/:id/refuel"   : "refuel"
@@ -36,6 +37,7 @@ class Gaso.AppRouter extends Backbone.Router
     @listPage     = new Gaso.StationsListPage(@stations, @user)
     @settingsPage = new Gaso.UserSettingsPage(@stations, @user)
     @mapPage      = new Gaso.MapPage(@stations, @user)
+    @menuPage     = new Gaso.MenuPage(@stations, @user)
 
     return
 
@@ -49,6 +51,8 @@ class Gaso.AppRouter extends Backbone.Router
   showMap: ->
     @changePage @mapPage
 
+  showMenu: ->
+    @changePage @menuPage
 
   stationDetails: (id) ->
     # For now just handle as refuel, we might do something else with this later.

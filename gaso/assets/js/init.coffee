@@ -12,7 +12,7 @@ _.templateSettings =
 window.socket = io.connect '/'
 
 # Load templates and init app on callback.
-Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page', 'station-list-item', 'station-details'], ->
+Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'menu-page', 'list-page', 'station-list-item', 'station-details'], ->
   Gaso.log 'Templates loaded'
   #Gaso.log Gaso.util.getTemplate 'station-details'
   
