@@ -93,6 +93,7 @@ class Gaso.MapPage extends Backbone.View
       objectType: "fuel"
       boundsOnly: true
       bounds: @mapBoundsToCMBounds mapBounds
+      # geometry: true
 
     processResponse = (response) =>
       console.log "CM response", response

@@ -53,6 +53,9 @@ class GasoApp
 
       $.get "templates", (data) ->
         $templates.html data
+        # If 'names'-argument was not given, load all templates.
+        if not names? or not names.length
+          names = $templates.find('script').map(-> @id).get()
         _loadTemplate 0
         return
     
