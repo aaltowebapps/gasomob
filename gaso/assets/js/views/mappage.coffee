@@ -12,10 +12,10 @@ class Gaso.MapPage extends Backbone.View
     @setElement $('<div id="page-map"/>')
 
 
-
-
   render: =>
     @$el.html @template @stations.toJSON()
+
+    @geocoder = new CM.Geocoder Gaso.CM_API_KEY
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
     # Bind some events
     google.maps.event.addListener @map, 'dragend', @saveMapLocation
@@ -30,6 +30,7 @@ class Gaso.MapPage extends Backbone.View
     @bindEvents()
 
     return @
+
 
   bindEvents: ->
     # Bind events
@@ -61,6 +62,8 @@ class Gaso.MapPage extends Backbone.View
     coords = @user.get 'mapCenter'
     Gaso.log "Pan map to", coords
     @map.panTo new google.maps.LatLng(coords.lat, coords.lon)
+    # FIXME now we search every time map moves, which is a bit too greedy, modify!
+    @findNearbyStations()
 
 
   saveMapLocation: =>
@@ -75,9 +78,46 @@ class Gaso.MapPage extends Backbone.View
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
 
 
+  findNearbyStations: =>
+    Gaso.log "Find nearby stations"
+
+    mapBounds = @map.getBounds()
+    #Try again after a moment if map is not yet ready.
+    if not mapBounds?
+      setTimeout =>
+        @findNearbyStations()
+      , 2000
+      return
+
+    options =
+      objectType: "fuel"
+      boundsOnly: true
+      bounds: @mapBoundsToCMBounds mapBounds
+
+    processResponse = (response) =>
+      console.log "CM response", response
+
+      for feature in response.features
+        stationdata = feature.properties
+        # Ignore stations we have already
+        if not @stations.get(stationdata.osm_id)?
+           # Ignore stations that don't have name set in OSM data.
+           if stationdata.name
+            @stations.add
+              id: stationdata.osm_id
+              name: stationdata.name
+              geoPosition:
+                lat: feature.centroid.coordinates[0]
+                lon: feature.centroid.coordinates[1]
+
+    # Run search
+    @geocoder.getLocations "", processResponse, options
 
 
+  mapBoundsToCMBounds: (gBounds) =>
+    cmSW = @mapLatLongToCMLatLong gBounds.getSouthWest()
+    cmNE = @mapLatLongToCMLatLong gBounds.getNorthEast()
+    new CM.LatLngBounds cmSW, cmNE
 
-
-
-
+  mapLatLongToCMLatLong: (gLatLng) =>
+    new CM.LatLng gLatLng.lat(), gLatLng.lng()

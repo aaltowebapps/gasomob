@@ -65,6 +65,8 @@ html ->
     else
       script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
 
+    # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
+    script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
     # Libs: Google Maps
     script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
 
