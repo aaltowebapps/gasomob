@@ -31,7 +31,20 @@ script type: 'text/template', id: 'menu-page', ->
   header 'data-role': 'header', ->
     h1 'Menu'
   div 'data-role': 'content', ->
-    # TODO content
+    ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', ->
+      li 'data-role': 'list-divider', ->
+        'Find gas near you'
+      li ->
+        a href:'#map'
+          'Map view'
+      li ->
+        a href:'#list'
+          'List view'
+      li 'data-role': 'list-divider', ->
+        'Settings'
+      li ->
+        a href:'#settings', 'data-transition':'slide', ->
+          'User settings'
   gasofooter ->
     partial 'navigation'
 
