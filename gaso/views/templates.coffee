@@ -61,7 +61,18 @@ script type: 'text/template', id: 'station-details', ->
         td ''
         td ->
           input type: 'submit', value: 'Save'
-    # TODO content
+    div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
+      h3 'Comments (comment count)'
+      div class: 'comment', ->
+        table ->
+          tr ->
+            td class: 'comment-title', ->
+              h4 'Comment title'
+            td class: 'comment-author', ->
+              'Comment author'
+          tr ->
+            td class: 'comment-content', ->
+              'Comment content'
   gasofooter ->
     partial 'navigation'
 
