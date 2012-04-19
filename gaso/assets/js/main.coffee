@@ -4,9 +4,18 @@ class GasoApp
   ###
     Public stuff.
   ###
-  models: {} # Backbone Models, to be defined/initialized.
-  views: {} # Backbone Views, to be defined/initialized.
-  app: {} # Running app and other data, to be defined/initialized.
+
+  # Some Constants
+  CM_API_KEY: 'a82f9aaf9fca4a1aa2e81ff9c514f0b2'
+
+  # Backbone Models, to be defined/initialized.
+  models: {}
+  # Backbone Views, to be defined/initialized.
+  views: {}
+  # Running app and other data, to be defined/initialized.
+  app: {} 
+
+  # Logging
   log: (args...) ->
     console.log args... unless productionEnv
   error: (args...) ->
@@ -15,7 +24,8 @@ class GasoApp
     else
       console.log args...
 
-  util: # Utilities: template handling etc.
+  # Utilities: template handling etc.
+  util: 
 
     # Recursively pre-load all the templates for the app.
     loadTemplates: (names, callback) ->
@@ -99,6 +109,11 @@ class GasoApp
 
   # Common async helper method for accessing HTML5 geolocation.
   _getGeoLocation = (funcName, options, callback) ->
+    if not navigator.geolocation?
+      return callback
+        code: -1
+        message: "Geolocation not supported on this browser."
+
     # Default settings below, can be modified with options-argument.
     defaults =
       enableHighAccuracy: true

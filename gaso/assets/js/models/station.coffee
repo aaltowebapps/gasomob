@@ -31,12 +31,34 @@ class Gaso.Station extends Backbone.Model
 
 
   initialize: (stationData) ->
-    if (stationData.location?)
+    # geoPosition might come also in location-property
+    if stationData.location
       pos = 
         lat: stationData.location.latitude
         lon: stationData.location.longitude
-    @set 'geoPosition', pos
+      @set 'geoPosition', pos
+
+    if not stationData.brand
+      @identifyBrand stationData.name
 
   cleanupModel: =>
     @ioUnbindAll()
     return @
+
+  clear: =>
+    @trigger 'clear'
+    @destroy
+
+  identifyBrand: (name) =>
+    console.log "Identify brand from", name
+    if (/abc/ig).test name
+      @set 'brand', 'abc' 
+    else if (/neste/ig).test name
+      @set 'brand', 'nesteoil' 
+    else if (/teboil/ig).test name
+      @set 'brand', 'teboil'
+    else if (/st1/ig).test name
+      @set 'brand', 'st1'
+    else if (/shell/ig).test name
+      @set 'brand', 'shell'
+

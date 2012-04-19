@@ -24,7 +24,6 @@ class Gaso.StationsListPage extends Backbone.View
 
     return @
 
-
   bindEvents: ->
     @collection.on 'add', (data) =>
       @addStationListItem data
