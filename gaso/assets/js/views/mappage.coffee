@@ -18,7 +18,10 @@ class Gaso.MapPage extends Backbone.View
     @geocoder = new CM.Geocoder Gaso.CM_API_KEY
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
     # Bind some events
-    google.maps.event.addListener @map, 'dragend', @saveMapLocation
+    google.maps.event.addListener @map, 'dragend', =>
+      @saveMapLocation()
+      # FIXME now we trigger a search to Cloudmade every time map moves, which might be a bit too greedy, modify?
+      @findNearbyStations()
 
     # New marker for user position as View.
     new Gaso.UserMarker(@user, @map).render()
@@ -47,7 +50,7 @@ class Gaso.MapPage extends Backbone.View
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
-    @user.on 'change:mapCenter', @changeMapLocation
+    @user.on 'reCenter', @changeMapLocation
 
 
   getInitialMapSettings: =>
@@ -62,7 +65,6 @@ class Gaso.MapPage extends Backbone.View
     coords = @user.get 'mapCenter'
     Gaso.log "Pan map to", coords
     @map.panTo new google.maps.LatLng(coords.lat, coords.lon)
-    # FIXME now we search every time map moves, which is a bit too greedy, modify!
     @findNearbyStations()
 
 
@@ -93,10 +95,10 @@ class Gaso.MapPage extends Backbone.View
       objectType: "fuel"
       boundsOnly: true
       bounds: @mapBoundsToCMBounds mapBounds
-      # geometry: true
+      resultsNumber: 20
 
     processResponse = (response) =>
-      console.log "CM response", response
+      Gaso.log "CM response", response
 
       for feature in response.features
         stationdata = feature.properties

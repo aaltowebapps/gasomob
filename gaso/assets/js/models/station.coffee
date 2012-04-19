@@ -50,15 +50,16 @@ class Gaso.Station extends Backbone.Model
     @destroy
 
   identifyBrand: (name) =>
-    console.log "Identify brand from", name
+    Gaso.log "Identify brand from", name
     if (/abc/ig).test name
       @set 'brand', 'abc' 
     else if (/neste/ig).test name
       @set 'brand', 'nesteoil' 
     else if (/teboil/ig).test name
       @set 'brand', 'teboil'
-    else if (/st1/ig).test name
+    else if (/st1|st\./ig).test name
       @set 'brand', 'st1'
     else if (/shell/ig).test name
       @set 'brand', 'shell'
-
+    else if (/seo/ig).test name
+      @set 'brand', 'seo'

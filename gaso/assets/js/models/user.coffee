@@ -38,6 +38,7 @@ class Gaso.User extends Backbone.Model
     # Default to current user position if coords not given.
     newCenter = _.extend({}, coords ? @get 'position') 
     @set 'mapCenter', newCenter
+    @trigger 'reCenter'
     return
 
 
@@ -47,7 +48,7 @@ class Gaso.User extends Backbone.Model
         when error.TIMEOUT
           Gaso.log "Device position watching timed out, retrying."
           @geoWatchID = Gaso.util.watchDevicePosition @updateUserPosition
-        else Gaso.error "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
+        else Gaso.log "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
       return
 
     coords = position.coords
