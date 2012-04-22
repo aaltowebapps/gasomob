@@ -18,9 +18,9 @@ class Gaso.Station extends Backbone.Model
     	lon: 0
 
     prices:
-    	diesel: 0
-    	"95E10": 0
-    	"98E5": 0
+    	diesel: null
+    	"95E10": null
+    	"98E5": null
    
     services:
     	air: true

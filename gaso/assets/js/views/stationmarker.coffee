@@ -6,9 +6,10 @@ class Gaso.StationMarker extends Backbone.View
   render: =>
     pos = @model.get 'geoPosition'
     opts =
-      map: @map
-      title: @model.get 'name'
-      position: new google.maps.LatLng(pos.lat, pos.lon)
+      map       : @map
+      title     : @model.get 'name'
+      position  : new google.maps.LatLng(pos.lat, pos.lon)
+      animation : google.maps.Animation.DROP
 
     brand = @model.get 'brand'
 

@@ -1,5 +1,3 @@
-
-
 ###
   Router(/controller) for client side.
 ###

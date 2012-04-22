@@ -9,7 +9,8 @@ class Gaso.UserMarker extends Backbone.View
       map: @map
       title: 'My location'
       position: new google.maps.LatLng(pos.lat, pos.lon)
-      #TODO custom icon, the cool "blue dot" perhaps
+      icon: "images/blue_ball16.png"
+      animation: google.maps.Animation.DROP
 
     @marker = new google.maps.Marker(opts)
 
