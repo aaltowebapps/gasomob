@@ -26,7 +26,7 @@ script type: 'text/template', id: 'map-page', ->
     partial 'navigation'
 
 
-# Menu template
+# Menu page -template
 script type: 'text/template', id: 'menu-page', ->
   header 'data-role': 'header', ->
     h1 'Menu'

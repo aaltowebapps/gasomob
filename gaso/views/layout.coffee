@@ -30,9 +30,16 @@ html ->
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
 
+    # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
+    script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
+    # Libs: Google Maps + geometry library
+    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
+    script src: "http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"
+
+    # Libs: Socket.io for websockets
     script src: '/socket.io/socket.io.js'
 
-    # Libs
+    # Other libs
     if productionEnv
       script src: 'http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js'
       script src: 'http://code.jquery.com/jquery-1.7.1.min.js'
@@ -64,11 +71,6 @@ html ->
       script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     else
       script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
-
-    # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
-    script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
-    # Libs: Google Maps
-    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
 
     script -> "productionEnv = #{productionEnv}; tmplVer = #{templatesversion};"
     

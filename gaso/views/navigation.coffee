@@ -2,7 +2,7 @@
 div 'data-role': 'navbar', ->
   ul ->
     li ->
-      a 'href': '#map', 'data-icon': 'search', 'Search'
+      a 'href': '#search', 'data-icon': 'search', 'Search'
     li ->
       a 'href': '#map', 'data-icon': 'home', 'Map'
     li ->

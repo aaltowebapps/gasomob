@@ -13,6 +13,7 @@ class Gaso.AppRouter extends Backbone.Router
     "map"                   : "showMap"
     "list"                  : "showList"
     "menu"                  : "showMenu"
+    "search"                : "search"
     "settings"              : "settings"
     "stations/:id"          : "stationDetails"
     "stations/:id/refuel"   : "refuel"
@@ -41,6 +42,10 @@ class Gaso.AppRouter extends Backbone.Router
 
     return
 
+
+  search: ->
+    #TODO implement search page, navigate there
+    @changePage @settingsPage
 
   showList: ->
     @changePage @listPage
