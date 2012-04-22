@@ -31,6 +31,9 @@ class Gaso.AppRouter extends Backbone.Router
     @user         = new Gaso.User()
     @user.fetch()
 
+    # Init helper controller.
+    @helper = new Gaso.Helper(@user, @stations)
+
     # Init views.
     #TODO hmm should we put these into Gaso.views... or not?
     @listPage     = new Gaso.StationsListPage(@stations, @user)

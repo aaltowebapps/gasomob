@@ -27,7 +27,7 @@ class Gaso.Station extends Backbone.Model
     	store: true
 
     # TODO calculate / fetch distance from backend / cloudmade / google maps
-    distance: (Math.random() * 10).toFixed(1)
+    distance: 'N/A'
 
 
   initialize: (stationData) ->
@@ -57,9 +57,17 @@ class Gaso.Station extends Backbone.Model
       @set 'brand', 'nesteoil' 
     else if (/teboil/ig).test name
       @set 'brand', 'teboil'
-    else if (/st1|st\./ig).test name
+    else if (/st1|st.*1/ig).test name
       @set 'brand', 'st1'
     else if (/shell/ig).test name
       @set 'brand', 'shell'
     else if (/seo/ig).test name
       @set 'brand', 'seo'
+
+
+  calculateDistanceTo: (position) =>
+    targetLatLng = new google.maps.LatLng(position.lat, position.lon)
+    geoPos = @get 'geoPosition'
+    myLatLng = new google.maps.LatLng(geoPos.lat, geoPos.lon)
+    distMeters = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, targetLatLng)
+    @set 'distance', (distMeters / 1000).toFixed(1)

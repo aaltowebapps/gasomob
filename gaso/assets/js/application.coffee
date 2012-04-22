@@ -4,5 +4,6 @@
 #= require models/stationslist
 #= require_tree models
 #= require_tree views
+#= require helper
 #= require router
 #= require init
