@@ -53,7 +53,7 @@ class Gaso.User extends Backbone.Model
       return
 
     coords = position.coords
-    @set 'positionAccuracy', position.accuracy
+    @set 'positionAccuracy', coords.accuracy
     @set 'position',
       lat: coords.latitude
       lon: coords.longitude
