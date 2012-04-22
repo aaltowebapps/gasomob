@@ -14,7 +14,8 @@ html ->
   head ->
     meta charset: 'utf-8'
 
-    title "#{@title} | Gaso" if @title?
+    #title "#{@title} | Gaso" if @title?
+    title "Gaso"
     meta(name: 'description', content: @description) if @description?
     meta name: 'viewport', content:'width=device-width, initial-scale=1'
     meta name: 'apple-mobile-web-app-capable', content: 'yes'
