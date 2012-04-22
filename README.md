@@ -1,12 +1,18 @@
+# Labs
+* Note: lab-exercises are in branch `labs`
+
+# Gaso
+
+## Demo
+* Demo app running at: [http://gaso.kilke.net][demo]
 
 ## Installation to local machine
-
 1. Install MongoDB
 1. Install nodejs
-1. Clone repository to your computer
-1. `cd gaso`
 1. Install `coffee-script` globally: `npm install coffee-script -g`
-1. `npm install`
+1. Clone gaso repository to your computer
+1. `cd gaso`
+1. `npm install -d`
 
 ## Starting on local machine
 
@@ -28,3 +34,6 @@ To avoid need of re-running node app after each change use `nodemon`.
 
   1. nodemon (at least v.0.6.12) won't work in windows with normal syntax
   1. -> this works: `nodemon -x .\node_modules\.bin\coffee.cmd app.coffee`
+
+
+[demo]: http://gaso.kilke.net
