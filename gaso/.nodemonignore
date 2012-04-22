@@ -1,7 +1,0 @@
-/lib/*
-/public/*
-./.gitignore
-./README.md 
-*.css
-# ./server.js
-#./.git/*
