@@ -4,7 +4,7 @@
 # Gaso
 
 ## Demo
-* Demo app running at: [http://gaso.kilke.net][demo]
+* Demo app running at: [http://gaso.kilke.net][demo]. If it doesn't work, try [alternative link](http://50.16.203.50:3000).
 
 ## Installation to local machine
 1. Install MongoDB
