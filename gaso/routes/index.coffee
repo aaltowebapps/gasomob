@@ -2,9 +2,11 @@
 ###
  GET home page.
 ###
+config = require '../config'
 exports.index = (req, res) ->
+  console.log config
   res.render 'index'
-    title: 'Hello!'
+    config: config
   return
 
 ###
@@ -12,11 +14,4 @@ exports.index = (req, res) ->
 ###
 exports.templates = (req, res) ->
   res.render 'templates', layout: false
-  return
-
-###
- GET map
-###
-exports.map = (req, res) ->
-  res.render 'map'
   return

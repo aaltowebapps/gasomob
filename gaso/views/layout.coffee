@@ -1,13 +1,12 @@
 ###
   Coffeekup template for default page layout.
 ###
-
-productionEnv = process.env.NODE_ENV is 'production'
+productionEnv = @config.env.production
+templatesversion = @config.env.version
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
 
-templatesversion = if productionEnv then 5 else 0
 
 doctype 5
 html ->
@@ -15,7 +14,7 @@ html ->
     meta charset: 'utf-8'
 
     #title "#{@title} | Gaso" if @title?
-    title "Gaso"
+    title @config.appName
     meta(name: 'description', content: @description) if @description?
     meta name: 'viewport', content:'width=device-width, initial-scale=1'
     meta name: 'apple-mobile-web-app-capable', content: 'yes'
