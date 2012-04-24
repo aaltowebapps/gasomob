@@ -9,12 +9,4 @@ $doc.bind 'mobileinit', (event) ->
     hashListeningEnabled : false
     pushStateEnabled     : false
 
-  # Remove page from DOM when it's being replaced
-  $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
-    Gaso.log "Remove page", @
-    $(@).remove()
-    return
 
-  return
-
-  # Here we could probably also e.g. open & initialize socket.io sockets or smth       

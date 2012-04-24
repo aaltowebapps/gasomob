@@ -59,3 +59,6 @@ class Gaso.User extends Backbone.Model
       lon: coords.longitude
     @save()
 
+  isPositionAccurate: ->
+    accuracy = @get 'positionAccuracy'
+    accuracy? and accuracy < 10000

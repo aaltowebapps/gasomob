@@ -18,12 +18,6 @@ class Gaso.AppRouter extends Backbone.Router
 
 
   initialize: ->
-    $(document).on 'click', '.back', (event) ->
-      window.history.back()
-      e.preventDefault()
-
-    @firstPage = true
-    
     # Init models.
     #TODO hmm should we put these into Gaso.models... or not?
     @stations     = new Gaso.StationsList()
@@ -37,11 +31,32 @@ class Gaso.AppRouter extends Backbone.Router
     # Init views.
     #TODO hmm should we put these into Gaso.views... or not?
     @listPage     = new Gaso.StationsListPage(@stations, @user)
-    @settingsPage = new Gaso.UserSettingsPage(@stations, @user)
+    @settingsPage = new Gaso.UserSettingsPage(@user)
     @mapPage      = new Gaso.MapPage(@stations, @user)
-    @menuPage     = new Gaso.MenuPage(@stations, @user)
+    @menuPage     = new Gaso.MenuPage(@user)
 
+    @bindEvents()
     return
+
+
+  bindEvents: ->
+    # Helper variables.
+    self = @
+    $doc = $ document
+
+    # Fix jQM back-button behaviour.
+    $doc.on 'click', '.back', (event) ->
+      window.history.back()
+      e.preventDefault()
+
+    # Remove page from DOM when it's being replaced
+    $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
+      Gaso.log "Remove page", @
+      # Expect page-views to implement a close() -method that cleans up the view properly.
+      Gaso.log "Call 'close' to ", self.prevPage
+      self.prevPage?.close()
+      $(@).remove()
+      self.prevPage = self.currentPage
 
 
   search: ->
@@ -85,15 +100,14 @@ class Gaso.AppRouter extends Backbone.Router
     $p.attr 'data-role', 'page'
     page.render()
     $('body').append $p
-    transition = $.mobile.defaultPageTransition
 
-    # Don't slide the first page
-    if @firstPage
-      transition = 'none'
-      @firstPage = false 
+    # Don't animate the first page.
+    transition = if not @currentPage? then 'none' else $.mobile.defaultPageTransition
     
-    # Change the JQM page
+    # Change the JQM page.
+    @currentPage = page
     $.mobile.changePage $p, 
       changeHash: false,
       transition: transition
-    return
+
+    

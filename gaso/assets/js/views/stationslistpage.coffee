@@ -25,10 +25,17 @@ class Gaso.StationsListPage extends Backbone.View
     return @
 
   bindEvents: ->
-    @collection.on 'add', (data) =>
-      @addStationListItem data
-      @$list.listview 'refresh'
+    Gaso.log "Bind list events", @
+    @collection.on 'add', @onCollectionAdd
 
+  close: =>
+    Gaso.log "Close page", @
+    @off()
+    @collection.off 'add', @onCollectionAdd
+
+  onCollectionAdd: (data) =>
+    @addStationListItem data
+    @$list.listview 'refresh'
 
   addStationListItem: (station) =>
     @$list.append new Gaso.StationListItem(model: station).render().el

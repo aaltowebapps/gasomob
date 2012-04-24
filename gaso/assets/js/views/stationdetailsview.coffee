@@ -20,3 +20,8 @@ class Gaso.StationDetailsView extends Backbone.View
         'diesel': @.$("#dieselPrice").val()
         '95E10':  @.$("#95E10Price").val()
         '98E5':  @.$("#98E5Price").val()
+    @model.save()
+
+  close: =>
+    @off
+    #@model.off ...

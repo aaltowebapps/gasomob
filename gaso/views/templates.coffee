@@ -12,6 +12,15 @@
 gasofooter = (callback) ->
   footer 'data-id': 'gasonav', id: 'footer', 'data-role': 'footer', 'data-position': 'fixed', 'data-transition': 'slide', 'data-tap-toggle': 'false', callback
 
+
+conditionalStationDistance = (options) ->
+  text '<% if (drivingDistance) { %>'
+  span class: 'distance-drive', "{{ drivingDistance }} km"
+  text '<% } else if (directDistance) { %>'
+  span class: 'distance-direct', "{{ directDistance }} km"
+  if not options?.leaveOpen
+    text '<% } %>'
+
 ###
   PAGE TEMPLATES
 ###
@@ -66,6 +75,8 @@ script type: 'text/template', id: 'station-details', ->
     div class: 'ui-icon-station ui-icon-{{ brand }}'
     h2 '{{ street }}'
     h3 '{{ zip }} {{ city }}'
+    h3 class: 'distance', ->
+      conditionalStationDistance()
     table ->
       tr ->
         td '95E10:'
@@ -151,12 +162,8 @@ script type: 'text/template', id: 'station-list-item', ->
         h2 '{{ prices["95E10"] }}'
       div class: "ui-block-d", ->
         h2 '{{ prices["98E5"] }}'
-        ###
-        # Station's prices
-        text '<% var blocks = ["b", "c", "d"]; %>'
-        text '<% _.each(prices, function(item, key) { %>'
-        span '{{ key }}: {{ item }}'
-        text '<% }); %>'
-        ###
-    p class: 'ui-li-aside distance', "{{ distance }} km"
-
+    p class: 'ui-li-aside distance', ->
+      conditionalStationDistance leaveOpen: true
+      text '<% } else { %>'
+      text 'N/A'
+      text '<% } %>'

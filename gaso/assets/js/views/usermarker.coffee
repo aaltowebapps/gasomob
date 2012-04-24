@@ -23,7 +23,7 @@ class Gaso.UserMarker extends Backbone.View
 
     opts =
       map: @map
-      title: "My location#{if not @getCircleRadius()? then ' (inaccurate)'}"
+      title: "My location#{if not @getCircleRadius()? then ' (inaccurate)' else ''}"
       position: new google.maps.LatLng(pos.lat, pos.lon)
       icon: image
       animation: google.maps.Animation.DROP
@@ -61,5 +61,4 @@ class Gaso.UserMarker extends Backbone.View
 
   getCircleRadius: =>
     # Don't display accuracy circle at all, if location is not accurate enough.
-    accuracy = @model.get 'positionAccuracy'
-    if accuracy? and accuracy < 10000 then accuracy else null
+    if @model.isPositionAccurate() then @model.get 'positionAccuracy' else null

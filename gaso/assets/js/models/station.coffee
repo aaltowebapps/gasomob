@@ -4,30 +4,32 @@ Station
 class Gaso.Station extends Backbone.Model
   noIoBind: false
   socket: window.socket
+  #url: 'station'
 
   defaults:
-    brand: ''
-    name:  ''
-
-    street: ''
-    city: ''
-    zip: ''
+    brand  : ''
+    name   : ''
+    
+    street : ''
+    city   : ''
+    zip    : ''
 
     geoPosition:
     	lat: 0
     	lon: 0
 
     prices:
-    	diesel: null
-    	"95E10": null
-    	"98E5": null
+      diesel  : null
+      "95E10" : null
+      "98E5"  : null
    
     services:
-    	air: true
-    	store: true
+      air   : true
+      store : true
 
-    # TODO calculate / fetch distance from backend / cloudmade / google maps
-    distance: 'N/A'
+    directDistance  : null
+    drivingDistance : null
+
 
 
   initialize: (stationData) ->
@@ -70,4 +72,4 @@ class Gaso.Station extends Backbone.Model
     geoPos = @get 'geoPosition'
     myLatLng = new google.maps.LatLng(geoPos.lat, geoPos.lon)
     distMeters = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, targetLatLng)
-    @set 'distance', (distMeters / 1000).toFixed(1)
+    @set 'directDistance', (distMeters / 1000).toFixed(1)

@@ -34,8 +34,8 @@ class Gaso.MapPage extends Backbone.View
 
     return @
 
-
   bindEvents: ->
+    Gaso.log "Bind events to", @
     # Bind events
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
@@ -46,12 +46,18 @@ class Gaso.MapPage extends Backbone.View
     ###
     @$el.off 'pageshow.mapppage'
     @$el.on 'pageshow.mappage', (event) =>
+      Gaso.log "Resize map"
       google.maps.event.trigger @map, 'resize'
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
     @user.on 'reCenter', @changeMapLocation
 
+  close: =>
+    Gaso.log "Close page", @
+    @off()
+    @stations.off 'add', @addStationMarker
+    @user.off 'reCenter', @changeMapLocation
 
   getInitialMapSettings: =>
     coords = @user.get 'mapCenter'
@@ -100,18 +106,21 @@ class Gaso.MapPage extends Backbone.View
     processResponse = (response) =>
       Gaso.log "CM response", response
 
-      for feature in response.features
-        stationdata = feature.properties
-        # Ignore stations we have already
-        if not @stations.get(stationdata.osm_id)?
-           # Ignore stations that don't have name set in OSM data.
-           if stationdata.name
-            @stations.add
-              id: stationdata.osm_id
-              name: stationdata.name
-              geoPosition:
-                lat: feature.centroid.coordinates[0]
-                lon: feature.centroid.coordinates[1]
+      if response.features?
+        for feature in response.features
+          stationdata = feature.properties
+          # Ignore stations we have already
+          if not @stations.get(stationdata.osm_id)?
+             # Ignore stations that don't have name set in OSM data.
+             if stationdata.name
+              @stations.add
+                id: stationdata.osm_id
+                name: stationdata.name
+                geoPosition:
+                  lat: feature.centroid.coordinates[0]
+                  lon: feature.centroid.coordinates[1]
+      else
+        Gaso.log "No 'features' in CM response", response
 
     # Run search
     @geocoder.getLocations "", processResponse, options
