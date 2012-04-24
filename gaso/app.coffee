@@ -56,8 +56,7 @@ io = socketio.listen app
 
 io.sockets.on 'connection', (socket) ->
   ###
-  socket.emit 'news',
-    hello: 'world'
+    COLLECTIONS RELATED
   ###
 
   ###
@@ -116,6 +115,33 @@ io.sockets.on 'connection', (socket) ->
     ###
 
     callback(null, list);
+
+  ###
+    stations:update
+    Called when we .save() our collection on client-side.
+  ###
+  socket.on 'stations:update', (data, callback) ->
+    console.log "Update stations", data
+
+
+  ###
+    MODEL RELATED
+  ###
+
+  ###
+    station:update
+    Called when we .save() our existing station model on client-side, if the model has own url-property defined to 'station'.
+  ###
+  socket.on 'station:update', (data, callback) ->
+    console.log "Update station", data.id, data
+
+  ###
+    station:create
+    Called when we .save() our existing station model on client-side.
+  ###
+  socket.on 'station:create', (data, callback) ->
+    console.log "Create station", data
+
 
 
 # Routes
