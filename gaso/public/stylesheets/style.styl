@@ -1,3 +1,15 @@
+/* MIXINS */
+box-shadow()
+  -webkit-box-shadow arguments
+  -moz-box-shadow arguments
+  box-shadow arguments
+
+border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
+/* /MIXINS */
+
 /* NAVIGATION */
 // Custom jQM icons
 .ui-icon-drop
@@ -14,14 +26,18 @@ size = 100
   //margin 1em
   width (size)px
   height (size)px
-  -webkit-box-shadow: 0 0 10px #222;
-  -moz-box-shadow: 0 0 10px #222;
-  box-shadow: 0 0 10px #222;
+  box-shadow 0 0 10px #222
 stations = abc shell nesteoil seo teboil st1
 for s in stations
   .ui-icon-{s}
     path = "../images/stationlogos/%s_%s.png" % (s size)
     background url(path) no-repeat
+.distance-direct
+  background url("../images/distance_direct_24.png") no-repeat
+  padding-left 30px
+.distance-drive
+  background url("../images/car_26.png") no-repeat
+  padding-left 30px
 /* /COMMON */
 
 
@@ -59,7 +75,7 @@ for s in stations
     width 20%
 
   li .distance
-    font-size 2em
+    font-size 1.4em
     padding-right 25px
 /* /LIST PAGE */
 
@@ -90,4 +106,5 @@ for s in stations
     width 100%
     .comment-author
       text-align right
+
 /* /STATION PAGE */
