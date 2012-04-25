@@ -54,7 +54,6 @@ class Gaso.MapPage extends Backbone.View
     @user.on 'reCenter', @changeMapLocation
 
   close: =>
-    Gaso.log "Close page", @
     @off()
     @stations.off 'add', @addStationMarker
     @user.off 'reCenter', @changeMapLocation

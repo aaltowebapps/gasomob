@@ -25,11 +25,9 @@ class Gaso.StationsListPage extends Backbone.View
     return @
 
   bindEvents: ->
-    Gaso.log "Bind list events", @
     @collection.on 'add', @onCollectionAdd
 
   close: =>
-    Gaso.log "Close page", @
     @off()
     @collection.off 'add', @onCollectionAdd
 
