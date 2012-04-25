@@ -18,7 +18,7 @@ app.get '/templates', routes.templates
 
 
 # Define REST API.
-rest = require './routes/restapi'
+rest = require('./routes/restapi').init app
 # TODO
 
 
