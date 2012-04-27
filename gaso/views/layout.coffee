@@ -16,8 +16,10 @@ html ->
     #title "#{@title} | Gaso" if @title?
     title @config.appName
     meta(name: 'description', content: @description) if @description?
-    meta name: 'viewport', content:'width=device-width, initial-scale=1'
+    meta name: 'viewport', content:'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no'
     meta name: 'apple-mobile-web-app-capable', content: 'yes'
+    meta rel: 'apple-touch-icon', href: '/apple-touch-icon.png' 
+    meta rel: 'apple-touch-startup-image', href: '/apple-touch-icon.png' 
     
     link(rel: 'canonical', href: @canonical) if @canonical?
 

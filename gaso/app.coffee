@@ -6,20 +6,12 @@ express = require 'express'
 app = module.exports = express.createServer()
 require('./config/environment').configure app
 
-
-# Init websockets.
+# Init websockets communication.
 require('./lib/sockets').init app
-
-
-# Define normal routes.
-routes = require './routes'
-app.get '/', routes.index
-app.get '/templates', routes.templates
-
-
-# Define REST API.
-rest = require('./routes/restapi').init app
-# TODO
+# Setup normal routes.
+require('./routes').init app
+# Define and setup REST API.
+require('./routes/restapi').init app
 
 
 # Start server.
