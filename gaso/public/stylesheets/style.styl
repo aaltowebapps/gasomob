@@ -20,14 +20,14 @@ border-radius()
 /* COMMON */
 // Experimenting with stylus for defining station icons as bg images. Works, but still would need custom positioning for lists.
 // Img-tags in lists with jqm work out of the box so lets go there with that, at least for now.
-size = 100
+size = 50
 .ui-icon-station
   float right
   //margin 1em
   width (size)px
   height (size)px
   box-shadow 0 0 10px #222
-stations = abc shell nesteoil seo teboil st1
+stations = abc shell nesteoil seo teboil st1 question
 for s in stations
   .ui-icon-{s}
     path = "../images/stationlogos/%s_%s.png" % (s size)

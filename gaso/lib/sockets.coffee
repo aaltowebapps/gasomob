@@ -71,19 +71,13 @@ exports.init = (app) ->
         console.log "Station saved", @, err, data
 
 
-      gotResult = (stationInDB) ->
+      gotResult = (err, stationInDB) ->
         console.log "found", stationInDB
         unless stationInDB?
 
           # Do some conversions
           data.osmId = data.id unless data.osmId?
           delete data.id
-          data.location = 
-            # NOTE: order must be lon, lat! (ie. x, y)
-            lon: data.geoPosition.lon
-            lon: data.geoPosition.lat
-          delete data.geoPosition
-          delete data.prices
           delete data.directDistance
           delete data.drivingDistance
 
@@ -95,7 +89,7 @@ exports.init = (app) ->
       # TODO save prices
       #db.FuelPrice.getTypes().forEach (val) ->
 
-      db.Station.find {osmId: data.id}, gotResult
+      db.Station.find {osmId: data.osmId}, gotResult
 
     ###
       station:create

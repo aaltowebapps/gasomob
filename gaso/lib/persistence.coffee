@@ -46,9 +46,7 @@ StationSchema = new Schema
   street  : String
   zip     : String
 
-  location :
-    lon : Number
-    lat : Number
+  location : []
 
   services : [String]
   comments : [CommentSchema]

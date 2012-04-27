@@ -5,7 +5,7 @@ class Gaso.Station extends Backbone.Model
   noIoBind: false
   socket: window.socket
   url: 'station'
-  #idAttribute: 'osmId'
+  idAttribute: 'osmId'
 
   defaults:
     brand  : ''
@@ -15,10 +15,10 @@ class Gaso.Station extends Backbone.Model
     city   : ''
     zip    : ''
 
-    geoPosition:
-    	lat: 0
-    	lon: 0
+    # Expected to be an array [lon, lat]. Note: our geospatial queries in the backend depend on the order to be correct.
+    location: []
 
+    # TODO modify prices to be an array of objects
     prices:
       diesel  : null
       "95E10" : null
@@ -32,15 +32,6 @@ class Gaso.Station extends Backbone.Model
 
 
   initialize: (stationData) ->
-    # geoPosition might come also in location-property
-    if stationData.location
-      pos = 
-        lat: stationData.location.latitude
-        lon: stationData.location.longitude
-      @set 'geoPosition', pos
-
-    @set 'id', stationData.osmId if stationData.osmId?
-
     @identifyBrand stationData.name unless stationData.brand
 
   cleanupModel: =>
@@ -69,7 +60,7 @@ class Gaso.Station extends Backbone.Model
 
   calculateDistanceTo: (position) =>
     targetLatLng = new google.maps.LatLng(position.lat, position.lon)
-    geoPos = @get 'geoPosition'
-    myLatLng = new google.maps.LatLng(geoPos.lat, geoPos.lon)
+    loc = @get 'location'
+    myLatLng = new google.maps.LatLng(loc[1], loc[0])
     distMeters = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, targetLatLng)
     @set 'directDistance', (distMeters / 1000).toFixed(1)

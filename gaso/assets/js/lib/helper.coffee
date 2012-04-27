@@ -53,10 +53,12 @@ class Gaso.Helper
         # Ignore stations we have already
         unless collection.get(stationdata.osm_id)?
           collection.add
-            id: stationdata.osm_id
+            osmId: stationdata.osm_id
             name: stationdata.name or "Unknown"
-            geoPosition:
-              lat: feature.centroid.coordinates[0]
-              lon: feature.centroid.coordinates[1]
+            location: [
+              # centroid is in the order [lat, lon], we require [lon, lat].
+              feature.centroid.coordinates[1] 
+              feature.centroid.coordinates[0]
+            ]
     else
       Gaso.log "No 'features' in CM data", data
