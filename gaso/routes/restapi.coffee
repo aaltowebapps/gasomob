@@ -1,7 +1,7 @@
 # Requiring express-resouce will "monkey-patc" Express server for using app.resource.
 # See https://github.com/visionmedia/express-resource for documentation.
 require('express-resource')
-mock = require '../test/mockdata'
+mock = require '../dev/mockdata'
 
 
 class StationResource
