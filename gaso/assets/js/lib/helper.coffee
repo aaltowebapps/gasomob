@@ -11,7 +11,10 @@ class Gaso.Helper
     userpos = @user.get 'position'
     # Don't do anything if user geolocation is not set.
     return if not (userpos.lat? and userpos.lon?)
-    station.calculateDistanceTo userpos
+    stationLoc = station.getLatLng()
+    return if not (stationLoc.lat? and stationLoc.lon?)
+    distMeters = Gaso.geo.calculateDistanceBetween userpos, stationLoc
+    station.set 'directDistance', (distMeters / 1000).toFixed(1)
 
 
   updateDistances: =>
@@ -28,11 +31,12 @@ class Gaso.Helper
 
 
   getStationsDataNearby: =>
+    userpos = @user.get 'position'
     @stations.fetch
       add : true
       data:
-        point: @user.get 'position'
-        within: 10000
+        point: [userpos.lon, userpos.lat]
+        radius: 10
 
 
   findStationsWithinGMapBounds: (mapBounds) ->

@@ -1,10 +1,10 @@
-class Geo
+class GeoLib
 
   constructor: ->
     @geocoder = new CM.Geocoder Gaso.CM_API_KEY
 
 
-  findFuelStations: (mapBounds, callback) =>
+  findFuelStations: (mapBounds, callback) ->
 
     options =
       objectType: "fuel"
@@ -30,5 +30,14 @@ class Geo
     new CM.LatLng gLatLng.lat(), gLatLng.lng()
 
 
+  latLonTogMapLatLng: (latlon) ->
+    new google.maps.LatLng latlon.lat, latlon.lon if latlon?
 
-Gaso.geo = new Geo()
+  calculateDistanceBetween: (from, to) ->
+    gTo = @latLonTogMapLatLng to
+    gFrom = @latLonTogMapLatLng from
+    distMeters = google.maps.geometry.spherical.computeDistanceBetween gFrom, gTo
+    
+
+# Publish our Geo-lib to application scope.
+Gaso.geo = new GeoLib()

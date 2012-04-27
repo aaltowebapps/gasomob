@@ -42,6 +42,11 @@ class Gaso.Station extends Backbone.Model
     @trigger 'clear'
     @destroy
 
+
+  getLatLng: =>
+    loc = @get 'location'
+    return lat: loc[1], lon: loc[0]
+
   identifyBrand: (name) =>
     Gaso.log "Identify brand from", name
     if (/abc/ig).test name
@@ -58,9 +63,3 @@ class Gaso.Station extends Backbone.Model
       @set 'brand', 'seo'
 
 
-  calculateDistanceTo: (position) =>
-    targetLatLng = new google.maps.LatLng(position.lat, position.lon)
-    loc = @get 'location'
-    myLatLng = new google.maps.LatLng(loc[1], loc[0])
-    distMeters = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, targetLatLng)
-    @set 'directDistance', (distMeters / 1000).toFixed(1)
