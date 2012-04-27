@@ -8,7 +8,5 @@ class Gaso.StationsList extends Backbone.Collection
 
   # For now using simple comparator
   comparator: (s) ->
-    if ( d = s.get 'drivingDistance' )?
-      return parseFloat(d)
-    else if ( d = s.get 'directDistance' )?
-      return parseFloat(d)
+    d = s.get('drivingDistance') ? s.get('directDistance')
+    parseFloat d
