@@ -4,7 +4,8 @@ Station
 class Gaso.Station extends Backbone.Model
   noIoBind: false
   socket: window.socket
-  #url: 'station'
+  url: 'station'
+  #idAttribute: 'osmId'
 
   defaults:
     brand  : ''
@@ -23,9 +24,7 @@ class Gaso.Station extends Backbone.Model
       "95E10" : null
       "98E5"  : null
    
-    services:
-      air   : true
-      store : true
+    services: []
 
     directDistance  : null
     drivingDistance : null
@@ -40,8 +39,9 @@ class Gaso.Station extends Backbone.Model
         lon: stationData.location.longitude
       @set 'geoPosition', pos
 
-    if not stationData.brand
-      @identifyBrand stationData.name
+    @set 'id', stationData.osmId if stationData.osmId?
+
+    @identifyBrand stationData.name unless stationData.brand
 
   cleanupModel: =>
     @ioUnbindAll()

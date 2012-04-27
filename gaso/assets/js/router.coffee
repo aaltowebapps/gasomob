@@ -18,25 +18,28 @@ class Gaso.AppRouter extends Backbone.Router
 
 
   initialize: ->
-    # Init models.
+    @initModels()
+    # Init helper controller.
+    Gaso.helper = new Gaso.Helper(@user, @stations, @searchContext)
+    @initViews()
+    @bindEvents()
+    return
+
+  initModels: ->
     #TODO hmm should we put these into Gaso.models... or not?
-    @stations     = new Gaso.StationsList()
-    @stations.fetch(add: true)
-    @user         = new Gaso.User()
+    @searchContext      = new Gaso.SearchContext()
+    @stations           = new Gaso.StationsList()
+    @user               = new Gaso.User()
+    # Load cache user data directly from localstorage.
     @user.fetch()
 
-    # Init helper controller.
-    @helper = new Gaso.Helper(@user, @stations)
 
-    # Init views.
+  initViews: ->
     #TODO hmm should we put these into Gaso.views... or not?
     @listPage     = new Gaso.StationsListPage(@stations, @user)
     @settingsPage = new Gaso.UserSettingsPage(@user)
     @mapPage      = new Gaso.MapPage(@stations, @user)
-    @menuPage     = new Gaso.MenuPage(@user)
-
-    @bindEvents()
-    return
+    @menuPage     = new Gaso.MenuPage(@user) 
 
 
   bindEvents: ->
@@ -58,6 +61,11 @@ class Gaso.AppRouter extends Backbone.Router
       $(@).remove()
       self.prevPage = self.currentPage
 
+
+
+  ###
+    ROUTES
+  ###
 
   search: ->
     #TODO implement search page, navigate there
@@ -93,6 +101,10 @@ class Gaso.AppRouter extends Backbone.Router
         replace: true
 
 
+  ###
+    HELPER METHODS
+  ###
+
   # Routing tricks for changing pages with jQM.
   changePage: (page) ->
     Gaso.log 'Change to page', page
@@ -102,7 +114,7 @@ class Gaso.AppRouter extends Backbone.Router
     $('body').append $p
 
     # Don't animate the first page.
-    transition = if not @currentPage? then 'none' else $.mobile.defaultPageTransition
+    transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
     
     # Change the JQM page.
     @currentPage = page

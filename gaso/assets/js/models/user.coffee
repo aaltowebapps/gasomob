@@ -24,7 +24,7 @@ class Gaso.User extends Backbone.Model
     # Init with initial position.
     Gaso.util.getDevicePosition (error, position) =>
       if error?
-        return Gaso.error "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
+        return Gaso.log "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
       @updateUserPosition null, position
       # Initialize map to device position.
       @centerOnPosition @get 'position'

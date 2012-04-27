@@ -15,7 +15,7 @@ class Gaso.MapPage extends Backbone.View
   render: =>
     @$el.html @template @stations.toJSON()
 
-    @geocoder = new CM.Geocoder Gaso.CM_API_KEY
+    
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
     # Bind some events
     google.maps.event.addListener @map, 'dragend', =>
@@ -96,39 +96,6 @@ class Gaso.MapPage extends Backbone.View
       , 2000
       return
 
-    options =
-      objectType: "fuel"
-      boundsOnly: true
-      bounds: @mapBoundsToCMBounds mapBounds
-      resultsNumber: 20
-
-    processResponse = (response) =>
-      Gaso.log "CM response", response
-
-      if response.features?
-        for feature in response.features
-          stationdata = feature.properties
-          # Ignore stations we have already
-          if not @stations.get(stationdata.osm_id)?
-             # Ignore stations that don't have name set in OSM data.
-             if stationdata.name
-              @stations.add
-                id: stationdata.osm_id
-                name: stationdata.name
-                geoPosition:
-                  lat: feature.centroid.coordinates[0]
-                  lon: feature.centroid.coordinates[1]
-      else
-        Gaso.log "No 'features' in CM response", response
-
-    # Run search
-    @geocoder.getLocations "", processResponse, options
+    Gaso.helper.findStationsWithinGMapBounds mapBounds
 
 
-  mapBoundsToCMBounds: (gBounds) =>
-    cmSW = @mapLatLongToCMLatLong gBounds.getSouthWest()
-    cmNE = @mapLatLongToCMLatLong gBounds.getNorthEast()
-    new CM.LatLngBounds cmSW, cmNE
-
-  mapLatLongToCMLatLong: (gLatLng) =>
-    new CM.LatLng gLatLng.lat(), gLatLng.lng()

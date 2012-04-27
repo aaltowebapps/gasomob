@@ -8,10 +8,6 @@ class GasoApp
   # Some Constants
   CM_API_KEY: 'a82f9aaf9fca4a1aa2e81ff9c514f0b2'
 
-  # Backbone Models, to be defined/initialized.
-  models: {}
-  # Backbone Views, to be defined/initialized.
-  views: {}
   # Running app and other data, to be defined/initialized.
   app: {} 
 
