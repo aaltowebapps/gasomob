@@ -26,23 +26,46 @@ exports.init = (app) ->
       stations:read
       Called when we .fetch() our collection in the client-side router.
       @param data Data sent from client, expected values:
-        point: latlng
-        within: Number (meters)
+        point: [lon, lat]
+        radius: Number (meters)
           OR
-        bounds: latlng, latlng
+        bounds: [[lon, lat], [lon, lat]]
 
     ###
-    socket.on 'stations:read', (data, send) ->
+    socket.on 'stations:read', (data, callback) ->
       list = [];
       console.log "Get stations by", data
 
-      # now returning mock data, do real geospatial query by query data
-      db.Station.findByOsmIds [1,2,3], (err, result) ->
-          # TODO first fetch latest prices for stations and append that to data to return.
-        result.forEach (station) ->
-          list.push station.toJSON()
-        send(null, list);
 
+      if data.point?
+
+        # MongoDB $near queries can be done in array form [lon, lat, distance_in_radians]
+        near = data.point
+        # Divide radius by average earth radius to get radians.
+        near.push data.radius / 6371
+
+        # TODO Simplify interface by moving actual query to some common model library
+        # TODO what's wrong with spatial queries, not getting results...?
+        # mongo: db.stations.find({"location": {"$near" : [24.93824, 60.169812, 10/6371], }})
+        # n = 10
+        # coffee: db.Station.find location: $near: [24.93824, 60.169812, n/6371], (err, docs) -> console.log docs
+        console.log "find near", near
+        db.Station.find
+          location:
+            $nearSphere: near
+          (err, result) ->
+            return callback err if err?
+            # TODO do another query for latest prices and append prices into stations data to return.
+            console.log "Query result", err, result
+            result.forEach (station) ->
+              list.push station.toJSON()
+            console.log "callback stations to client: ", list.map (s) -> s.osmId
+            callback(null, list)
+      else if data.bounds?
+        console.log 'TODO do geospatial query of stations by bounds'
+      else
+        console.log "Unsupported query for stations", data
+        callback "Unsupported query #{data}"
 
 
     ###
@@ -71,17 +94,9 @@ exports.init = (app) ->
         console.log "Station saved", @, err, data
 
 
-      gotResult = (err, stationInDB) ->
+      findCallback = (err, stationInDB) ->
         console.log "found", stationInDB
-        unless stationInDB?
-
-          # Do some conversions
-          data.osmId = data.id unless data.osmId?
-          delete data.id
-          delete data.directDistance
-          delete data.drivingDistance
-
-
+        unless stationInDB.length
           new db.Station(data).save stationSaved 
         else
           console.log 'TODO station found from DB, handle update'
@@ -89,7 +104,7 @@ exports.init = (app) ->
       # TODO save prices
       #db.FuelPrice.getTypes().forEach (val) ->
 
-      db.Station.find {osmId: data.osmId}, gotResult
+      db.Station.find {osmId: data.osmId}, findCallback
 
     ###
       station:create

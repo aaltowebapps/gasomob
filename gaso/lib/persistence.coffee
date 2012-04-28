@@ -1,20 +1,30 @@
-# Persistence
+###
+  Persistence using Mongoose ORM Schemas.
+###
 config   = require '../config'
 mongoose = require 'mongoose'
+
+# Connect to DB.
 mongoose.connect config.db.URL
 
+
+# Helper variables.
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
 
 ###
-  Mongoose Schemas
+  USER SCHEMA
 ###
-
 UserSchema = new Schema
   uid : String
+# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+, strict: true
 
 
+###
+  FUEL PRICE SCHEMA
+###
 FuelPriceSchema = new Schema
   updater  : ObjectId
   station  : ObjectId
@@ -23,8 +33,17 @@ FuelPriceSchema = new Schema
   date     :
     type    : Date
     default : Date.now
+# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+, strict: true
+
+FuelPriceSchema.pre 'save', (next) ->
+  @emit 'save', @
+  next()
 
 
+###
+  COMMENT SCHEMA
+###
 CommentSchema = new Schema
   by       : ObjectId
   title    : String
@@ -32,12 +51,17 @@ CommentSchema = new Schema
   date     :
     type    : Date
     default : Date.now
+# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+, strict: true
 
 
+###
+  STATION SCHEMA
+###
 StationSchema = new Schema
   osmId   : 
     type  : Number
-    unique : true
+    unique : true # index and require uniqueness
   name    : String
   brand   : String
 
@@ -50,23 +74,12 @@ StationSchema = new Schema
 
   services : [String]
   comments : [CommentSchema]
-
-
-StationSchema.statics.removeByOsmIds = (ids, callback) ->
-  @remove 
-    osmId: $in: ids
-    callback
-
-StationSchema.statics.findByOsmIds = (ids, callback) ->
-  @find 
-    osmId: $in: ids
-    callback
-
+# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+, strict: true  
 
 # Build geospatial index of station locations.
 StationSchema.index
   location: '2d'
-
 
 # TODO Testing middleware
 StationSchema.pre 'save', (next) ->
@@ -79,9 +92,20 @@ StationSchema.pre 'set', (next, path, val, type) ->
   console.log "Setting #{path} to #{val} for", @, 'type?', type
   next()
 
-FuelPriceSchema.pre 'save', (next) ->
-  @emit 'save', @
-  next()
+###
+  Helpher methods for StationSchema.
+###
+StationSchema.statics.removeByOsmIds = (ids, callback) ->
+  @remove 
+    osmId: $in: ids
+    callback
+
+StationSchema.statics.findByOsmIds = (ids, callback) ->
+  @find 
+    osmId: $in: ids
+    callback
+
+
 
 
 # Define and export models
