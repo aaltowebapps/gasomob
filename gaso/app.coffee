@@ -17,5 +17,5 @@ require('./routes/restapi').init app
 # Start server.
 console.log "Start server..."
 app.listen config.server.port
-console.log "Express server listening on port %d", app.address().port
+console.log "Express server listening on port %d", config.server.port
 
