@@ -115,6 +115,10 @@ script type: 'text/template', id: 'list-page', ->
   header 'data-role': 'header', ->
     h1 'Stations listed'
   div 'data-role': 'content', ->
+    fieldset id: 'fueltypes', class: "ui-grid-b", ->
+      div class: "ui-block-a", -> button class: 'ui-btn-active', '95E10'
+      div class: "ui-block-b", -> button '98E5'
+      div class: "ui-block-c", -> button 'Diesel'
     # jQM Listview for station list items
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
       li id: 'stations-nearby', 'data-role': 'list-divider', 'Nearby'

@@ -8,6 +8,8 @@ class Gaso.User extends Backbone.Model
 
 
   defaults:
+    myFuelType: '95E10'
+
     positionAccuracy: null
     position:
       lat: null
