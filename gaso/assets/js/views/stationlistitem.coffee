@@ -13,9 +13,9 @@ class Gaso.StationListItem extends Backbone.View
     return @
 
   bindEvents: ->
-    @model.on 'clear', @close, @
+    @model.on 'clear', @close
 
   close: =>
     @off()
-    @model.off null, null, @
-    @remove()
+    @model.off 'clear', @close
+    #@remove()

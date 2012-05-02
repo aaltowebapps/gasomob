@@ -1,14 +1,18 @@
 class Gaso.UserMarker extends Backbone.View
 
   constructor: (@model, @map) ->
-    @model.on 'change:position change:positionAccuracy', @updatePosition
-    
   
   render: =>
     @renderLocationIndicator()
     @renderAccuracyIndicator()
+    @bindEvents()
     return @
 
+  bindEvents: =>
+    @model.on 'change:position change:positionAccuracy', @updatePosition
+
+  close: =>
+    @model.off 'change:position change:positionAccuracy', @updatePosition
 
   renderLocationIndicator: =>
     pos = @model.get 'position'

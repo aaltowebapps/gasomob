@@ -3,9 +3,9 @@ Map page
 ###
 class Gaso.MapPage extends Backbone.View
 
-  stationMarkers: []
 
   constructor: (@stations, @user) ->
+    @stationMarkers = []
     @template = _.template Gaso.util.getTemplate 'map-page'
 
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
@@ -15,7 +15,6 @@ class Gaso.MapPage extends Backbone.View
   render: =>
     @$el.html @template @stations.toJSON()
 
-    
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
     # Bind some events
     google.maps.event.addListener @map, 'dragend', =>
@@ -24,7 +23,7 @@ class Gaso.MapPage extends Backbone.View
       @findNearbyStations()
 
     # New marker for user position as View.
-    new Gaso.UserMarker(@user, @map).render()
+    @userMarker = new Gaso.UserMarker(@user, @map).render()
 
     # New markers for stations.
     for station in @stations.models
@@ -57,6 +56,9 @@ class Gaso.MapPage extends Backbone.View
     @off()
     @stations.off 'add', @addStationMarker
     @user.off 'reCenter', @changeMapLocation
+    @userMarker.close()
+    for marker in @stationMarkers
+      marker.close()
 
   getInitialMapSettings: =>
     coords = @user.get 'mapCenter'

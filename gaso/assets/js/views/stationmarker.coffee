@@ -21,6 +21,9 @@ class Gaso.StationMarker extends Backbone.View
     google.maps.event.addListener(@marker, 'click', @showInfo)
     
     return @
+
+  close: =>
+    #TODO remove map event listeners
   
   showInfo: =>  
     # TODO should we rather first show google maps info bubble and then allow user to go to refuel page from there?
