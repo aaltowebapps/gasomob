@@ -85,7 +85,7 @@ exports.init = (app) ->
       Called when we .save() our existing station model on client-side, if the model has own url-property defined to 'station'.
     ###
     socket.on 'station:update', (data, callback) ->
-      console.log "Update station", data.id, data
+      console.log "Update station", data.osmId, data
       prices = data.prices
 
       # TODO make this more readable, now order turned upside down

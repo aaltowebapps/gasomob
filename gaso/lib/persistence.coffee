@@ -13,13 +13,15 @@ Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
 
+
 ###
   USER SCHEMA
 ###
 UserSchema = new Schema
   uid : String
-# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+# Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
+
 
 
 ###
@@ -27,18 +29,24 @@ UserSchema = new Schema
 ###
 FuelPriceSchema = new Schema
   updater  : ObjectId
-  station  : ObjectId
-  city     : String
-  fuelType : String
+  value    : 
+    type : Number
+    min  : 0
+  fuelType : 
+    type      : String
+    enum      : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
+    index     : true
   date     :
     type    : Date
     default : Date.now
-# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+    index   : true
+# Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
 
 FuelPriceSchema.pre 'save', (next) ->
   @emit 'save', @
   next()
+
 
 
 ###
@@ -51,8 +59,9 @@ CommentSchema = new Schema
   date     :
     type    : Date
     default : Date.now
-# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+# Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
+
 
 
 ###
@@ -70,11 +79,32 @@ StationSchema = new Schema
   street  : String
   zip     : String
 
-  location : []
+  lastModified:
+    type    : Date
+    default : Date.now
 
+  location : 
+    type     : []
+    required : true
   services : [String]
-  comments : [CommentSchema]
-# Make this Schema strcit by default, i.e. extra priperties in models don't get saved into the DB.
+  prices   : 
+    ###
+      This kind nested document array might not be optimal when we want to run queries for e.g. latest prices for some subset of
+      stations. With this structure we may need to do e.g. map/reduce or multiple queries for that kind of needs.
+      Completely separate collection (with maybe just ObjectId references) would be most flexible, but at least
+      for now this structure feels easiest to comprehend and handle in simple situations.
+      # TODO implement some vows-tests for testing queries etc with mockdata
+
+      (For consideration: Mongoose does support DBRef-like references between collections,
+       see http://mongoosejs.com/docs/populate.html)
+    ###
+    type  : [FuelPriceSchema]
+    index : true
+    select: false
+  comments : 
+    type : [CommentSchema]
+    select : false
+# Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true  
 
 # Build geospatial index of station locations.
