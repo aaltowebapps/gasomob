@@ -187,7 +187,7 @@ script type: 'text/template', id: 'station-list-item', ->
     p class: "station-info", ->
       span '{{ name }}'
       text '<% if (address.street && address.city) { %>'
-      span '{{ address.street }}, {{ address.city }}'
+      span ' {{ address.street }}, {{ address.city }}'
       text '<% } %>'
 
     div class: "ui-li-aside distance-col", ->
