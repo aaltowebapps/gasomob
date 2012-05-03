@@ -76,10 +76,11 @@ StationSchema = new Schema
   name    : String
   brand   : String
 
-  country : String
-  city    : String
-  street  : String
-  zip     : String
+  address:
+    country : String
+    city    : String
+    street  : String
+    zip     : String
 
   lastModified:
     type    : Date

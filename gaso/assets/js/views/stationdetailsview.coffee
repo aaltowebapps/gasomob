@@ -12,17 +12,20 @@ class Gaso.StationDetailsView extends Backbone.View
     @template = _.template Gaso.util.getTemplate 'station-details'
     @setElement $('<div id="station-details"/>')
   
-  bindEvents: ->
-    @$el.off 'pageshow.stationdetailsview'
-    @$el.on 'pageshow.stationdetailsview', (event) =>
-      google.maps.event.trigger @map, 'resize'
-      @map.setCenter new google.maps.LatLng(@model.get('location')[1], @model.get('location')[0])
-  
+  getMapSettings: =>
+    zoom: 16
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+    disableDefaultUI: true
+    draggable: false
+    disableDoubleClickZoom: true
+
   render: (eventName) -> 
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
     @$el.html @template @model.toJSON()
+
+    @model.updateAddress()
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     marker = new Gaso.StationMarker(@model, @map).render()
@@ -36,24 +39,35 @@ class Gaso.StationDetailsView extends Backbone.View
     @bindEvents()
     
     return @
-    
-  getMapSettings: =>
-    zoom: 16
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-    disableDefaultUI: true
-    draggable: false
-    disableDoubleClickZoom: true
-    
+
+  bindEvents: ->
+    @$el.off 'pageshow.stationdetailsview'
+    @$el.on 'pageshow.stationdetailsview', (event) =>
+      google.maps.event.trigger @map, 'resize'
+      @map.setCenter Gaso.geo.latLonTogMapLatLng @model.get('location')
+    @model.on 'change:address', @displayAddress
+
+  close: =>
+    @off
+    @$el.off 'pageshow.stationdetailsview'
+    @model.off 'change:address', @displayAddress
+    #@model.off ...
+    for input in @priceEdits
+      input.close()
+
+  displayAddress: =>
+    # We could have own view for just the address that would render automatically, but meh
+    $temp = $(@template @model.toJSON())
+    @$el.find('.address').fadeOut ->
+      self = $(@)
+      self.hide() # Is it the span or what, but without explicity hide() the fading doesn't seem to work.
+      self.html $temp.find('.address').html()
+      self.fadeIn()
+  
   savePrices: ->
     for input in @priceEdits
       input.updateModel()
     @model.save()
-
-  close: =>
-    @off
-    #@model.off ...
-    for input in @priceEdits
-      input.close()
 
 
   addPriceEdit: (price, options) =>

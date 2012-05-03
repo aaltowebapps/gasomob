@@ -6,10 +6,11 @@ stations.push new db.Station
   osmId    : 1
   name     : 'Testiasema'
   brand    : 'abc'
-  country  : 'Finland'
-  city     : 'Espoo'
-  street   : 'Perälänkuja 5'
-  zip      : '00400'
+  address:
+    country  : 'Finland'
+    city     : 'Espoo'
+    street   : 'Perälänkuja 5'
+    zip      : '00400'
   location : [24.955, 60.167]
   prices   : [
     type  : '95E10'
@@ -24,10 +25,11 @@ stations.push new db.Station
   osmId    : 2
   name     : 'Toinen mesta'
   brand    : 'nesteoil'
-  country  : 'Finland'
-  city     : 'Espoo'
-  street   : 'Usvatie 2'
-  zip      : '00530'
+  address:
+    country  : 'Finland'
+    city     : 'Espoo'
+    street   : 'Usvatie 2'
+    zip      : '00530'
   location : [24.938536, 60.169696]
   prices   : [
     type  : '95E10'
@@ -45,10 +47,11 @@ stations.push new db.Station
   osmId    : 3
   name     : 'Kolmas mesta'
   brand    : 'shell'
-  country  : 'Finland'
-  city     : 'Espoo'
-  street   : 'Mikäsenytolikatu 45'
-  zip      : '00430'
+  address:
+    country  : 'Finland'
+    city     : 'Espoo'
+    street   : 'Mikäsenytolikatu 45'
+    zip      : '00430'
   location : [24.945, 60.16968]
   prices   : [
     type  : '95E10'

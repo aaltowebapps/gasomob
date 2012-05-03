@@ -59,9 +59,10 @@ class Gaso.Helper
           collection.add
             osmId: stationdata.osm_id
             name: stationdata.name or "Unknown"
-            street: stationdata['addr:street'].concat " ", stationdata['addr:housenumber']
-            city: stationdata['addr:city']
-            zip: stationdata['addr:postcode']
+            # What are these? There's no address data readily in CM response afaik. --Markus
+            #street: stationdata['addr:street'].concat " ", stationdata['addr:housenumber']
+            #city: stationdata['addr:city']
+            #zip: stationdata['addr:postcode']
             location: [
               # centroid is in the order [lat, lon], we require [lon, lat].
               feature.centroid.coordinates[1] 
