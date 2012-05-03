@@ -8,6 +8,9 @@ class Gaso.User extends Backbone.Model
 
 
   defaults:
+    myFuelType: '95E10'
+
+    positionAccuracy: null
     position:
       lat: null
       lon: null
@@ -23,7 +26,7 @@ class Gaso.User extends Backbone.Model
     # Init with initial position.
     Gaso.util.getDevicePosition (error, position) =>
       if error?
-        return Gaso.error "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
+        return Gaso.log "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
       @updateUserPosition null, position
       # Initialize map to device position.
       @centerOnPosition @get 'position'
@@ -38,6 +41,7 @@ class Gaso.User extends Backbone.Model
     # Default to current user position if coords not given.
     newCenter = _.extend({}, coords ? @get 'position') 
     @set 'mapCenter', newCenter
+    @trigger 'reCenter'
     return
 
 
@@ -47,12 +51,16 @@ class Gaso.User extends Backbone.Model
         when error.TIMEOUT
           Gaso.log "Device position watching timed out, retrying."
           @geoWatchID = Gaso.util.watchDevicePosition @updateUserPosition
-        else Gaso.error "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
+        else Gaso.log "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
       return
 
     coords = position.coords
+    @set 'positionAccuracy', coords.accuracy
     @set 'position',
       lat: coords.latitude
       lon: coords.longitude
-    #@save()
+    @save()
 
+  isPositionAccurate: ->
+    accuracy = @get 'positionAccuracy'
+    accuracy? and accuracy < 10000

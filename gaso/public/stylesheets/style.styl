@@ -1,3 +1,15 @@
+/* MIXINS */
+box-shadow()
+  -webkit-box-shadow arguments
+  -moz-box-shadow arguments
+  box-shadow arguments
+
+border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
+/* /MIXINS */
+
 /* NAVIGATION */
 // Custom jQM icons
 .ui-icon-drop
@@ -14,20 +26,32 @@ size = 100
   //margin 1em
   width (size)px
   height (size)px
-  -webkit-box-shadow: 0 0 20px #333;
-  -moz-box-shadow: 0 0 20px #333;
-  box-shadow: 0 0 20px #333;
-stations = abc shell nesteoil seo teboil st1
+  box-shadow 0 0 10px #222
+stations = abc shell nesteoil seo teboil st1 question
 for s in stations
   .ui-icon-{s}
     path = "../images/stationlogos/%s_%s.png" % (s size)
     background url(path) no-repeat
+.distance-direct
+  background url("../images/distance_direct_16.png") no-repeat
+  padding-left 30px
+.distance-drive
+  background url("../images/car_26.png") no-repeat
+  padding-left 30px
 /* /COMMON */
 
 
 
 /* LIST PAGE */
 #page-list
+  #fueltypes
+    .ui-btn
+    .ui-select
+      margin 0.5em 5px
+
+  .ui-listview-filter 
+    margin-top 10px
+
   // Slider-related styles
   #ranking-slider
     margin 0
@@ -56,11 +80,8 @@ for s in stations
 
   // Other stuff related to list
   .ui-li-aside
-    width 20%
+    padding-right 20px
 
-  li .distance
-    font-size 2em
-    padding-right 25px
 /* /LIST PAGE */
 
 
@@ -79,10 +100,15 @@ for s in stations
 
 
 
+/* MENU PAGE */
+#page-menu
+  background #333
+/* /MENU PAGE */
+
 /* STATION PAGE */
 #station-details
-  padding 0
-  width 100%
+  .distance-direct
+    background url("../images/distance_direct_24.png") no-repeat
   .comment table
     width 100%
     .comment-author
@@ -92,3 +118,7 @@ for s in stations
   padding 0
   height 150px
 /* /STATION PAGE */
+=======
+
+/* /STATION PAGE */
+>>>>>>> 14f5c227c2d871ca0979c159bc1a25095a2151a9

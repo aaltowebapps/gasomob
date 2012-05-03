@@ -4,39 +4,108 @@ Station
 class Gaso.Station extends Backbone.Model
   noIoBind: false
   socket: window.socket
+  url: 'station'
+  idAttribute: 'osmId'
 
   defaults:
-    brand: ''
-    name:  ''
+    brand  : ''
+    name   : ''
+    
+    street : ''
+    city   : ''
+    zip    : ''
 
-    street: ''
-    city: ''
-    zip: ''
+    # Expected to be an array [lon, lat]. Note: our geospatial queries in the backend depend on the order to be correct.
+    location: null
+    services: null
+    prices: null
 
-    geoPosition:
-    	lat: 0
-    	lon: 0
+    directDistance  : null
+    drivingDistance : null
 
-    prices:
-    	diesel: 0
-    	"95E10": 0
-    	"98E5": 0
-   
-    services:
-    	air: true
-    	store: true
+  ###
+   All the models will share reference to same object/array, if we define object- or array-default values
+   in the defaults-hash. Then we'll get into huge problems very easily.
+   See e.g. http://stackoverflow.com/questions/6433795/backbone-js-handling-of-attributes-that-are-arrays
+  ###
+  setNonPrimitiveDefaults: (initData) ->
+    @set 'location', [] unless initData.location?
+    @set 'services', [] unless initData.services?
+    defaultPrices = [
+      type: "95E10"
+    ,
+      type: "98E5"
+    ,
+      type: "Diesel"
+    ]
+    @set 'prices', defaultPrices unless initData.prices?
 
-    # TODO calculate / fetch distance from backend / cloudmade / google maps
-    distance: (Math.random() * 10).toFixed(1)
 
 
   initialize: (stationData) ->
-    if (stationData.location?)
-      pos = 
-        lat: stationData.location.latitude
-        lon: stationData.location.longitude
-    @set 'geoPosition', pos
+    @setNonPrimitiveDefaults stationData
+    @identifyBrand stationData.name unless stationData.brand
 
   cleanupModel: =>
     @ioUnbindAll()
     return @
+
+  clear: =>
+    @trigger 'clear'
+    @destroy
+
+  updatePrice: (type, value) =>
+    prices = @get 'prices'
+    pricesUpdated = _updatePrice prices, type, value
+    # Modifying the array won't automatically trigger backbone event, lets trigger it ourself.
+    @trigger 'change:prices', @ if pricesUpdated
+
+
+  getLatLng: =>
+    loc = @get 'location'
+    return lat: loc[1], lon: loc[0]
+
+  identifyBrand: (name) =>
+    Gaso.log "Identify brand from", name
+    if (/abc/ig).test name
+      @set 'brand', 'abc' 
+    else if (/neste/ig).test name
+      @set 'brand', 'nesteoil' 
+    else if (/teboil/ig).test name
+      @set 'brand', 'teboil'
+    else if (/st1|st.*1/ig).test name
+      @set 'brand', 'st1'
+    else if (/shell/ig).test name
+      @set 'brand', 'shell'
+    else if (/seo/ig).test name
+      @set 'brand', 'seo'
+
+
+  ###
+    Private helper methods etc.
+  ###
+
+
+  ###
+    Helper method to update price for given type.
+    @return false If a) value hasn't changed or b) trying to set empty or 0 value. Otherwise return true.
+  ###
+  _updatePrice = (prices, type, value) ->
+    return false if !value
+
+    value = parseFloat(value).toFixed(3)
+
+    currPrice = _.find prices, (p) -> p.type == type
+    if not currPrice?
+      # Given fuel type not in prices array at all, add it.
+      prices.push
+        type  : type
+        value : value
+      return true
+
+    # Type exists in array, update only if value has changed.
+    return false if currPrice.value == value
+
+    currPrice.value = value
+    return true
+

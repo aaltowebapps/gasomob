@@ -11,8 +11,8 @@ _.templateSettings =
 # Initialize socket for data syncing.
 window.socket = io.connect '/'
 
-# Load templates and init app on callback.
-Gaso.util.loadTemplates ['user-settings-page', 'map-page', 'list-page', 'station-list-item', 'station-details'], ->
+# Load all templates and init app on callback.
+Gaso.util.loadTemplates [], ->
   Gaso.log 'Templates loaded'
   #Gaso.log Gaso.util.getTemplate 'station-details'
   

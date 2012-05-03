@@ -12,6 +12,21 @@
 gasofooter = (callback) ->
   footer 'data-id': 'gasonav', id: 'footer', 'data-role': 'footer', 'data-position': 'fixed', 'data-transition': 'slide', 'data-tap-toggle': 'false', callback
 
+fuelTypeSelect = (options) ->
+  firstOptionLabel = options?.firstOptionLabel or ''
+  select id: 'otherType', name: 'otherType', ->
+    option value: '', firstOptionLabel
+    option value: 'E85', 'E85'
+    option value: 'Unleaded', 'Unleaded'
+
+conditionalStationDistance = (options) ->
+  text '<% if (drivingDistance) { %>'
+  span class: 'distance-drive', "{{ drivingDistance }} km"
+  text '<% } else if (directDistance) { %>'
+  span class: 'distance-direct', "{{ directDistance }} km"
+  if not options?.leaveOpen
+    text '<% } %>'
+
 ###
   PAGE TEMPLATES
 ###
@@ -25,6 +40,28 @@ script type: 'text/template', id: 'map-page', ->
   gasofooter ->
     partial 'navigation'
 
+
+# Menu page -template
+script type: 'text/template', id: 'menu-page', ->
+  header 'data-role': 'header', ->
+    h1 'Menu'
+  div 'data-role': 'content', ->
+    ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', 'data-dividertheme': 'a', ->
+      li 'data-role': 'list-divider', ->
+        'Find gas near you'
+      li ->
+        a href:'#map'
+          'Map view'
+      li ->
+        a href:'#list'
+          'List view'
+      li 'data-role': 'list-divider', ->
+        'Settings'
+      li ->
+        a href:'#settings', 'data-transition':'slide', ->
+          'User settings'
+  gasofooter ->
+    partial 'navigation'
 
 # User settings page -template
 script type: 'text/template', id: 'user-settings-page', ->
@@ -42,26 +79,21 @@ script type: 'text/template', id: 'station-details', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
     div id: 'small-map-canvas'
+    text '<% if (!brand) { brand = "question"; } %>'
     div class: 'ui-icon-station ui-icon-{{ brand }}'
     h2 '{{ street }}'
     h3 '{{ zip }} {{ city }}'
-    table ->
-      tr ->
-        td '95E10:'
-        td ->
-          input id: '95E10Price', type: 'text', value: '{{ prices["95E10"] }}'
-      tr ->
-        td '98E5:'
-        td ->
-          input id: '98E5Price', type: 'text', value: '{{ prices["98E5"] }}'
-      tr ->
-        td 'Diesel:'
-        td ->
-          input id: 'dieselPrice', type: 'text', value: '{{ prices.diesel }}'
-      tr ->
-        td ''
-        td ->
-          input id: 'saveButton', type: 'submit', value: 'Save'
+    h3 class: 'distance', ->
+      conditionalStationDistance()
+
+    div id: 'prices'
+
+    div id: "addOtherPrice", 'data-role': "fieldcontain", ->
+      label for: 'otherType', 'Other fuel types:'
+      fuelTypeSelect()
+
+    input id: 'saveButton', type: 'submit', value: 'Save'
+
     div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
       h3 'Comments (comment count)'
       div class: 'comment', ->
@@ -77,11 +109,19 @@ script type: 'text/template', id: 'station-details', ->
   gasofooter ->
     partial 'navigation'
 
+
+
 # Stations list page -template
 script type: 'text/template', id: 'list-page', ->
   header 'data-role': 'header', ->
     h1 'Stations listed'
   div 'data-role': 'content', ->
+    fieldset id: 'fueltypes', class: "ui-grid-c", ->
+      div class: "ui-block-a", -> button 'data-fueltype': '95E10', '95E10'
+      div class: "ui-block-b", -> button 'data-fueltype': '98E5', '98E5'
+      div class: "ui-block-c", -> button 'data-fueltype': 'Diesel', 'Diesel'
+      div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:'
+      # TODO button for other fuel types
     # jQM Listview for station list items
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
       li id: 'stations-nearby', 'data-role': 'list-divider', 'Nearby'
@@ -112,29 +152,40 @@ script type: 'text/template', id: 'list-page', ->
   MODEL TEMPLATES
 ###
 
+# Price-edit for station-details form
+script type: 'text/template', id: 'price-edit', ->
+  text '<% if (typeof value === "undefined") { value = ""; } %>'
+  text '<% ptype = "price"+type; %>'
+
+  label for: "{{ptype}}", "{{type}}"
+  input class: 'price-input', type: "text", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+
+
+
 # Stations-list list-item
 script type: 'text/template', id: 'station-list-item', ->
-  a 'href' : '#stations/{{ id }}/refuel', ->
+  a 'href' : '#stations/{{ osmId }}/refuel', ->
+      # TODO set some generic image if brand is not set?
+    text '<% if (!brand) { brand = "question"; } %>'
     img src: "../images/stationlogos/{{ brand }}_100.png"
     # alternative approach:
     # span class: 'ui-icon ui-icon-station ui-icon-{{ brand }}'
-    div class: "ui-grid-c", ->
-      div class: "ui-block-a", ->
-        h1 '{{ name }}'
-        #h3 '{{ street }}, {{ city }}'
-        # TODO modify to a better layout and structure for station data in the list. Maybe common headers for prices, with fuel type headings?
-      div class: "ui-block-b", ->
-        h2 '{{ prices["diesel"] }}'
-      div class: "ui-block-c", ->
-        h2 '{{ prices["95E10"] }}'
-      div class: "ui-block-d", ->
-        h2 '{{ prices["98E5"] }}'
-        ###
-        # Station's prices
-        text '<% var blocks = ["b", "c", "d"]; %>'
-        text '<% _.each(prices, function(item, key) { %>'
-        span '{{ key }}: {{ item }}'
-        text '<% }); %>'
-        ###
-    p class: 'ui-li-aside distance', "{{ distance }} km"
 
+    # TODO Improve price rendering, it is a bit clumsy to have this much logic here in the template?
+    text '<% _ftype = Gaso.app.router.user.get("myFuelType"); %>'
+    text '<% _priceToDisplay = _.find(prices, function(p) {return p.type === _ftype}).value %>'
+    text '<% if (_priceToDisplay != null) { _priceToDisplay = _ftype + ": " + _priceToDisplay + " &euro;" } %>'
+    h1 class: 'price', '{{ _priceToDisplay }}'
+    
+    p class: "station-info", ->
+      span '{{ name }}'
+      text '<% if (street && city) { %>'
+      span '{{ street }}, {{ city }}'
+      text '<% } %>'
+
+    div class: "ui-li-aside distance-col", ->
+      h2 class: 'distance', ->
+        conditionalStationDistance leaveOpen: true
+        text '<% } else { %>'
+        text 'N/A'
+        text '<% } %>'

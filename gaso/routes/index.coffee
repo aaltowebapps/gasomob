@@ -1,22 +1,28 @@
+config = require '../config'
 
 ###
- GET home page.
+  GET home page.
 ###
-exports.index = (req, res) ->
+index = (req, res) ->
   res.render 'index'
-    title: 'Hello!'
+    config: config
   return
 
 ###
- GET templates
+  GET templates
 ###
-exports.templates = (req, res) ->
-  res.render 'templates', layout: false
+templates = (req, res) ->
+  res.render 'templates'
+    layout: false
   return
 
+touchIcon = (req, res) ->
+  res.sendfile 'public/images/apple-touch-icon.png'
+
 ###
- GET map
+  Initialization.
 ###
-exports.map = (req, res) ->
-  res.render 'map'
-  return
+exports.init = (app) ->
+  app.get '/', index
+  app.get '/templates', templates
+  app.get '/apple-touch-icon.png', touchIcon

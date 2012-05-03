@@ -1,23 +1,25 @@
 ###
   Coffeekup template for default page layout.
 ###
-
-productionEnv = process.env.NODE_ENV is 'production'
+productionEnv = @config.env.production
+templatesversion = @config.env.version
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
 
-templatesversion = if productionEnv then 3 else 0
 
 doctype 5
 html ->
   head ->
     meta charset: 'utf-8'
 
-    title "#{@title} | Gaso" if @title?
+    #title "#{@title} | Gaso" if @title?
+    title @config.appName
     meta(name: 'description', content: @description) if @description?
-    meta name: 'viewport', content:'width=device-width, initial-scale=1'
+    meta name: 'viewport', content:'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no'
     meta name: 'apple-mobile-web-app-capable', content: 'yes'
+    meta rel: 'apple-touch-icon', href: '/apple-touch-icon.png' 
+    meta rel: 'apple-touch-startup-image', href: '/apple-touch-icon.png' 
     
     link(rel: 'canonical', href: @canonical) if @canonical?
 
@@ -30,9 +32,15 @@ html ->
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
 
+    # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
+    script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
+    # Libs: Google Maps + geometry library
+    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&libraries=geometry&sensor=true'
+
+    # Libs: Socket.io for websockets
     script src: '/socket.io/socket.io.js'
 
-    # Libs
+    # Other libs
     if productionEnv
       script src: 'http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js'
       script src: 'http://code.jquery.com/jquery-1.7.1.min.js'
@@ -64,9 +72,6 @@ html ->
       script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
     else
       script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
-
-    # Libs: Google Maps
-    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&sensor=true'
 
     script -> "productionEnv = #{productionEnv}; tmplVer = #{templatesversion};"
     

@@ -3,9 +3,9 @@ Map page
 ###
 class Gaso.MapPage extends Backbone.View
 
-  stationMarkers: []
 
   constructor: (@stations, @user) ->
+    @stationMarkers = []
     @template = _.template Gaso.util.getTemplate 'map-page'
 
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
@@ -14,12 +14,16 @@ class Gaso.MapPage extends Backbone.View
 
   render: =>
     @$el.html @template @stations.toJSON()
+
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
     # Bind some events
-    google.maps.event.addListener @map, 'dragend', @saveMapLocation
+    google.maps.event.addListener @map, 'dragend', =>
+      @saveMapLocation()
+      # FIXME now we trigger a search to Cloudmade every time map moves, which might be a bit too greedy, modify?
+      @findNearbyStations()
 
     # New marker for user position as View.
-    new Gaso.UserMarker(@user, @map).render()
+    @userMarker = new Gaso.UserMarker(@user, @map).render()
 
     # New markers for stations.
     for station in @stations.models
@@ -31,6 +35,7 @@ class Gaso.MapPage extends Backbone.View
     
 
   bindEvents: ->
+    Gaso.log "Bind events to", @
     # Bind events
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
@@ -41,12 +46,20 @@ class Gaso.MapPage extends Backbone.View
     ###
     @$el.off 'pageshow.mapppage'
     @$el.on 'pageshow.mappage', (event) =>
+      Gaso.log "Resize map"
       google.maps.event.trigger @map, 'resize'
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
-    @user.on 'change:mapCenter', @changeMapLocation
+    @user.on 'reCenter', @changeMapLocation
 
+  close: =>
+    @off()
+    @stations.off 'add', @addStationMarker
+    @user.off 'reCenter', @changeMapLocation
+    @userMarker.close()
+    for marker in @stationMarkers
+      marker.close()
 
   getInitialMapSettings: =>
     coords = @user.get 'mapCenter'
@@ -60,6 +73,7 @@ class Gaso.MapPage extends Backbone.View
     coords = @user.get 'mapCenter'
     Gaso.log "Pan map to", coords
     @map.panTo new google.maps.LatLng(coords.lat, coords.lon)
+    @findNearbyStations()
 
 
   saveMapLocation: =>
@@ -72,3 +86,19 @@ class Gaso.MapPage extends Backbone.View
 
   addStationMarker: (station) =>
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
+
+
+  findNearbyStations: =>
+    Gaso.log "Find nearby stations"
+
+    mapBounds = @map.getBounds()
+    #Try again after a moment if map is not yet ready.
+    if not mapBounds?
+      setTimeout =>
+        @findNearbyStations()
+      , 2000
+      return
+
+    Gaso.helper.findStationsWithinGMapBounds mapBounds
+
+
