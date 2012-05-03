@@ -79,8 +79,6 @@ script type: 'text/template', id: 'station-details', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
     div id: 'small-map-canvas'
-    text '<% if (!brand) { brand = "question"; } %>'
-    div class: 'ui-icon-station ui-icon-{{ brand }}'
     h2 '{{ street }}'
     h3 '{{ zip }} {{ city }}'
     h3 class: 'distance', ->

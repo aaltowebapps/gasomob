@@ -35,7 +35,7 @@ class Gaso.StationDetailsView extends Backbone.View
     return @
     
   getMapSettings: =>
-    zoom: 14
+    zoom: 16
     mapTypeId: google.maps.MapTypeId.ROADMAP
     
   savePrices: ->
