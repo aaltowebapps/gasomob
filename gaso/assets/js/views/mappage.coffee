@@ -107,6 +107,8 @@ class Gaso.MapPage extends Backbone.View
       , 2000
       return
 
-    Gaso.helper.findStationsWithinGMapBounds mapBounds
-
+    if @user.get('mapZoom') >= 7
+      Gaso.helper.findStationsWithinGMapBounds mapBounds
+    else
+      Gaso.log "Zoomed too far out, not fetching stations"
 
