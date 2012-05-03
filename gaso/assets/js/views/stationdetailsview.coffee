@@ -6,6 +6,7 @@ class Gaso.StationDetailsView extends Backbone.View
     'click #saveButton': 'savePrices'
     'change #addOtherPrice select': 'addOtherPriceEdit'
     'click #small-map-canvas': 'openLargeMap'
+    'tap #small-map-canvas': 'openLargeMap'
   
   initialize: ->
     @template = _.template Gaso.util.getTemplate 'station-details'
@@ -83,4 +84,5 @@ class Gaso.StationDetailsView extends Backbone.View
       @addPriceEdit p, animate: true
 
   openLargeMap: ->
-    console.log "openLargeMap"
+    Gaso.app.router.navigate "stationmap/#{ @model.id }", trigger: true
+    

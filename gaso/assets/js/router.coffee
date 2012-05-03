@@ -14,6 +14,7 @@ class Gaso.AppRouter extends Backbone.Router
     "search"                : "search"
     "settings"              : "settings"
     "stations/:id"          : "stationDetails"
+    "stationmap/:id"        : "stationMap"
     "stations/:id/refuel"   : "refuel"
 
 
@@ -87,6 +88,10 @@ class Gaso.AppRouter extends Backbone.Router
     # For now just handle as refuel, we might do something else with this later.
     @refuel id
 
+  stationMap: (id) ->
+    station = @stations.get(id)
+    if station?
+      @changePage new Gaso.StationMapPage(model: station)
   
   refuel: (id) =>
     station = @stations.get(id)
