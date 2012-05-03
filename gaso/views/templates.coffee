@@ -14,7 +14,7 @@ gasofooter = (callback) ->
 
 fuelTypeSelect = (options) ->
   firstOptionLabel = options?.firstOptionLabel or ''
-  select id: 'otherType', name: 'otherType', ->
+  select id: 'otherType', name: 'otherType', 'data-mini': 'true', ->
     option value: '', firstOptionLabel
     option value: 'E85', 'E85'
     option value: 'Unleaded', 'Unleaded'
@@ -115,9 +115,9 @@ script type: 'text/template', id: 'list-page', ->
     h1 'Stations listed'
   div 'data-role': 'content', ->
     fieldset id: 'fueltypes', class: "ui-grid-c", ->
-      div class: "ui-block-a", -> button 'data-fueltype': '95E10', '95E10'
-      div class: "ui-block-b", -> button 'data-fueltype': '98E5', '98E5'
-      div class: "ui-block-c", -> button 'data-fueltype': 'Diesel', 'Diesel'
+      div class: "ui-block-a", -> button 'data-fueltype': '95E10', 'data-mini': 'true', '95'
+      div class: "ui-block-b", -> button 'data-fueltype': '98E5', 'data-mini': 'true', '98'
+      div class: "ui-block-c", -> button 'data-fueltype': 'Diesel', 'data-mini': 'true', 'Di'
       div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:'
       # TODO button for other fuel types
     # jQM Listview for station list items
