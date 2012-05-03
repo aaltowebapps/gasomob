@@ -44,10 +44,13 @@ class Gaso.MapPage extends Backbone.View
      gMaps to draw initial map larger instead of the small box
      in the top-left corner of the screen?
     ###
-    @$el.off 'pageshow.mapppage'
+    @$el.off 'pageshow.mappage'
     @$el.on 'pageshow.mappage', (event) =>
       Gaso.log "Resize map"
       google.maps.event.trigger @map, 'resize'
+      coords = @user.get 'mapCenter'
+      # return object in google.maps options format, see https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+      @map.setCenter new google.maps.LatLng(coords.lat, coords.lon)
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
@@ -62,9 +65,6 @@ class Gaso.MapPage extends Backbone.View
       marker.close()
 
   getInitialMapSettings: =>
-    coords = @user.get 'mapCenter'
-    # return object in google.maps options format, see https://developers.google.com/maps/documentation/javascript/reference#MapOptions
-    center: new google.maps.LatLng(coords.lat, coords.lon)
     zoom: @user.get 'mapZoom'
     mapTypeId: google.maps.MapTypeId[@user.get 'mapTypeId']
 

@@ -11,10 +11,10 @@ class Gaso.StationDetailsView extends Backbone.View
     @setElement $('<div id="station-details"/>')
   
   bindEvents: ->
-    @$el.off 'pageshow.station-details'
-    @$el.on 'pageshow.station-details', (event) =>
-      console.log("pageshow station-details")
+    @$el.off 'pageshow.stationdetailsview'
+    @$el.on 'pageshow.stationdetailsview', (event) =>
       google.maps.event.trigger @map, 'resize'
+      @map.setCenter new google.maps.LatLng(@model.get('location')[1], @model.get('location')[0])
   
   render: (eventName) -> 
     @priceEdits = []
@@ -23,16 +23,18 @@ class Gaso.StationDetailsView extends Backbone.View
     @$el.html @template @model.toJSON()
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
+    new Gaso.StationMarker(@model, @map).render()
 
     @$prices = @$el.find '#prices'
 
     for price in @model.get 'prices'
       @addPriceEdit price
-
+    
+    @bindEvents()
+    
     return @
     
   getMapSettings: =>
-    center: new google.maps.LatLng(@model.get('geoPosition').lat, @model.get('geoPosition').lon)
     zoom: 14
     mapTypeId: google.maps.MapTypeId.ROADMAP
     
@@ -74,4 +76,3 @@ class Gaso.StationDetailsView extends Backbone.View
       $select.find(':selected').remove()
       $select.val('').selectmenu('refresh')
       @addPriceEdit p, animate: true
->>>>>>> 14f5c227c2d871ca0979c159bc1a25095a2151a9
