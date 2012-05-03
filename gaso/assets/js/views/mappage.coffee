@@ -12,8 +12,6 @@ class Gaso.MapPage extends Backbone.View
     @setElement $('<div id="page-map"/>')
 
 
-
-
   render: =>
     @$el.html @template @stations.toJSON()
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
@@ -30,6 +28,7 @@ class Gaso.MapPage extends Backbone.View
     @bindEvents()
 
     return @
+    
 
   bindEvents: ->
     # Bind events
@@ -73,11 +72,3 @@ class Gaso.MapPage extends Backbone.View
 
   addStationMarker: (station) =>
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
-
-
-
-
-
-
-
-
