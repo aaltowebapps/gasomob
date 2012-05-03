@@ -49,9 +49,9 @@ class Gaso.AppRouter extends Backbone.Router
     $doc = $ document
 
     # Fix jQM back-button behaviour.
-    $doc.on 'click', '.back', (event) ->
+    $doc.on 'click', '.back, [data-rel="back"]', (event) ->
       window.history.back()
-      e.preventDefault()
+      event.preventDefault()
 
     # Remove page from DOM when it's being replaced
     $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
