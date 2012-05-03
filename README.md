@@ -1,5 +1,5 @@
 # Labs
-* Note: lab-exercises are in [labs-branch](tree/labs)
+* Note: lab-exercises are in [labs-branch](gasomob/tree/labs)
 
 
 # Gaso

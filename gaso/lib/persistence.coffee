@@ -93,10 +93,13 @@ StationSchema = new Schema
       stations. With this structure we may need to do e.g. map/reduce or multiple queries for that kind of needs.
       Completely separate collection (with maybe just ObjectId references) would be most flexible, but at least
       for now this structure feels easiest to comprehend and handle in simple situations.
-      # TODO implement some vows-tests for testing queries etc with mockdata
 
       (For consideration: Mongoose does support DBRef-like references between collections,
        see http://mongoosejs.com/docs/populate.html)
+
+      # TODO implement some vows-tests for testing queries etc with mockdata: based on results modify schema to use
+      # DBRefs if it looks bad, or roll with this if it looks good
+
     ###
     type  : [FuelPriceSchema]
     index : true
