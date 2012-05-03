@@ -16,11 +16,6 @@ class Gaso.MapPage extends Backbone.View
     @$el.html @template @stations.toJSON()
 
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
-    # Bind some events
-    google.maps.event.addListener @map, 'dragend', =>
-      @saveMapLocation()
-      # FIXME now we trigger a search to Cloudmade every time map moves, which might be a bit too greedy, modify?
-      @findNearbyStations()
 
     # New marker for user position as View.
     @userMarker = new Gaso.UserMarker(@user, @map).render()
@@ -36,7 +31,16 @@ class Gaso.MapPage extends Backbone.View
 
   bindEvents: ->
     Gaso.log "Bind events to", @
-    # Bind events
+    # Save new location and fetch stations on drag end event.
+    google.maps.event.addListener @map, 'dragend', =>
+      @saveMapLocation()
+      @findNearbyStationsThrottled()()
+
+    # Save new zoom level to user model when map zoom has changed.
+    google.maps.event.addListener @map, 'zoom_changed', =>
+      @user.set 'mapZoom', @map.getZoom()
+      @user.save()
+      Gaso.log "Zoom level set to", @user.get 'mapZoom'
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
     ###
@@ -88,6 +92,10 @@ class Gaso.MapPage extends Backbone.View
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
 
 
+  findNearbyStationsThrottled: =>
+    _.throttle @findNearbyStations, 2000
+
+
   findNearbyStations: =>
     Gaso.log "Find nearby stations"
 
@@ -99,6 +107,8 @@ class Gaso.MapPage extends Backbone.View
       , 2000
       return
 
-    Gaso.helper.findStationsWithinGMapBounds mapBounds
-
+    if @user.get('mapZoom') >= 7
+      Gaso.helper.findStationsWithinGMapBounds mapBounds
+    else
+      Gaso.log "Zoomed too far out, not fetching stations"
 

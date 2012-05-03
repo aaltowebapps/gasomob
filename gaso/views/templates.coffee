@@ -33,13 +33,19 @@ conditionalStationDistance = (options) ->
 
 # Map page -template
 script type: 'text/template', id: 'map-page', ->
-  #header 'data-role': 'header', ->
-  #  h1 'Map'
   div 'data-role': 'content', ->
     div id: 'map-canvas'
   gasofooter ->
     partial 'navigation'
 
+# Single station map page -template
+script type: 'text/template', id: 'station-map-page', ->
+  header 'data-role': 'header', ->
+    h1 '{{ name }}'
+  div 'data-role': 'content', ->
+    div id: 'station-map-canvas'
+  gasofooter ->
+    partial 'navigation'
 
 # Menu page -template
 script type: 'text/template', id: 'menu-page', ->
