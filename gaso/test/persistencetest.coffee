@@ -10,7 +10,8 @@ mock   = require '../dev/mockdata'
 # console.log util.inspect(foobar, true, null, true)
 stationAmt = 0
 
-console.log "\nUsing DB", config.db.URL
+log = (args...) ->
+  console.log "LOG:", args...
 
 # Helper methods and macros for testing.
 # See example at http://vowsjs.org/#-macros
@@ -45,7 +46,7 @@ vows
         return
       'cleanup done': (err, count) ->
         assert.isNull err
-        console.log "Removed #{count} stations during cleanup"
+        log "Removed #{count} stations during cleanup"
 
   .export module
 
