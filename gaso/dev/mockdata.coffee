@@ -15,7 +15,7 @@ addPrice = (station, type, value, date) ->
     value: value
   p.date = date or now()
 
-  station.prices.push p
+  #station.prices.push p
 
 # Defin mock stations.
 

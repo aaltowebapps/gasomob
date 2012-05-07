@@ -34,6 +34,7 @@ class Gaso.MapPage extends Backbone.View
     # Save new location and fetch stations on drag end event.
     google.maps.event.addListener @map, 'dragend', =>
       @saveMapLocation()
+      # IMPROVE not the most intuitive to immediately run a function returned by function.
       @findNearbyStationsThrottled()()
 
     # Save new zoom level to user model when map zoom has changed.

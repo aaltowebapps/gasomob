@@ -20,7 +20,9 @@ ObjectId = Schema.ObjectId
   USER SCHEMA
 ###
 UserSchema = new Schema
-  uid : String
+  uid : 
+    type  : String
+    index : true
 # Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
 
@@ -30,24 +32,21 @@ UserSchema = new Schema
   FUEL PRICE SCHEMA
 ###
 FuelPriceSchema = new Schema
-  updater  : ObjectId
-  value    : 
-    type : Number
-    min  : 0
-  type : 
-    type      : String
-    enum      : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
-    index     : true
-  date     :
+  updater : ObjectId
+  station : ObjectId
+  value   : 
+    type    : Number
+    min     : 0.001
+  type    :  
+    type    : String
+    enum    : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
+    index   : true
+  date    :
     type    : Date
     default : Date.now
     index   : true
 # Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
-
-FuelPriceSchema.pre 'save', (next) ->
-  @emit 'save', @
-  next()
 
 
 
@@ -55,10 +54,10 @@ FuelPriceSchema.pre 'save', (next) ->
   COMMENT SCHEMA
 ###
 CommentSchema = new Schema
-  by       : ObjectId
-  title    : String
-  body     : String
-  date     :
+  by      : ObjectId
+  title   : String
+  body    : String
+  date    :
     type    : Date
     default : Date.now
 # Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
@@ -70,46 +69,29 @@ CommentSchema = new Schema
   STATION SCHEMA
 ###
 StationSchema = new Schema
-  osmId   : 
-    type  : Number
-    unique : true # index and require uniqueness
-  name    : String
-  brand   : String
+  osmId     : 
+    type      : Number
+    unique    : true # index and require uniqueness
+  name      : String
+  brand     : String
 
-  address:
-    country : String
-    city    : String
-    street  : String
-    zip     : String
+  address   :
+    country   : String
+    city      : String
+    street    : String
+    zip       : String
 
-  lastModified:
-    type    : Date
-    default : Date.now
+  updated   :
+    type      : Date
+    default   : Date.now
 
-  location : 
-    type     : []
-    required : true
-  services : [String]
-  prices   : 
-    ###
-      This kind nested document array might not be optimal when we want to run queries for e.g. latest prices for some subset of
-      stations. With this structure we may need to do e.g. map/reduce or multiple queries for that kind of needs.
-      Completely separate collection (with maybe just ObjectId references) would be most flexible, but at least
-      for now this structure feels easiest to comprehend and handle in simple situations.
-
-      (For consideration: Mongoose does support DBRef-like references between collections,
-       see http://mongoosejs.com/docs/populate.html)
-
-      # TODO implement some vows-tests for testing queries etc with mockdata: based on results modify schema to use
-      # DBRefs if it looks bad, or roll with this if it looks good
-
-    ###
-    type  : [FuelPriceSchema]
-    index : true
-    select: false
-  comments : 
-    type : [CommentSchema]
-    select : false
+  location  : 
+    type      : []
+    required  : true
+  services  : [String]
+  comments  : 
+    type      : [CommentSchema]
+    select    : false
 # Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true  
 
@@ -120,7 +102,12 @@ StationSchema.index
 # TODO Testing middleware
 StationSchema.pre 'save', (next) ->
   # async function to notify users in the city
-  @emit 'save', @
+  console.log "saving station", @
+  next()
+
+# Parallel middleware func
+StationSchema.pre 'remove', true, (next, done) ->
+  console.log 'removing', @
   next()
 
 StationSchema.pre 'set', (next, path, val, type) ->
@@ -132,6 +119,8 @@ StationSchema.pre 'set', (next, path, val, type) ->
   Helpher methods for StationSchema.
 ###
 StationSchema.statics.removeByOsmIds = (ids, callback) ->
+  # Note: Calling Schema.remove directly doesn't fire pre-middleware methods,
+  # see https://github.com/LearnBoost/mongoose/issues/439
   @remove 
     osmId: $in: ids
     callback
@@ -144,8 +133,14 @@ StationSchema.statics.findByOsmIds = (ids, callback) ->
 
 
 
-# Define and export models
-exports.User      = mongoose.model 'User', UserSchema
-exports.Comment   = mongoose.model 'Comment', CommentSchema
-exports.Station   = mongoose.model 'Station', StationSchema
-exports.FuelPrice = mongoose.model 'FuelPrice', FuelPriceSchema
+# Define models
+User      = mongoose.model 'User', UserSchema
+Comment   = mongoose.model 'Comment', CommentSchema
+Station   = mongoose.model 'Station', StationSchema
+FuelPrice = mongoose.model 'FuelPrice', FuelPriceSchema
+
+# Export models
+exports.User      = User
+exports.Comment   = Comment
+exports.Station   = Station
+exports.FuelPrice = FuelPrice

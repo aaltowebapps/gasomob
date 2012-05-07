@@ -4,11 +4,6 @@ mock = require '../dev/mockdata'
 
 db = require './persistence'
 
-# TODO Testing listening events from mongoose models
-db.Station.on 'save', (arg1, arg2) ->
-  console.log "Sockets listening station saved", @, arg1, arg2
-
-
 
 class Sync
 
@@ -72,27 +67,21 @@ class Sync
     updateStation()
     @param data Data sent from client, expected values is a station object somewhat or exactly like our StationSchema
   ###
-  updateStation: (data, callback) ->
-    console.log "Update station", data.osmId, data
-    prices = data.prices
+  updateStation: (clientdata, callback) ->
+    console.log "Update station", clientdata.osmId, clientdata
+    prices = clientdata.prices
 
-    # TODO make this more readable, now order turned upside down
-
-    stationSaved = (err, data) ->
-      console.log "Station saved", @, err, data
-
-
-    findCallback = (err, stationInDB) ->
-      console.log "found", stationInDB
-      unless stationInDB.length
-        new db.Station(data).save stationSaved 
-      else
+    db.Station.findOne osmId: clientdata.osmId, (err, station) ->
+      if station?
         console.log 'TODO station found from DB, handle update'
+        # TODO save non-zero prices of each type if latest price isn't equal to the price being saved already
+      else
+        # New station
+        station = new db.Station(clientdata)
 
-    # TODO save prices
-    #db.FuelPrice.getTypes().forEach (val) ->
-
-    db.Station.find {osmId: data.osmId}, findCallback
+      station.save (err, data) ->
+        # TODO save non-zero prices
+        console.log "Station saved", @, err, data
 
 
   ###

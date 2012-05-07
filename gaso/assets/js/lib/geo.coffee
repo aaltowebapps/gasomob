@@ -9,6 +9,7 @@ class GeoLib
 
     options =
       objectType: "fuel"
+      return_location: true
       boundsOnly: true
       bounds: @gMapBoundsToCMBounds mapBounds
       resultsNumber: 20
