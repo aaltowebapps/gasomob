@@ -92,18 +92,7 @@ script type: 'text/template', id: 'station-details', ->
 
     input id: 'saveButton', type: 'submit', value: 'Save'
 
-    div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
-      h3 'Comments (comment count)'
-      div class: 'comment', ->
-        table ->
-          tr ->
-            td class: 'comment-title', ->
-              h4 'Comment title'
-            td class: 'comment-author', ->
-              'Comment author'
-          tr ->
-            td class: 'comment-content', ->
-              'Comment content'
+
   gasofooter ->
     partial 'navigation'
 
@@ -144,11 +133,40 @@ script type: 'text/template', id: 'list-page', ->
   COLLECTION TEMPLATES
 ###
 
-# ...
+script type: 'text/template', id: 'comments-list', ->
+  div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
+    h3 'Comments ({{ comments.length }})'
+    #text '<% if (comments.length != 0) { %>'
+    div class: 'comment', ->
+      ul 'id':'comments', ->
+    #text '<% } else { %>'
+    # TODO Something to display when comment count is zero
+    #text '<% } %>'
+
+    h4 'Add comment'
+
+    div 'data-role': 'fieldcontain', ->
+      label 'for': 'newcomment', 'id': 'ownid', ->
+        '{{ curuser.id }}: '
+      input 'type': 'text', 'name': 'newcomment', 'value': 'Your review', 'data-theme': 'c'
+      a 'href': '#', 'data-role': 'button', 'data-inline': 'true', ->
+        'Shout!'
+
 
 ###
   MODEL TEMPLATES
 ###
+
+
+# Station comment
+script type: 'text/template', id: 'comment', ->
+  li ->
+    span class: 'comment-title', ->
+      h4 'Comment title'
+    span class: 'comment-author', ->
+      'Comment author'
+    span class: 'comment-content', -> 
+      'Comment'
 
 # Price-edit for station-details form
 script type: 'text/template', id: 'price-edit', ->

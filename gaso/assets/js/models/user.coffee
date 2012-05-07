@@ -2,12 +2,12 @@
 User
 ###
 class Gaso.User extends Backbone.Model
-  id: 'localUser'
   #noIoBind: true
   localStorage: new Backbone.LocalStorage("Gaso.User")
 
 
   defaults:
+    id: 'localUser'
     myFuelType: '95E10'
 
     positionAccuracy: null
@@ -20,7 +20,6 @@ class Gaso.User extends Backbone.Model
       lon: 24.955
     mapZoom: 14
     mapTypeId: 'ROADMAP'
-
 
   initialize: ->
     # Init with initial position.

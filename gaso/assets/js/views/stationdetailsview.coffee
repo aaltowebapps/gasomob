@@ -5,8 +5,8 @@ class Gaso.StationDetailsView extends Backbone.View
   events:
     "click #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
-  
-  initialize: ->
+
+  constructor: (@model, @user) ->
     @template = _.template Gaso.util.getTemplate 'station-details'
     @setElement $('<div id="station-details"/>')
   
@@ -20,7 +20,10 @@ class Gaso.StationDetailsView extends Backbone.View
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
-    @$el.html @template @model.toJSON()
+    station = @model.toJSON()
+    _.extend station,
+      curuser: @user.toJSON()
+    @$el.html @template station
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     new Gaso.StationMarker(@model, @map).render()

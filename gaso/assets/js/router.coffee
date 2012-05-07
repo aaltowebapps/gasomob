@@ -27,6 +27,7 @@ class Gaso.AppRouter extends Backbone.Router
 
   initModels: ->
     #TODO hmm should we put these into Gaso.models... or not?
+    @comments           = new Gaso.CommentsList()
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
     @user               = new Gaso.User()
@@ -91,7 +92,7 @@ class Gaso.AppRouter extends Backbone.Router
   refuel: (id) =>
     station = @stations.get(id)
     if station?
-      @changePage new Gaso.StationDetailsView(model: station, refuel: true)
+      @changePage new Gaso.StationDetailsView(station, @user)
     else
       Gaso.log 'TODO Station not loaded, redirecting to listing for now'
       # TODO fetch station in the background and e.g. and change to page after callback.
