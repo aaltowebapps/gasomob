@@ -33,13 +33,19 @@ conditionalStationDistance = (options) ->
 
 # Map page -template
 script type: 'text/template', id: 'map-page', ->
-  #header 'data-role': 'header', ->
-  #  h1 'Map'
   div 'data-role': 'content', ->
     div id: 'map-canvas'
   gasofooter ->
     partial 'navigation'
 
+# Single station map page -template
+script type: 'text/template', id: 'station-map-page', ->
+  header 'data-role': 'header', ->
+    h1 '{{ name }}'
+  div 'data-role': 'content', ->
+    div id: 'station-map-canvas'
+  gasofooter ->
+    partial 'navigation'
 
 # Menu page -template
 script type: 'text/template', id: 'menu-page', ->
@@ -79,10 +85,13 @@ script type: 'text/template', id: 'station-details', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
     div id: 'small-map-canvas'
-    h2 '{{ street }}'
-    h3 '{{ zip }} {{ city }}'
-    h3 class: 'distance', ->
+
+    h3 ->
       conditionalStationDistance()
+      span class: 'address', ->
+        text '<% if (address.street && address.city) { %>'
+        text '{{ address.street }}, {{ address.city }}'
+        text '<% } %>'
 
     div id: 'prices'
 
@@ -195,8 +204,8 @@ script type: 'text/template', id: 'station-list-item', ->
     
     p class: "station-info", ->
       span '{{ name }}'
-      text '<% if (street && city) { %>'
-      span '{{ street }}, {{ city }}'
+      text '<% if (address.street && address.city) { %>'
+      span ' {{ address.street }}, {{ address.city }}'
       text '<% } %>'
 
     div class: "ui-li-aside distance-col", ->

@@ -4,8 +4,10 @@
 config   = require '../config'
 mongoose = require 'mongoose'
 
+dbURL = config.db.URL
+console.log "\nConnecting to DB", dbURL
 # Connect to DB.
-mongoose.connect config.db.URL
+mongoose.connect dbURL
 
 
 # Helper variables.
@@ -32,7 +34,7 @@ FuelPriceSchema = new Schema
   value    : 
     type : Number
     min  : 0
-  fuelType : 
+  type : 
     type      : String
     enum      : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
     index     : true
@@ -74,10 +76,11 @@ StationSchema = new Schema
   name    : String
   brand   : String
 
-  country : String
-  city    : String
-  street  : String
-  zip     : String
+  address:
+    country : String
+    city    : String
+    street  : String
+    zip     : String
 
   lastModified:
     type    : Date

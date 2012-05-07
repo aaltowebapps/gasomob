@@ -11,9 +11,11 @@ class Gaso.Station extends Backbone.Model
     brand  : ''
     name   : ''
     
-    street : ''
-    city   : ''
-    zip    : ''
+    address:
+      country: ''
+      city   : ''
+      street : ''
+      zip    : ''
 
     # Expected to be an array [lon, lat]. Note: our geospatial queries in the backend depend on the order to be correct.
     location: null
@@ -60,6 +62,15 @@ class Gaso.Station extends Backbone.Model
     # Modifying the array won't automatically trigger backbone event, lets trigger it ourself.
     @trigger 'change:prices', @ if pricesUpdated
 
+  updateAddress: ->
+    # Don't update if we don't have coordinates or address is already set.
+    loc = @get 'location'
+    return if not loc?
+    # Test just the street
+    return if @get 'street'
+
+    Gaso.geo.getAddress loc, (addr) =>
+      @set 'address', addr
 
   getLatLng: =>
     loc = @get 'location'

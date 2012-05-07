@@ -18,7 +18,7 @@ class GasoApp
     if productionEnv
       alert args.join ""
     else
-      console.log args...
+      console.error args...
 
   # Utilities: template handling etc.
   util: 
