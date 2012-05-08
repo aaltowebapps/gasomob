@@ -2,7 +2,7 @@
   Coffeekup template for default page layout.
 ###
 productionEnv = @config.env.production
-templatesversion = @config.env.version
+templatesversion = @config.version
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
