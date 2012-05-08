@@ -32,22 +32,43 @@ UserSchema = new Schema
   FUEL PRICE SCHEMA
 ###
 FuelPriceSchema = new Schema
-  updater : ObjectId
-  station : ObjectId
-  value   : 
-    type    : Number
-    min     : 0.001
-  type    :  
-    type    : String
-    enum    : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
-    index   : true
-  date    :
-    type    : Date
-    default : Date.now
-    index   : true
+  updater   : ObjectId
+  # Using underscore-prefixed key to denote DBref-like field.
+  _station  :
+    type      : ObjectId
+    ref       : 'Station'
+    index     : true
+  value     : 
+    type      : Number
+    min       : 0.001
+  type      :  
+    type      : String
+    enum      : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
+    index     : true
+  date      :
+    type      : Date
+    default   : Date.now
+    index     : true
 # Make this Schema strict by default, i.e. extra properties in models don't get saved into the DB.
 , strict: true
 
+# Note: This kind of method can't be chained :/
+FuelPriceSchema.statics.findByStationOsmIds = (osmIds, fields..., callback) ->
+  # To query prices we need station's DB ids, so query those
+  Station.findByOsmIds osmIds, ['id'], (err, stations) =>
+    return callback err if err?
+    # Return already if no stations found.
+    return callback null, [] unless stations.length
+    # Map results to only array of DB ids.
+    stationDBids = stations.map (station) -> station._id
+    # Query prices, use callback for results.
+    FuelPrice.findByStationIds stationDBids, fields[0], callback
+
+FuelPriceSchema.statics.findByStationIds = (stationDBids, fields..., callback) ->
+  @find 
+    _station: $in: stationDBids
+    fields[0]
+    callback
 
 
 ###
@@ -102,12 +123,23 @@ StationSchema.index
 # TODO Testing middleware
 StationSchema.pre 'save', (next) ->
   # async function to notify users in the city
-  console.log "saving station", @
+  # console.log "saving station", @
   next()
 
-# Parallel middleware func
+###
+  Parallel middleware func for 'remove' action.
+  
+  Note: Calling Schema.remove or Query.remove directly doesn't fire 'remove'-middleware methods,
+  because it directly sends the remove command to mongodb.
+  See e.g. https://github.com/LearnBoost/mongoose/issues/439.
+
+  Use Model.remove to make the middleware fire.
+###
 StationSchema.pre 'remove', true, (next, done) ->
-  console.log 'removing', @
+  # Remove any prices related to this station.
+  FuelPrice.remove _station: @id, (err, countremoved) ->
+    # Forward any possible errors.
+    done(err)
   next()
 
 StationSchema.pre 'set', (next, path, val, type) ->
@@ -119,15 +151,20 @@ StationSchema.pre 'set', (next, path, val, type) ->
   Helpher methods for StationSchema.
 ###
 StationSchema.statics.removeByOsmIds = (ids, callback) ->
-  # Note: Calling Schema.remove directly doesn't fire pre-middleware methods,
-  # see https://github.com/LearnBoost/mongoose/issues/439
-  @remove 
-    osmId: $in: ids
-    callback
+  Station.findByOsmIds ids, (err, stations) ->
+    return callback err if err?
+    lastIndex = stations.length - 1
+    stations.forEach (s, i) ->
+      s.remove (err) ->
+        return callback err if err?
+        # Callback after final remove succeeds.
+        if i == lastIndex
+          callback null, stations.length
 
-StationSchema.statics.findByOsmIds = (ids, callback) ->
+StationSchema.statics.findByOsmIds = (ids, fields..., callback) ->
   @find 
     osmId: $in: ids
+    fields[0]
     callback
 
 
