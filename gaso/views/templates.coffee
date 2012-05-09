@@ -79,6 +79,20 @@ script type: 'text/template', id: 'user-settings-page', ->
     partial 'navigation'
 
 
+# Search page
+script type: 'text/template', id: 'search-page', ->
+  header 'data-role': 'header', ->
+    h1 'Station search'
+  div 'data-role': 'content', ->
+    form class: 'ui-body-b', ->
+      h2 'Please type in an address.'
+      label 'for': 'search', 'Find stations near'
+      input 'type': 'search', 'name': 'address', 'id': 'field-address'
+      button 'type': 'submit', 'GO'
+  gasofooter ->
+    partial 'navigation'
+
+
 # Station details page -template
 script type: 'text/template', id: 'station-details', ->
   header 'data-role': 'header', ->

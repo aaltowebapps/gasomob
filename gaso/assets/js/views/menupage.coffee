@@ -5,6 +5,7 @@ class Gaso.MenuPage extends Backbone.View
   constructor: (@user) ->
     @template = _.template Gaso.util.getTemplate 'menu-page'
     @setElement $('<div id="page-menu"/>')
+    @transition = 'flip'
 
   render: (eventName) ->
     $(@el).html @template()
