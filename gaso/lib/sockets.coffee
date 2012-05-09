@@ -50,10 +50,6 @@ class Sync
       near.push data.radius / 6371
 
       # TODO Simplify interface by moving actual query to some common model library
-      # TODO what's wrong with spatial queries, not getting results...?
-      # mongo: db.stations.find({"location": {"$near" : [24.93824, 60.169812, 10/6371], }})
-      # n = 10
-      # coffee: db.Station.find location: $near: [24.93824, 60.169812, n/6371], (err, docs) -> console.log docs
       console.log "find near", near
       db.Station.find
         location:

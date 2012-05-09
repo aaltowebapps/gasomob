@@ -9,6 +9,7 @@ mock   = require '../dev/mockdata'
 # Helper variables.
 # console.log util.inspect(foobar, true, null, true)
 stationAmt = 0
+mockStationDBIds = mock.stations.map (s) -> s._id
 
 debug = (args...) ->
   console.log "DEBUG:", args...
@@ -34,20 +35,19 @@ api =
 
   saveAllMockPrices: ->
     lastIndex = mock.prices.length-1
-    stationIds = mock.stations.map (s) -> s._id
     mock.prices.forEach (price, i) =>
       price.save (err) =>
         return @callback err if err?
         if i == lastIndex
-          db.FuelPrice.findByStationIds(stationIds).count @callback
+          db.FuelPrice.findByStationIds(mockStationDBIds).count @callback
     return
-
 
 ###
   TESTS SETUP
 ###
 vows
   .describe('Setup before actual tests')
+
   .addBatch
     # Empty mock stations and related data from database before starting.
     'cleanup mock stations':
@@ -57,6 +57,7 @@ vows
       'cleaning up stations done': (err, count) ->
         assert.isNull err
         # debug "Removed #{count} stations during cleanup"
+
   .addBatch
     'after removing mock stations':
       topic: ->
@@ -74,6 +75,7 @@ vows
 ###
 vows
   .describe('Stations creation')
+
   .addBatch
     'before testing saving':
       topic: ->
@@ -111,12 +113,22 @@ vows
   .export module
 
 vows
-
   .describe('Prices creation')
+
   .addBatch
     'when we create prices for mock stations':
       topic: api.saveAllMockPrices
       "we'll have 17 prices for our mock stations saved in the DB": (err, count) ->
         assert.isNull err
         assert.equal count, 17
+
+  .addBatch
+    'when we search latest prices for station #1':
+      topic: ->
+        db.FuelPrice.searchLatestPrices [mockStationDBIds[1]], @callback
+        return
+      "We'll get an array of prices: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
+        assert.isNull err
+        assert.equals prices.length, 3
+
   .export module

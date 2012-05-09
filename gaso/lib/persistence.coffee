@@ -71,6 +71,53 @@ FuelPriceSchema.statics.findByStationIds = (stationDBids, fields..., callback) -
     callback
 
 
+mapLatestPricesFunc = -> 
+  mapped =
+    price: @value 
+    date: @date
+    count: 1
+  emit @_station, data: [
+    type: @type
+    pricedata: mapped
+  ]
+
+test = 0
+reduceLatestPricesFunc = (station, prices) -> 
+  reduced = data: []
+  latestOfType = {}
+
+  prices.forEach (price, i) ->
+    p = price.data[0]
+    _type = latestOfType[p.type]
+    if not _type 
+      reduced.data.push p
+      latestOfType[p.type] =
+        date: p.date
+        index: reduced.data.length-1
+    else
+      ritem = reduced.data[_type.index]
+      pd = ritem.pricedata
+      if _type.date < p.date
+        pd.price = p.price
+        pd.date = p.date
+        _type.date = p.date
+      pd.count = pd.count+1
+
+  return reduced
+  
+
+
+FuelPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callback) ->
+  mf = mapLatestPricesFunc.toString()
+  rf = reduceLatestPricesFunc.toString()
+  # TODO sort the prices, do incremental map-reduce for improved performance
+  FuelPrice.collection.mapReduce mf, rf, { out : "latestprices" }, (err, result) -> 
+    return callback err if err?
+    # TODO query the latestprices for actual collection
+    console.log "Map reduce result", err, result
+    callback null, result
+
+
 ###
   COMMENT SCHEMA
 ###
