@@ -40,6 +40,9 @@ class Gaso.CommentListView extends Backbone.View
     else
       @$list.html itemsHTML.join('')
 
+    # Tidy comment post dates
+    @$el.find("time.timeago").timeago()
+
   bindEvents: ->
     @$list.on 'create', @onListInitialized
     @collection.on 'reset', @onCollectionReset

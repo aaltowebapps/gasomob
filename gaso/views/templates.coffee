@@ -88,7 +88,7 @@ script type: 'text/template', id: 'search-page', ->
       h2 'Please type in an address.'
       label 'for': 'search', 'Find stations near'
       input 'type': 'search', 'name': 'address', 'id': 'field-address'
-      button 'type': 'submit', 'GO'
+      button 'type': 'submit', 'GO!'
   gasofooter ->
     partial 'navigation'
 
@@ -184,7 +184,7 @@ script type: 'text/template', id: 'comment-list-item', ->
   p class: 'comment-author', ->
     '{{ userId }}'
   p class: 'comment-publish-date', ->
-    'Posted {{ date }}'
+    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
   p class: 'comment-content', -> 
     '{{ body }}'
 
