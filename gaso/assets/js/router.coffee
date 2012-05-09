@@ -97,7 +97,9 @@ class Gaso.AppRouter extends Backbone.Router
   refuel: (id) =>
     station = @stations.get(id)
     if station?
-      @changePage new Gaso.StationDetailsView(station, @user)
+      @changePage new Gaso.StationDetailsView(station, @user, @comments)
+      @comments.fetch
+        data: station.id
     else
       Gaso.log 'TODO Station not loaded, redirecting to listing for now'
       # TODO fetch station in the background and e.g. and change to page after callback.

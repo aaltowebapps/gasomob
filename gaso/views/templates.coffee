@@ -101,7 +101,8 @@ script type: 'text/template', id: 'station-details', ->
 
     input id: 'saveButton', type: 'submit', value: 'Save'
 
-
+    div id: 'comments'
+      
   gasofooter ->
     partial 'navigation'
 
@@ -143,14 +144,10 @@ script type: 'text/template', id: 'list-page', ->
 ###
 
 script type: 'text/template', id: 'comments-list', ->
+  h3 'Comments'
+  
   div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
-    h3 'Comments ({{ comments.length }})'
-    #text '<% if (comments.length != 0) { %>'
-    div class: 'comment', ->
-      ul 'id':'comments', ->
-    #text '<% } else { %>'
-    # TODO Something to display when comment count is zero
-    #text '<% } %>'
+    ul id: 'list-comments'
 
     h4 'Add comment'
 
@@ -169,15 +166,14 @@ script type: 'text/template', id: 'comments-list', ->
 
 # Station comment
 script type: 'text/template', id: 'comment-list-item', ->
-  li ->
-    span class: 'comment-title', ->
-      h4 '{{ title }}'
-    span class: 'comment-author', ->
-      '{{ userId }}'
-    span class: 'comment-publish-date', ->
-      '{{ publishDate }}'
-    span class: 'comment-content', -> 
-      '{{ comment }}'
+  span class: 'comment-title', ->
+    h4 '{{ title }}'
+  span class: 'comment-author', ->
+    '{{ userId }}'
+  span class: 'comment-publish-date', ->
+    '{{ date }}'
+  span class: 'comment-content', -> 
+    '{{ body }}'
 
 # Price-edit for station-details form
 script type: 'text/template', id: 'price-edit', ->
