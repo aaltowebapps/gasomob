@@ -22,7 +22,11 @@ class Sync
 
   getComments: (data, callback) ->
     console.log "Get comments by", data
-    list = mock.comments;
+    list = []
+    list.comments.forEach (c) ->
+      co = c.toJSON()
+      co.date = co.date.getTime()
+      list.push co
     callback null, list
 
   ###
