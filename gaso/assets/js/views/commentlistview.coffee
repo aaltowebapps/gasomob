@@ -3,24 +3,21 @@ Comment list
 ###
 class Gaso.CommentListView extends Backbone.View
 
-  events:
-    'click #fueltypes button' : 'onSelectFuelType'
-
   constructor: (@collection, @user) ->
-    @template = _.template Gaso.util.getTemplate 'station-details'
+    @template = _.template Gaso.util.getTemplate 'comments-list'
     # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
-    @setElement $('<div id="station-details"/>')
+    @setElement $('<div id="comments-list"/>')
 
 
   render: (eventName) ->
-    @$el.html @template @collection.toJSON()
+    collection = @collection.toJSON()
+    _.extend collection,
+      curuser: @user.toJSON()
+    @$el.html @template collection
+    
     @$list = @$el.find 'ul#list-comments'
     @renderList()
     @bindEvents()
-    
-    # Note: delegateEvents() is called automatically once in View constructor, however since we re-use the list-page
-    # we must make sure that event listeners are bound again when we re-visit the list page.
-    @delegateEvents()
 
     return @
 
@@ -30,8 +27,8 @@ class Gaso.CommentListView extends Backbone.View
     @listItems = []
     # Create list items from stations.
     itemsHTML = []
-    for station in @collection.models
-      $temp = $('<div/>').append @addStationListItem(station).$el
+    for comment in @collection.models
+      $temp = $('<div/>').append @addCommentListItem(comment).$el
       itemsHTML.push $temp.html()
 
     if refresh
@@ -45,16 +42,9 @@ class Gaso.CommentListView extends Backbone.View
   bindEvents: ->
     @collection.on 'add', @onCollectionAdd
 
-    # Updates top-page fuel type selection buttons to reflect current user choice. Initial selection must be set
-    # after jQM has enhanced the page content, therefore we listen to 'pagebeforeshow' event.
-    @$el.on 'pagebeforeshow', @setActiveFuelTypeButton
-    @user.on 'change:myFuelType', @onUserFuelTypeChanged
-
   close: =>
     @off()
-    @$el.off 'pagebeforeshow'
     @collection.off 'add', @onCollectionAdd
-    @user.off 'change:myFuelType', @onUserFuelTypeChanged
     @closeListItems()
 
   closeListItems: =>
@@ -62,29 +52,13 @@ class Gaso.CommentListView extends Backbone.View
       for item in @listItems
         item.close()
 
-  setActiveFuelTypeButton: =>
-    currentFuelType = @user.get 'myFuelType'
-    $btns = @$el.find("#fueltypes .ui-btn")
-    $btnToActivate = $btns.filter(":has([data-fueltype='#{currentFuelType}'])")
-    $btns.not($btnToActivate).removeClass('ui-btn-active')
-    $btnToActivate.addClass('ui-btn-active')
-
-  onUserFuelTypeChanged: =>
-    @setActiveFuelTypeButton()
-    newType = @user.get 'myFuelType'
-    @renderList true
-
-  onSelectFuelType: (event) ->
-    @user.set 'myFuelType', $(event.target).attr('data-fueltype')
-    @user.save()
-
   onCollectionAdd: (data) =>
     console.log "Add comment to comment view", @, data
-    item = @addStationListItem data
+    item = @addCommentListItem data
     @$list.append item.el
     @$list.listview 'refresh'
 
-  addStationListItem: (station) =>
-    newItem = new Gaso.StationListItem model: station
+  addCommentListItem: (comment) =>
+    newItem = new Gaso.CommentListItem model: comment
     @listItems.push newItem
     newItem.render()
