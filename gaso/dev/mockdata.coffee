@@ -3,6 +3,7 @@ db = require '../lib/persistence'
 dates = require 'datejs'
 
 prices = []
+comments = []
 stations = []
 
 # Helper stuff
@@ -18,6 +19,23 @@ addPrice = (station, type, value, date) ->
   p.date = date or now()
 
   prices.push new db.FuelPrice p
+
+# Mock comments.
+
+c1 = new db.Comment
+  by : ''
+  title : 'Lorem'
+  body : '''
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  '''
+  date : now().addDays -1
+
+comments.push c1
 
 # Define mock stations.
 
@@ -79,5 +97,6 @@ addPrice s3, '95E10', 1.4, now().addDays -20
 addPrice s3, 'Diesel', 1.4
 stations.push s3
 
+exports.comments = comments
 exports.stations = stations
 exports.prices = prices
