@@ -188,26 +188,27 @@ script type: 'text/template', id: 'price-edit', ->
 script type: 'text/template', id: 'station-list-item', ->
   a 'href' : '#stations/{{ osmId }}/refuel', ->
       # TODO set some generic image if brand is not set?
-    text '<% if (!brand) { brand = "question"; } %>'
-    img src: "../images/stationlogos/{{ brand }}_100.png"
+    #text '<% if (!brand) { brand = "question"; } %>'
+    #img src: "../images/stationlogos/{{ brand }}_100.png"
     # alternative approach:
-    # span class: 'ui-icon ui-icon-station ui-icon-{{ brand }}'
-
-    # TODO Improve price rendering, it is a bit clumsy to have this much logic here in the template?
-    text '<% _ftype = Gaso.app.router.user.get("myFuelType"); %>'
-    text '<% _priceToDisplay = _.find(prices, function(p) {return p.type === _ftype}).value %>'
-    text '<% if (_priceToDisplay != null) { _priceToDisplay = _ftype + ": " + _priceToDisplay + " &euro;" } %>'
-    h1 class: 'price', '{{ _priceToDisplay }}'
+    span class: 'ui-icon ui-icon-station ui-icon-{{ brand }}'
     
-    p class: "station-info", ->
+    p class: "station-info station-info-name", ->
       span '{{ name }}'
+      
+    p class: "station-info station-info-address", ->
       text '<% if (address.street && address.city) { %>'
       span ' {{ address.street }}, {{ address.city }}'
       text '<% } %>'
-
-    div class: "ui-li-aside distance-col", ->
-      h2 class: 'distance', ->
-        conditionalStationDistance leaveOpen: true
-        text '<% } else { %>'
-        text 'N/A'
-        text '<% } %>'
+      
+    p class: "station-info station-info-distance", ->
+      conditionalStationDistance leaveOpen: true
+      text '<% } else { %>'
+      text 'N/A'
+      text '<% } %>'
+      
+    # TODO Improve price rendering, it is a bit clumsy to have this much logic here in the template?
+    text '<% _ftype = Gaso.app.router.user.get("myFuelType"); %>'
+    text '<% _priceToDisplay = _.find(prices, function(p) {return p.type === _ftype}).value %>'
+    text '<% if (_priceToDisplay != null) { _priceToDisplay = _priceToDisplay + " &euro; (" + _ftype + ")" } %>'
+    p class: 'station-info station-info-price', '{{ _priceToDisplay }}'
