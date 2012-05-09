@@ -23,6 +23,7 @@ class Sync
   getComments: (data, callback) ->
     console.log "Get comments by", data
     list = mock.comments;
+    callback(null, list)
 
   ###
     getStations()

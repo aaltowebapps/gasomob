@@ -20,15 +20,15 @@ class Gaso.StationDetailsView extends Backbone.View
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
-    station = @station.toJSON()
-    _.extend station,
-      curuser: @user.toJSON()
-    @$el.html @template station
+    @$el.html @template @station.toJSON()
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     new Gaso.StationMarker(@station, @map).render()
 
-    #@commentsView = new Gaso.CommentListView(@comments, @user).render()
+    # Render comments
+    @commentsView = new Gaso.CommentListView(@comments, @user).render()
+    @$comments = @$el.find '#comments'
+    @$comments.append(@commentsView.el)
 
     @$prices = @$el.find '#prices'
 
