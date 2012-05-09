@@ -6,7 +6,7 @@ class Gaso.StationDetailsView extends Backbone.View
     "click #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
 
-  constructor: (@model, @user) ->
+  constructor: (@station, @user, @comments) ->
     @template = _.template Gaso.util.getTemplate 'station-details'
     @setElement $('<div id="station-details"/>')
   
@@ -14,23 +14,23 @@ class Gaso.StationDetailsView extends Backbone.View
     @$el.off 'pageshow.stationdetailsview'
     @$el.on 'pageshow.stationdetailsview', (event) =>
       google.maps.event.trigger @map, 'resize'
-      @map.setCenter new google.maps.LatLng(@model.get('location')[1], @model.get('location')[0])
+      @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
   
   render: (eventName) -> 
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
-    station = @model.toJSON()
+    station = @station.toJSON()
     _.extend station,
       curuser: @user.toJSON()
     @$el.html @template station
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
-    new Gaso.StationMarker(@model, @map).render()
+    new Gaso.StationMarker(@station, @map).render()
 
     @$prices = @$el.find '#prices'
 
-    for price in @model.get 'prices'
+    for price in @station.get 'prices'
       @addPriceEdit price
     
     @bindEvents()
@@ -44,11 +44,11 @@ class Gaso.StationDetailsView extends Backbone.View
   savePrices: ->
     for input in @priceEdits
       input.updateModel()
-    @model.save()
+    @station.save()
 
   close: =>
     @off
-    #@model.off ...
+    #@station.off ...
     for input in @priceEdits
       input.close()
 
@@ -58,7 +58,7 @@ class Gaso.StationDetailsView extends Backbone.View
       animate: false
     settings = _.extend {}, defaults, options
 
-    newEdit = new Gaso.StationPriceEdit @model, price
+    newEdit = new Gaso.StationPriceEdit @station, price
     @priceEdits.push newEdit
     $edit = newEdit.render().$el
 

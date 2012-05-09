@@ -101,6 +101,9 @@ script type: 'text/template', id: 'station-details', ->
 
     input id: 'saveButton', type: 'submit', value: 'Save'
 
+    div id: 'comments', ->
+      h3 'Comments'
+      ul id: 'list-comments', ->
 
   gasofooter ->
     partial 'navigation'
@@ -144,10 +147,8 @@ script type: 'text/template', id: 'list-page', ->
 
 script type: 'text/template', id: 'comments-list', ->
   div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
-    h3 'Comments ({{ comments.length }})'
+    
     #text '<% if (comments.length != 0) { %>'
-    div class: 'comment', ->
-      ul 'id':'comments', ->
     #text '<% } else { %>'
     # TODO Something to display when comment count is zero
     #text '<% } %>'

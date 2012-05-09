@@ -8,6 +8,8 @@ db = require './persistence'
 class Sync
 
   constructor: (socket) ->
+    socket.on 'comments:read', @getComments
+
     # stations:read is called when we .fetch() our collection in the client-side router.
     socket.on 'stations:read', @getStations
 
@@ -18,6 +20,9 @@ class Sync
     # station:create is called when we .save() a new station model that doesn't have an id yet on client-side.
     socket.on 'station:create', @createStation
 
+  getComments: (data, callback) ->
+    console.log "Get comments by", data
+    list = mock.comments;
 
   ###
     getStations()
