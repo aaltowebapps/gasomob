@@ -2,7 +2,7 @@
   Coffeekup template for default page layout.
 ###
 productionEnv = @config.env.production
-templatesversion = @config.version
+templatesversion = "'#{@config.version}'" if productionEnv
 
 # Format Coffeekup's html-output to human-readable form with indents and line breaks.
 @.format = true unless productionEnv
@@ -73,7 +73,7 @@ html ->
     else
       script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
 
-    script -> "productionEnv = #{productionEnv}; tmplVer = '#{templatesversion}';"
+    script -> "productionEnv = #{productionEnv}; tmplVer = #{templatesversion};"
     
     # Include rest of own scripts, ie. other but 'mobileinit'
     text assets.js 'application' # See /assets/application.coffee

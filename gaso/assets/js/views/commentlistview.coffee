@@ -16,13 +16,14 @@ class Gaso.CommentListView extends Backbone.View
     @$el.html @template collection
     
     @$list = @$el.find 'ul#list-comments'
-    @renderList()
+    @listInitialized = false
     @bindEvents()
+    @renderList()
 
     return @
 
   renderList: (refresh) =>
-    Gaso.log "Render comments", @collection
+    Gaso.log "Render comments", @collection, @collection.models.length
     @closeListItems()
     @listItems = []
     # Create list items from stations.
@@ -34,29 +35,32 @@ class Gaso.CommentListView extends Backbone.View
     if refresh
       @$list.fadeOut =>
         @$list.html itemsHTML.join('')
-        @$list.listview 'refresh'
+        @$list.listview 'refresh' if @listInitialized
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
 
   bindEvents: ->
-    @collection.on 'add', @onCollectionAdd
+    @$list.on 'create', @onListInitialized
+    @collection.on 'reset', @onCollectionReset
+
+  onListInitialized: =>
+    Gaso.log "Comments list initialized by jQM"
+    @listInitialized = true
+
+  onCollectionReset: =>
+    @renderList true
 
   close: =>
     @off()
-    @collection.off 'add', @onCollectionAdd
+    @$list.off 'create', @onListInitialized
+    @collection.off 'reset', @onCollectionReset
     @closeListItems()
 
   closeListItems: =>
     if @listItems?
       for item in @listItems
         item.close()
-
-  onCollectionAdd: (data) =>
-    console.log "Add comment to comment view", @, data
-    item = @addCommentListItem data
-    @$list.append item.el
-    @$list.listview 'refresh'
 
   addCommentListItem: (comment) =>
     newItem = new Gaso.CommentListItem model: comment

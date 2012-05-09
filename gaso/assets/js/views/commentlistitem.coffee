@@ -8,6 +8,7 @@ class Gaso.CommentListItem extends Backbone.View
 
 
   render: (eventName) ->
+    console.log "render comment", @, Gaso.util.getTemplate('comment-list-item')
     @$el.html @template @model.toJSON()
     @bindEvents()
     return @

@@ -166,15 +166,14 @@ script type: 'text/template', id: 'comments-list', ->
 
 # Station comment
 script type: 'text/template', id: 'comment-list-item', ->
-  li ->
-    span class: 'comment-title', ->
-      h4 '{{ title }}'
-    span class: 'comment-author', ->
-      '{{ userId }}'
-    span class: 'comment-publish-date', ->
-      '{{ publishDate }}'
-    span class: 'comment-content', -> 
-      '{{ comment }}'
+  span class: 'comment-title', ->
+    h4 '{{ title }}'
+  span class: 'comment-author', ->
+    '{{ userId }}'
+  span class: 'comment-publish-date', ->
+    '{{ date }}'
+  span class: 'comment-content', -> 
+    '{{ body }}'
 
 # Price-edit for station-details form
 script type: 'text/template', id: 'price-edit', ->
