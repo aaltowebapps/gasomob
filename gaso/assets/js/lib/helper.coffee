@@ -56,14 +56,18 @@ class Gaso.Helper
         stationdata = feature.properties
         # Ignore stations we have already
         unless collection.get(stationdata.osm_id)?
+          # Address data might be missing completely for many stations, but lets use it if it exists.
+          sStreet = stationdata['addr:street']
+          sNum = stationdata['addr:housenumber']
           collection.add
             osmId: stationdata.osm_id
             name: stationdata.name or "Unknown"
-            # What are these? There's no address data readily in CM response afaik. --Markus
-            # street: stationdata['addr:street'].concat " ", stationdata['addr:housenumber']
-            # city: stationdata['addr:city']
-            # zip: stationdata['addr:postcode']
-            # country: stationdata['addr:country']
+            address: {
+              street: "#{sStreet} #{sNum}" if sNum and sStreet
+              city: stationdata['addr:city']
+              zip: stationdata['addr:postcode']
+              country: stationdata['addr:country']
+            }
             location: [
               # centroid is in the order [lat, lon], we require [lon, lat].
               feature.centroid.coordinates[1] 
