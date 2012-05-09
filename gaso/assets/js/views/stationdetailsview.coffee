@@ -5,6 +5,8 @@ class Gaso.StationDetailsView extends Backbone.View
   events:
     "click #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
+    'click #small-map-canvas': 'openLargeMap'
+    'tap #small-map-canvas': 'openLargeMap'
 
   constructor: (@model, @user) ->
     @template = _.template Gaso.util.getTemplate 'station-details'
@@ -26,7 +28,8 @@ class Gaso.StationDetailsView extends Backbone.View
     @$el.html @template station
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
-    new Gaso.StationMarker(@model, @map).render()
+    marker = new Gaso.StationMarker(@model, @map).render()
+    google.maps.event.clearInstanceListeners(marker.marker)
 
     @$prices = @$el.find '#prices'
 
@@ -40,6 +43,9 @@ class Gaso.StationDetailsView extends Backbone.View
   getMapSettings: =>
     zoom: 16
     mapTypeId: google.maps.MapTypeId.ROADMAP
+    disableDefaultUI: true
+    draggable: false
+    disableDoubleClickZoom: true
     
   savePrices: ->
     for input in @priceEdits
@@ -79,3 +85,6 @@ class Gaso.StationDetailsView extends Backbone.View
       $select.find(':selected').remove()
       $select.val('').selectmenu('refresh')
       @addPriceEdit p, animate: true
+      
+  openLargeMap: ->
+    Gaso.app.router.navigate "stationmap/#{ @model.id }", trigger: true
