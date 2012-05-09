@@ -28,6 +28,8 @@ class Gaso.StationDetailsView extends Backbone.View
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     new Gaso.StationMarker(@station, @map).render()
 
+    #@commentsView = new Gaso.CommentListView(@comments, @user).render()
+
     @$prices = @$el.find '#prices'
 
     for price in @station.get 'prices'
@@ -51,6 +53,7 @@ class Gaso.StationDetailsView extends Backbone.View
     #@station.off ...
     for input in @priceEdits
       input.close()
+    @commentsView.close()
 
 
   addPriceEdit: (price, options) =>

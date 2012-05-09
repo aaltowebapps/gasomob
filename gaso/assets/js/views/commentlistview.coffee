@@ -25,9 +25,9 @@ class Gaso.CommentListView extends Backbone.View
     return @
 
   renderList: (refresh) =>
+    Gaso.log "Render comments", @collection
     @closeListItems()
     @listItems = []
-    console.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
     # Create list items from stations.
     itemsHTML = []
     for station in @collection.models
@@ -79,6 +79,7 @@ class Gaso.CommentListView extends Backbone.View
     @user.save()
 
   onCollectionAdd: (data) =>
+    console.log "Add comment to comment view", @, data
     item = @addStationListItem data
     @$list.append item.el
     @$list.listview 'refresh'
