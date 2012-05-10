@@ -72,51 +72,76 @@ FuelPriceSchema.statics.findByStationIds = (stationDBids, fields..., callback) -
 
 
 mapLatestPricesFunc = -> 
-  mapped =
-    price: @value 
-    date: @date
-    count: 1
+  # Map/Reduce doesn't support Array as reduction result, so we define an object which has array in it.
+  # TODO can we make incremental reduce work with this structure?
   emit @_station, data: [
     type: @type
-    pricedata: mapped
+    pricedata :
+      price : @value 
+      date  : @date
+      count : 1
   ]
 
-test = 0
 reduceLatestPricesFunc = (station, prices) -> 
   reduced = data: []
   latestOfType = {}
 
   prices.forEach (price, i) ->
-    p = price.data[0]
-    _type = latestOfType[p.type]
-    if not _type 
-      reduced.data.push p
-      latestOfType[p.type] =
-        date: p.date
-        index: reduced.data.length-1
+    currPrice     = price.data[0]
+    currPriceData = currPrice.pricedata
+    latestPrice   = latestOfType[currPrice.type]
+    if not latestPrice
+      # This type of price hasn't been recorded yet into reduced set, so add it as is.
+      reduced.data.push currPrice
+      latestOfType[currPrice.type] =
+        date  : currPriceData.date
+        index : reduced.data.length - 1
     else
-      ritem = reduced.data[_type.index]
-      pd = ritem.pricedata
-      if _type.date < p.date
-        pd.price = p.price
-        pd.date = p.date
-        _type.date = p.date
-      pd.count = pd.count+1
+      priceInReducedSet = reduced.data[latestPrice.index]
+      reducedPriceData  = priceInReducedSet.pricedata
 
+      reducedPriceData.count = reducedPriceData.count + 1
+      if latestPrice.date < currPriceData.date
+        reducedPriceData.price = currPriceData.price
+        reducedPriceData.date  = currPriceData.date
+        latestPrice.date       = currPriceData.date
+        
   return reduced
   
 
 
 FuelPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callback) ->
-  mf = mapLatestPricesFunc.toString()
-  rf = reduceLatestPricesFunc.toString()
-  # TODO sort the prices, do incremental map-reduce for improved performance
-  FuelPrice.collection.mapReduce mf, rf, { out : "latestprices" }, (err, result) -> 
+  mapFunc = mapLatestPricesFunc.toString()
+  reduceFunc = reduceLatestPricesFunc.toString()
+  # TODO do incremental map-reduce (and sorting/limiting if needed) for improved performance, along these lines:
+  ###
+  options =
+    # Store prevStart to alternate document in the DB
+    query: date: $gte: prevStart
+    # sort: date: -1
+    out: reduce: "latestprices"
+  ###
+  options =
+    out : "latestprices"
+  FuelPrice.collection.mapReduce mapFunc, reduceFunc, options, (err, result) -> 
     return callback err if err?
     # TODO query the latestprices for actual collection
-    console.log "Map reduce result", err, result
-    callback null, result
+    LatestPrice.find
+      _id: $in: stationDBids
+      fields[0]
+      callback
 
+
+###
+  Extension to FuelPrice through map/reduce -> LatestPrice.
+###
+LatestPriceSchema = new Schema
+  _id  :
+    type      : ObjectId
+    ref       : 'Station'
+    index     : true
+  value:
+    data: []
 
 ###
   COMMENT SCHEMA
@@ -138,7 +163,7 @@ CommentSchema = new Schema
 ###
 StationSchema = new Schema
   osmId     : 
-    type      : Number
+    type      : String
     unique    : true # index and require uniqueness
   name      : String
   brand     : String
@@ -200,6 +225,8 @@ StationSchema.pre 'set', (next, path, val, type) ->
 StationSchema.statics.removeByOsmIds = (ids, callback) ->
   Station.findByOsmIds ids, (err, stations) ->
     return callback err if err?
+    # Return already if no stations found.
+    return callback null, [] unless stations.length
     lastIndex = stations.length - 1
     stations.forEach (s, i) ->
       s.remove (err) ->
@@ -218,13 +245,18 @@ StationSchema.statics.findByOsmIds = (ids, fields..., callback) ->
 
 
 # Define models
-User      = mongoose.model 'User', UserSchema
-Comment   = mongoose.model 'Comment', CommentSchema
-Station   = mongoose.model 'Station', StationSchema
-FuelPrice = mongoose.model 'FuelPrice', FuelPriceSchema
+User        = mongoose.model 'User', UserSchema
+Comment     = mongoose.model 'Comment', CommentSchema
+Station     = mongoose.model 'Station', StationSchema
+FuelPrice   = mongoose.model 'FuelPrice', FuelPriceSchema
+LatestPrice = mongoose.model 'LatestPrice', LatestPriceSchema
 
 # Export models
 exports.User      = User
 exports.Comment   = Comment
 exports.Station   = Station
 exports.FuelPrice = FuelPrice
+
+# Exports for testing
+exports._test =
+  reduceLatestPricesFunc: reduceLatestPricesFunc

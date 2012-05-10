@@ -22,7 +22,18 @@ addPrice = (station, type, value, date) ->
 
 # Mock comments.
 
-c1 = new db.Comment
+c = new db.Comment
+  by : ''
+  title : 'Lipsum'
+  body : '''
+  Ten years ago a crack commando unit was sent to prison by a military court for a crime they didn't commit. 
+  These men promptly escaped from a maximum security stockade to the Los Angeles underground. Today, still 
+  wanted by the government, they survive as soldiers of fortune. If you have a problem and no one else can 
+  help, and if you can find them, maybe you can hire the A-team.
+  '''
+  date : now().addMinutes -3
+comments.push c
+c = new db.Comment
   by : ''
   title : 'Lorem'
   body : '''
@@ -34,13 +45,25 @@ c1 = new db.Comment
   proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   '''
   date : now().addDays -1
-
-comments.push c1
+comments.push c
+c = new db.Comment
+  by : ''
+  title : 'Bacon!'
+  body : '''
+  Tail short loin shankle leberkas biltong turducken, ball tip capicola ham ground round.
+  Pig rump sirloin, chuck tongue tri-tip pork belly ribeye andouille speck capicola. 
+  Frankfurter kielbasa tri-tip pancetta, cow brisket ribeye meatloaf pork capicola pig rump 
+  short loin flank. Frankfurter tenderloin beef, corned beef capicola beef ribs sausage. 
+  Chicken pancetta bresaola, meatball bacon meatloaf sausage speck brisket chuck t-bone 
+  capicola tail tongue. Sausage andouille short ribs pork belly swine prosciutto.
+  '''
+  date : now().addDays -10
+comments.push c
 
 # Define mock stations.
 
 s1 = new db.Station
-  osmId    : 1
+  osmId    : 'a'
   name     : 'Testiasema'
   brand    : 'abc'
   address:
@@ -60,8 +83,8 @@ stations.push s1
 
 
 s2 = new db.Station
-  osmId    : 2
-  name     : 'Toinen mesta'
+  osmId    : 'b'
+  name     : 'Mesta #1'
   brand    : 'nesteoil'
   address:
     country  : 'Finland'
@@ -80,8 +103,8 @@ stations.push s2
 
 
 s3 = new db.Station
-  osmId    : 3
-  name     : 'Kolmas mesta'
+  osmId    : 'c'
+  name     : 'Another mesta'
   brand    : 'shell'
   address:
     country  : 'Finland'
@@ -97,6 +120,44 @@ addPrice s3, '95E10', 1.4, now().addDays -20
 addPrice s3, 'Diesel', 1.4
 stations.push s3
 
+
+pricesMappingResult = ->
+  arr = []
+  arr.push
+    data: [
+      type: '95E10'
+      pricedata:
+        price: 1.6
+        date: now().addDays -5
+        count: 1
+    ]
+  arr.push
+    data: [
+      type: '95E10'
+      pricedata:
+        price: 1.3
+        date: now().addDays -2
+        count: 1
+    ]
+  arr.push
+    data: [
+      type: '98E5'
+      pricedata:
+        price: 1.5
+        date: now().addDays -1
+        count: 1
+    ]
+  arr.push
+    data: [
+      type: '98E5'
+      pricedata:
+        price: 1.8
+        date: now().addDays -2
+        count: 1
+    ]
+  return ["mockstation", arr]
+
 exports.comments = comments
 exports.stations = stations
 exports.prices = prices
+exports.pricesMappingResult = pricesMappingResult()

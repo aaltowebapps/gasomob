@@ -12,7 +12,8 @@ stationAmt = 0
 mockStationDBIds = mock.stations.map (s) -> s._id
 
 debug = (args...) ->
-  console.log "DEBUG:", args...
+  for n in args
+    console.log "DEBUG:", util.inspect(n, true, null, true)
 
 # Helper methods and macros for testing.
 # See example at http://vowsjs.org/#-macros
@@ -45,14 +46,13 @@ api =
 ###
   TESTS SETUP
 ###
-vows
-  .describe('Setup before actual tests')
+vows.describe('Setup before actual tests')
 
   .addBatch
     # Empty mock stations and related data from database before starting.
     'cleanup mock stations':
       topic: ->
-        db.Station.removeByOsmIds [1, 2, 3], @callback
+        db.Station.removeByOsmIds ['a', 'b', 'c'], @callback
         return
       'cleaning up stations done': (err, count) ->
         assert.isNull err
@@ -61,7 +61,7 @@ vows
   .addBatch
     'after removing mock stations':
       topic: ->
-        db.FuelPrice.findByStationOsmIds [1, 2, 3], @callback
+        db.FuelPrice.findByStationOsmIds ['a', 'b', 'c'], @callback
         return
       'there should be no prices in the DB for our mock stations': (err, docs) ->
         assert.isNull err
@@ -73,8 +73,7 @@ vows
 ###
   STATIONS TESTS
 ###
-vows
-  .describe('Stations creation')
+vows.describe('Stations creation')
 
   .addBatch
     'before testing saving':
@@ -86,24 +85,19 @@ vows
         assert.isNotNull count
         stationAmt = count
 
-
   .addBatch
     'when we save new station (station #0)':
       topic: api.saveMockStation(0)
       'the amount of stations in the DB increases by one': assertCountChangesBy 1
 
-
-  .addBatch
-    'when we save the same station(station #0) again':
-      topic: api.saveMockStation(0)
-      'the DB still contains the same amount of stations': assertCountChangesBy 0
-
+      'when we save the same station(station #0) again':
+        topic: api.saveMockStation(0)
+        'the DB still contains the same amount of stations': assertCountChangesBy 0
 
   .addBatch
     'when we save a different station (station #1)':
       topic: api.saveMockStation(1)
       'the amount of stations in the DB increases by one': assertCountChangesBy 1
-
 
   .addBatch
     'when we save a different station (station #2)':
@@ -112,8 +106,8 @@ vows
 
   .export module
 
-vows
-  .describe('Prices creation')
+
+vows.describe('Prices creation')
 
   .addBatch
     'when we create prices for mock stations':
@@ -122,13 +116,45 @@ vows
         assert.isNull err
         assert.equal count, 17
 
+  .export module
+
+
+vows.describe('Map/reduce for latest prices')
+
   .addBatch
-    'when we search latest prices for station #1':
+    'when we test our latest prices reduction function':
       topic: ->
-        db.FuelPrice.searchLatestPrices [mockStationDBIds[1]], @callback
+        return db._test.reduceLatestPricesFunc.apply @, mock.pricesMappingResult
+
+      'The reduction works': (result) ->
+        assert.isNotNull result
+
+  .export module
+
+
+vows.describe('Prices search')
+
+  .addBatch
+    'when we search latest prices for all of our mock stations':
+      topic: ->
+        db.FuelPrice.searchLatestPrices mockStationDBIds, @callback
         return
-      "We'll get an array of prices: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
+
+      "we'll get an array of prices for 3 stations": (err, prices) ->
         assert.isNull err
-        assert.equals prices.length, 3
+        assert.equal prices.length, 3
+
+      "and latest prices for station #1 are: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
+        assert.isNull err
+        temp = prices.filter (s) -> s.id == mockStationDBIds[1].toString()
+        assert.equal temp.length, 1
+        s1Prices = temp[0]
+        assert.equal s1Prices.value.data.length, 3
+        s1Prices.value.data.forEach (price) ->
+          pdata = price.pricedata
+          switch price.type
+            when '95E10'  then assert.equal pdata.price, 1.3
+            when '98E5'   then assert.equal pdata.price, 1.8
+            when 'Diesel' then assert.equal pdata.price, 1.5
 
   .export module
