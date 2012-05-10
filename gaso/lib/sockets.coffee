@@ -30,6 +30,20 @@ class Sync
     callback null, list
 
   ###
+    Create and return a callback function for handling results from our persistence layer.
+    @param callback Callback function from socket.io that is called after we have data.
+  ###
+  syncStationsToClient: (callback) ->
+    return (err, stations) ->
+      return callback err if err?
+      list = [];
+      # TODO do another query for latest prices and append prices into stations data to return.
+      stations.forEach (station) ->
+        list.push station.toJSON()
+      console.log "Sync stations to client: ", list.map (s) -> s.osmId
+      callback null, list
+
+  ###
     getStations()
     @param data Data sent from client, expected values:
       point: [lon, lat]
@@ -37,33 +51,13 @@ class Sync
         OR
       bounds: [[lon, lat], [lon, lat]]
   ###
-  getStations: (data, callback) ->
-    list = [];
+  getStations: (data, callback) =>
     console.log "Get stations by", data
 
-
-    if data.point?
-
-      # MongoDB $near queries can be done in array form [lon, lat, distance_in_radians]
-      near = data.point
-      # Divide radius by average earth radius to get radians.
-      near.push data.radius / 6371
-
-      # TODO Simplify interface by moving actual query to some common model library
-      console.log "find near", near
-      db.Station.find
-        location:
-          $nearSphere: near
-        (err, result) ->
-          return callback err if err?
-          # TODO do another query for latest prices and append prices into stations data to return.
-          console.log "Query result", err, result
-          result.forEach (station) ->
-            list.push station.toJSON()
-          console.log "callback stations to client: ", list.map (s) -> s.osmId
-          callback(null, list)
+    if data.point? and data.radius?
+      db.Station.findNearPoint data.point, data.radius, @syncStationsToClient(callback)
     else if data.bounds?
-      console.log 'TODO do geospatial query of stations by bounds'
+      db.Station.findWithin data.bounds, @syncStationsToClient(callback)
     else
       console.log "Unsupported query for stations", data
       callback "Unsupported query #{data}"

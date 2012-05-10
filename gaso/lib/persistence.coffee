@@ -255,8 +255,41 @@ StationSchema.statics.findByOsmIds = (ids, fields..., callback) ->
     fields[0]
     callback
 
+###
+ @param point Array of coordinates ([lon,lat]).
+ @param radius Max distance from point (in kilometers).
+ @param fields... (optional) Fields to return.
+ @param callback (optional)
+###
+StationSchema.statics.findNearPoint = (point, radius, fields..., callback) ->
+  maxRadius = 1000
+  # Don't allow too wide queries.
+  if radius > maxRadius
+    callback "Maximum radius is #{maxRadius}."
+  # MongoDB $near queries can be done in array form [lon, lat, distance_in_radians]
+  near = point
+  # Divide radius by average earth radius to get radians.
+  near.push radius / 6371
+  q = Station.find {}, fields[0]
+  q.where location: $nearSphere: near
+  # Force maximum results
+  q.limit 100
+  q.run callback if callback?
+  return q
 
-
+###
+ @param box [ [lon,lat] , [lon,lat] ]
+ @param fields... (optional) Fields to return
+ @param callback (optional)
+###
+StationSchema.statics.findWithin = (box, fields..., callback) ->
+  # Don't allow too wide queries.
+  q = Station.find {}, fields[0]
+  q.where location: $within: $box: box
+  # Force maximum results
+  q.limit 100
+  q.run callback if callback?
+  return q
 
 # Define models
 User        = mongoose.model 'User', UserSchema
