@@ -52,6 +52,11 @@ class GeoLib
   ###
     UTILITY METHODS related to our geo libraries and other geo stuff.
   ###
+  gMapBoundsToArray: (gBounds) ->
+    sw = gBounds.getSouthWest()
+    ne = gBounds.getNorthEast()
+    return [ [sw.lng(), sw.lat()] , [ne.lng(), ne.lat()] ]
+
 
   gMapBoundsToCMBounds: (gBounds) ->
     cmSW = @gMapLatLongToCMLatLong gBounds.getSouthWest()

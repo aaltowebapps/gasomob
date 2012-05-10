@@ -284,8 +284,9 @@ StationSchema.statics.findNearPoint = (point, radius, fields..., callback) ->
 ###
 StationSchema.statics.findWithin = (box, fields..., callback) ->
   # Don't allow too wide queries.
-  q = Station.find {}, fields[0]
-  q.where location: $within: $box: box
+  q = Station.find
+    location: $within: $box: box
+    fields[0]
   # Force maximum results
   q.limit 100
   q.run callback if callback?

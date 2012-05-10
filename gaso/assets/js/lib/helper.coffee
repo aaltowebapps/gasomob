@@ -26,11 +26,11 @@ class Gaso.Helper
 
 
   #TODO not used yet
-  getStationsDataWithinBounds: =>
+  getStationsDataWithinBounds: (bounds) =>
     @stations.fetch
       add : true
       data:
-        bounds: @searchContext.get 'mapBounds'
+        bounds: bounds
 
 
   getStationsDataNearby: =>
@@ -40,11 +40,10 @@ class Gaso.Helper
       data:
         point: [userpos.lon, userpos.lat]
         radius: 10
-      success: (collection, response) ->
-        Gaso.log "stations received from our db", collection.toJSON()
 
 
   findStationsWithinGMapBounds: (mapBounds) ->
+    @getStationsDataWithinBounds Gaso.geo.gMapBoundsToArray mapBounds
     Gaso.geo.findFuelStations mapBounds, (data) =>
       convertCMDatatoStationData data, (station) =>
         @addStationToCollection station, update: false
