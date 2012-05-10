@@ -16,14 +16,13 @@ class Gaso.CommentListView extends Backbone.View
     @$el.html @template collection
     
     @$list = @$el.find 'ul#list-comments'
-    @listInitialized = false
     @bindEvents()
     @renderList()
 
     return @
 
   renderList: (refresh) =>
-    Gaso.log "Render comments", @collection, @collection.models.length
+    Gaso.log "Render comments list", @collection, @collection.models.length
     @closeListItems()
     @listItems = []
     # Create list items from stations.
@@ -35,7 +34,6 @@ class Gaso.CommentListView extends Backbone.View
     if refresh
       @$list.fadeOut =>
         @$list.html itemsHTML.join('')
-        @$list.listview 'refresh' if @listInitialized
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
@@ -44,19 +42,11 @@ class Gaso.CommentListView extends Backbone.View
     @$el.find("time.timeago").timeago()
 
   bindEvents: ->
-    @$list.on 'create', @onListInitialized
     @collection.on 'reset', @onCollectionReset
 
-  onListInitialized: =>
-    Gaso.log "Comments list initialized by jQM"
-    @listInitialized = true
-
-  onCollectionReset: =>
-    @renderList true
 
   close: =>
     @off()
-    @$list.off 'create', @onListInitialized
     @collection.off 'reset', @onCollectionReset
     @closeListItems()
 
@@ -64,6 +54,9 @@ class Gaso.CommentListView extends Backbone.View
     if @listItems?
       for item in @listItems
         item.close()
+
+  onCollectionReset: =>
+    @renderList true
 
   addCommentListItem: (comment) =>
     newItem = new Gaso.CommentListItem model: comment
