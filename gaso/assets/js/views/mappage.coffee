@@ -39,9 +39,14 @@ class Gaso.MapPage extends Backbone.View
 
     # Save new zoom level to user model when map zoom has changed.
     google.maps.event.addListener @map, 'zoom_changed', =>
-      @user.set 'mapZoom', @map.getZoom()
+      newZoom = @map.getZoom()
+      Gaso.log "Zoom level set to", newZoom
+
+      prevZoom = @user.get 'mapZoom'
+      @user.set 'mapZoom', newZoom
       @user.save()
-      Gaso.log "Zoom level set to", @user.get 'mapZoom'
+      if newZoom < prevZoom 
+        @findNearbyStationsThrottled()()
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
     ###
@@ -56,12 +61,14 @@ class Gaso.MapPage extends Backbone.View
       coords = @user.get 'mapCenter'
       # return object in google.maps options format, see https://developers.google.com/maps/documentation/javascript/reference#MapOptions
       @map.setCenter new google.maps.LatLng(coords.lat, coords.lon)
+      @findNearbyStationsThrottled()()
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
     @user.on 'reCenter', @changeMapLocation
 
   close: =>
+    google.maps.event.clearInstanceListeners @map
     @off()
     @stations.off 'add', @addStationMarker
     @user.off 'reCenter', @changeMapLocation
