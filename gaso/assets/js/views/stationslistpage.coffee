@@ -13,9 +13,9 @@ class Gaso.StationsListPage extends Backbone.View
 
 
   render: (eventName) ->
+    @pageInitialized = false
     @$el.html @template @collection.toJSON()
     @$list = @$el.find 'ul#list-stations'
-    @listInitialized = false
     @bindEvents()
     @renderList()
     # TODO tried to get rid of FOUC with slider, when moving from map page to list page. no success yet
@@ -50,13 +50,13 @@ class Gaso.StationsListPage extends Backbone.View
     if refresh
       @$list.fadeOut =>
         @$list.html itemsHTML.join('')
-        @$list.listview 'refresh' if @listInitialized
+        @$list.listview 'refresh' if @pageInitialized
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
 
   bindEvents: ->
-    @$list.on 'create', @onListInitialized
+    @$el.on 'pageinit', @onPageInit
     @collection.on 'add', @onCollectionAdd
     @collection.on 'reset', @onCollectionReset
 
@@ -67,7 +67,7 @@ class Gaso.StationsListPage extends Backbone.View
 
   close: =>
     @off()
-    @$list.off 'create', @onListInitialized
+    @$el.off 'pageinit', @onPageInit
     @$el.off 'pagebeforeshow'
     @collection.off 'add', @onCollectionAdd
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
@@ -85,9 +85,9 @@ class Gaso.StationsListPage extends Backbone.View
     $btns.not($btnToActivate).removeClass('ui-btn-active')
     $btnToActivate.addClass('ui-btn-active')
 
-  onListInitialized: =>
-    Gaso.log "Stations list initialized by jQM"
-    @listInitialized = true
+  onPageInit: =>
+    Gaso.log "Stations page initialized by jQM"
+    @pageInitialized = true
 
   onUserFuelTypeChanged: =>
     @setActiveFuelTypeButton()

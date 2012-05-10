@@ -48,10 +48,7 @@ class Gaso.Station extends Backbone.Model
     @on 'change:directDistance change:drivingDistance', @onDistanceChanged
 
   onDistanceChanged: =>
-    if @collection?
-      console.log "sort collection"
-      # This causes too much sort calls for collection, one for each model in collection
-      @collection.trigger 'distancesChanged'
+    @collection.trigger 'distancesChanged' if @collection?
 
   cleanupModel: =>
     @ioUnbindAll()
