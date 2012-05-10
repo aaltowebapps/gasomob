@@ -73,40 +73,54 @@ FuelPriceSchema.statics.findByStationIds = (stationDBids, fields..., callback) -
 
 mapLatestPricesFunc = -> 
   # Map/Reduce doesn't support Array as reduction result, so we define an object which has array in it.
-  # TODO can we make incremental reduce work with this structure?
-  emit @_station, data: [
-    type: @type
-    pricedata :
-      price : @value 
-      date  : @date
-      count : 1
+  map = {}
+  map[@type] =
+    price : @value 
+    date  : @date
+    count : 1
+  emit @_station, map
+
+reduceLatestPricesFunc = (station, priceMaps) -> 
+  # Expected input:
+  ###
+  priceMaps = [
+    '95E10':
+      price : x
+      date  : y
+      count : n
+  ,
+    '98E5':
+      price : x
+      date  : y
+      count : n
+  ,
+    'Diesel': ...
+  ,
+    '95E10': ...
+  ,
+    ...
   ]
+  ###
 
-reduceLatestPricesFunc = (station, prices) -> 
-  reduced = data: []
-  latestOfType = {}
+  # TODO can we make incremental reduce work with this structure? Will the whole deep strcuture of the object get
+  # combined correctly when combining previously reduced data with new data?
+  reducedPrices = {}
 
-  prices.forEach (price, i) ->
-    currPrice     = price.data[0]
-    currPriceData = currPrice.pricedata
-    latestPrice   = latestOfType[currPrice.type]
-    if not latestPrice
-      # This type of price hasn't been recorded yet into reduced set, so add it as is.
-      reduced.data.push currPrice
-      latestOfType[currPrice.type] =
-        date  : currPriceData.date
-        index : reduced.data.length - 1
-    else
-      priceInReducedSet = reduced.data[latestPrice.index]
-      reducedPriceData  = priceInReducedSet.pricedata
-
-      reducedPriceData.count = reducedPriceData.count + 1
-      if latestPrice.date < currPriceData.date
-        reducedPriceData.price = currPriceData.price
-        reducedPriceData.date  = currPriceData.date
-        latestPrice.date       = currPriceData.date
+  priceMaps.forEach (prices) ->
+    for fuelType, priceData of prices
+      priceInReducedSet = reducedPrices[fuelType]
+      if not priceInReducedSet
+        # This type of price hasn't been recorded yet into reduced set, so add it as is.
+        reducedPrices[fuelType] = priceData
+      else
+        if priceInReducedSet.date < priceData.date
+          # Update reduced set price data, if date is newer.
+          priceInReducedSet.price = priceData.price
+          priceInReducedSet.date  = priceData.date
+        # Always increase count.  
+        priceInReducedSet.count += priceData.count
         
-  return reduced
+  return reducedPrices
   
 
 
@@ -141,7 +155,7 @@ LatestPriceSchema = new Schema
     ref       : 'Station'
     index     : true
   value:
-    data: []
+    prices: {}
 
 ###
   COMMENT SCHEMA

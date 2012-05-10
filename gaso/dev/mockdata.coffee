@@ -124,37 +124,28 @@ stations.push s3
 pricesMappingResult = ->
   arr = []
   arr.push
-    data: [
-      type: '95E10'
-      pricedata:
-        price: 1.6
-        date: now().addDays -5
-        count: 1
-    ]
+    '95E10':
+      price: 1.6
+      date: now().addDays -5
+      count: 1
+
   arr.push
-    data: [
-      type: '95E10'
-      pricedata:
-        price: 1.3
-        date: now().addDays -2
-        count: 1
-    ]
+    '95E10':
+      price: 1.3
+      date: now().addDays -2
+      count: 1
+
   arr.push
-    data: [
-      type: '98E5'
-      pricedata:
-        price: 1.5
-        date: now().addDays -1
-        count: 1
-    ]
+    '98E5':
+      price: 1.5
+      date: now().addDays -1
+      count: 1
+
   arr.push
-    data: [
-      type: '98E5'
-      pricedata:
-        price: 1.8
-        date: now().addDays -2
-        count: 1
-    ]
+    '98E5':
+      price: 1.8
+      date: now().addDays -2
+      count: 1
   return ["mockstation", arr]
 
 exports.comments = comments

@@ -126,8 +126,12 @@ vows.describe('Map/reduce for latest prices')
       topic: ->
         return db._test.reduceLatestPricesFunc.apply @, mock.pricesMappingResult
 
-      'The reduction works': (result) ->
-        assert.isNotNull result
+      'The reduction works and returns expected results for mock data': (prices) ->
+        assert.isNotNull prices
+        assert.equal prices['95E10'].count, 2
+        assert.equal prices['95E10'].price, 1.3
+        assert.equal prices['98E5'].count, 2
+        assert.equal prices['98E5'].price, 1.5
 
   .export module
 
@@ -146,19 +150,18 @@ vows.describe('Prices search')
 
       "and latest prices for station #1 are: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
         assert.isNull err
-
         # Find station #1 from the results
         temp = prices.filter (s) -> s.id == mockStationDBIds[1].toString()
         assert.equal temp.length, 1
-        s1Prices = temp[0]
+        s1Prices = temp[0].toJSON()
 
         # Assert prices
-        assert.equal s1Prices.value.data.length, 3
-        s1Prices.value.data.forEach (price) ->
-          pdata = price.pricedata
-          switch price.type
-            when '95E10'  then assert.equal pdata.price, 1.3
-            when '98E5'   then assert.equal pdata.price, 1.8
-            when 'Diesel' then assert.equal pdata.price, 1.5
+        assert.equal Object.keys(s1Prices.value).length, 3
+        for own fuelType, priceData of s1Prices.value
+          switch fuelType
+            when '95E10'  then assert.equal priceData.price, 1.3
+            when '98E5'   then assert.equal priceData.price, 1.8
+            when 'Diesel' then assert.equal priceData.price, 1.5
+            else assert.fail "Unexpected fuel type '#{fuelType}' in the results. There should be no other fuel types but the ones we tested."
 
   .export module
