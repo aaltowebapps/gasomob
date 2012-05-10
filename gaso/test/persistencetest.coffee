@@ -146,9 +146,13 @@ vows.describe('Prices search')
 
       "and latest prices for station #1 are: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
         assert.isNull err
+
+        # Find station #1 from the results
         temp = prices.filter (s) -> s.id == mockStationDBIds[1].toString()
         assert.equal temp.length, 1
         s1Prices = temp[0]
+
+        # Assert prices
         assert.equal s1Prices.value.data.length, 3
         s1Prices.value.data.forEach (price) ->
           pdata = price.pricedata
