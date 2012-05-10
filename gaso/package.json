@@ -1,6 +1,6 @@
 {
   "description": "Gaso: HTML5 mobile gas price application",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "dependencies": {
     "express": "2.5.8",
@@ -13,7 +13,8 @@
     "backbone": "0.9.2",
     "plates": "0.4.5",
     "connect-assets": "2.1.9",
-    "mongoose": "2.5.13"
+    "mongoose": "2.5.13",
+    "node.extend": "1.0.0"
   },
   "devDependencies": {
     "api-easy": "0.3.2",
