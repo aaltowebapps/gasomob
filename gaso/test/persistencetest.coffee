@@ -9,7 +9,7 @@ mock   = require '../dev/mockdata'
 # Helper variables.
 # console.log util.inspect(foobar, true, null, true)
 stationAmt = 0
-mockStationDBIds = mock.stations.map (s) -> s._id
+mockStationDBIds = mock.stations.map (s) -> s.id
 
 debug = (args...) ->
   for n in args
@@ -106,6 +106,10 @@ vows.describe('Stations creation')
 
   .export module
 
+# TODO tests for station searches:
+# db.Station.findNearPoint
+# db.Station.findWithin
+
 
 vows.describe('Prices creation')
 
@@ -151,7 +155,7 @@ vows.describe('Prices search')
       "and latest prices for station #1 are: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
         assert.isNull err
         # Find station #1 from the results
-        temp = prices.filter (s) -> s.id == mockStationDBIds[1].toString()
+        temp = prices.filter (s) -> s.id == mockStationDBIds[1]
         assert.equal temp.length, 1
         s1Prices = temp[0].toJSON()
 
