@@ -11,5 +11,9 @@ class Gaso.SearchContext extends Backbone.Model
     searchAddress: null
 
     mapBounds:
-      lon: null
-      lat: null
+      sw:
+        lon: null
+        lat: null
+      ne: 
+        lon: null
+        lat: null

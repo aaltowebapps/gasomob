@@ -15,6 +15,8 @@ class GasoApp
   log: (args...) ->
     console.log args... unless productionEnv
   error: (args...) ->
+    console.error args... unless productionEnv
+  fatal: (args...) ->
     if productionEnv
       alert args.join ""
     else
