@@ -42,11 +42,16 @@ class Gaso.Station extends Backbone.Model
     ]
     @set 'prices', defaultPrices unless initData.prices?
 
-
-
   initialize: (stationData) ->
     @setNonPrimitiveDefaults stationData
     @identifyBrand stationData.name unless stationData.brand
+    @on 'change:directDistance change:drivingDistance', @onDistanceChanged
+
+  onDistanceChanged: =>
+    if @collection?
+      console.log "sort collection"
+      # This causes too much sort calls for collection, one for each model in collection
+      @collection.trigger 'distancesChanged'
 
   cleanupModel: =>
     @ioUnbindAll()
@@ -54,6 +59,7 @@ class Gaso.Station extends Backbone.Model
 
   clear: =>
     @trigger 'clear'
+    @cleanupModel()
     @destroy
 
   updatePrice: (type, value) =>
@@ -75,6 +81,10 @@ class Gaso.Station extends Backbone.Model
   getLatLng: =>
     loc = @get 'location'
     return lat: loc[1], lon: loc[0]
+
+  getDistance: ->
+    d = @get('drivingDistance') ? @get('directDistance')
+    parseFloat d
 
   identifyBrand: (name) =>
     Gaso.log "Identify brand from", name

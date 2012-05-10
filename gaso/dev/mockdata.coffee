@@ -64,7 +64,7 @@ comments.push c
 
 s1 = new db.Station
   osmId    : 'a'
-  name     : 'Testiasema'
+  name     : 'ABC Aina valmis'
   brand    : 'abc'
   address:
     country  : 'Finland'
@@ -84,7 +84,7 @@ stations.push s1
 
 s2 = new db.Station
   osmId    : 'b'
-  name     : 'Mesta #1'
+  name     : 'Neste nesteessä'
   brand    : 'nesteoil'
   address:
     country  : 'Finland'
@@ -104,7 +104,7 @@ stations.push s2
 
 s3 = new db.Station
   osmId    : 'c'
-  name     : 'Another mesta'
+  name     : 'Shell siellä jossain'
   brand    : 'shell'
   address:
     country  : 'Finland'

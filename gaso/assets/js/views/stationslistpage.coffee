@@ -15,6 +15,8 @@ class Gaso.StationsListPage extends Backbone.View
   render: (eventName) ->
     @$el.html @template @collection.toJSON()
     @$list = @$el.find 'ul#list-stations'
+    @listInitialized = false
+    @bindEvents()
     @renderList()
     # TODO tried to get rid of FOUC with slider, when moving from map page to list page. no success yet
     # @$el.trigger('create')
@@ -28,7 +30,6 @@ class Gaso.StationsListPage extends Backbone.View
     # @$el.trigger('create')
     # with
 
-    @bindEvents()
 
     # Note: delegateEvents() is called automatically once in View constructor, however since we re-use the list-page
     # we must make sure that event listeners are bound again when we re-visit the list page.
@@ -39,7 +40,7 @@ class Gaso.StationsListPage extends Backbone.View
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
-    console.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
+    Gaso.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
     # Create list items from stations.
     itemsHTML = []
     for station in @collection.models
@@ -49,13 +50,15 @@ class Gaso.StationsListPage extends Backbone.View
     if refresh
       @$list.fadeOut =>
         @$list.html itemsHTML.join('')
-        @$list.listview 'refresh'
+        @$list.listview 'refresh' if @listInitialized
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
 
   bindEvents: ->
+    @$list.on 'create', @onListInitialized
     @collection.on 'add', @onCollectionAdd
+    @collection.on 'reset', @onCollectionReset
 
     # Updates top-page fuel type selection buttons to reflect current user choice. Initial selection must be set
     # after jQM has enhanced the page content, therefore we listen to 'pagebeforeshow' event.
@@ -64,6 +67,7 @@ class Gaso.StationsListPage extends Backbone.View
 
   close: =>
     @off()
+    @$list.off 'create', @onListInitialized
     @$el.off 'pagebeforeshow'
     @collection.off 'add', @onCollectionAdd
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
@@ -81,6 +85,10 @@ class Gaso.StationsListPage extends Backbone.View
     $btns.not($btnToActivate).removeClass('ui-btn-active')
     $btnToActivate.addClass('ui-btn-active')
 
+  onListInitialized: =>
+    Gaso.log "Stations list initialized by jQM"
+    @listInitialized = true
+
   onUserFuelTypeChanged: =>
     @setActiveFuelTypeButton()
     newType = @user.get 'myFuelType'
@@ -89,6 +97,9 @@ class Gaso.StationsListPage extends Backbone.View
   onSelectFuelType: (event) ->
     @user.set 'myFuelType', $(event.target).attr('data-fueltype')
     @user.save()
+
+  onCollectionReset: =>
+    @renderList true
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
