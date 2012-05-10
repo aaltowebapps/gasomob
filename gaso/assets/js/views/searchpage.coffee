@@ -1,11 +1,11 @@
 ###
-menupage.coffee
+Search page
 ###
-class Gaso.MenuPage extends Backbone.View
+class Gaso.SearchPage extends Backbone.View
   constructor: (@user) ->
-    @template = _.template Gaso.util.getTemplate 'menu-page'
-    @setElement $('<div id="page-menu"/>')
-    @transition = 'flip'
+    @template = _.template Gaso.util.getTemplate 'search-page'
+    @setElement $('<div id="page-search"/>')
+    @transition = 'pop'
 
   render: (eventName) ->
     $(@el).html @template()

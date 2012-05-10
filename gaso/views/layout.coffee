@@ -55,6 +55,9 @@ html ->
     script src: '/javascripts/lib/backbone.iosync.js'
     script src: '/javascripts/lib/backbone.iobind.js'
 
+    # Timeago plugin for jQuery
+    script src: '/javascripts/lib/jquery.timeago.js'
+
     # FIXME Can't atm use a minimified cdn version of backbone.localstorage in production,
     # because it clashes with our own minimified code.
     # How can we prevent the variable clash during js minimization?

@@ -41,7 +41,8 @@ class Gaso.AppRouter extends Backbone.Router
     @listPage     = new Gaso.StationsListPage(@stations, @user)
     @settingsPage = new Gaso.UserSettingsPage(@user)
     @mapPage      = new Gaso.MapPage(@stations, @user)
-    @menuPage     = new Gaso.MenuPage(@user) 
+    @menuPage     = new Gaso.MenuPage(@user)
+    @searchPage   = new Gaso.SearchPage(@user)
 
 
   bindEvents: ->
@@ -70,8 +71,7 @@ class Gaso.AppRouter extends Backbone.Router
   ###
 
   search: ->
-    #TODO implement search page, navigate there
-    @changePage @settingsPage
+    @changePage @searchPage
 
   showList: ->
     @changePage @listPage
@@ -121,9 +121,9 @@ class Gaso.AppRouter extends Backbone.Router
     page.render()
     $('body').append $p
 
-    # Don't animate the first page.
+    # Don't animate the first page. Use default JQM transition if nothing else defined in view.
     transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
-    
+
     # Change the JQM page.
     @currentPage = page
     $.mobile.changePage $p, 

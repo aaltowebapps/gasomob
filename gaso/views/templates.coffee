@@ -79,6 +79,20 @@ script type: 'text/template', id: 'user-settings-page', ->
     partial 'navigation'
 
 
+# Search page
+script type: 'text/template', id: 'search-page', ->
+  header 'data-role': 'header', ->
+    h1 'Station search'
+  div 'data-role': 'content', ->
+    form class: 'ui-body-b', ->
+      h2 'Please type in an address.'
+      label 'for': 'search', 'Find stations near'
+      input 'type': 'search', 'name': 'address', 'id': 'field-address'
+      button 'type': 'submit', 'GO!'
+  gasofooter ->
+    partial 'navigation'
+
+
 # Station details page -template
 script type: 'text/template', id: 'station-details', ->
   header 'data-role': 'header', ->
@@ -144,19 +158,18 @@ script type: 'text/template', id: 'list-page', ->
 ###
 
 script type: 'text/template', id: 'comments-list', ->
-  h3 'Comments'
-  
   div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
-    ul id: 'list-comments'
-
-    h4 'Add comment'
-
+    h3 'Comments'
+    
     div 'data-role': 'fieldcontain', ->
-      label 'for': 'newcomment', 'id': 'ownid', ->
-        '{{ curuser.id }}: '
-      input 'type': 'text', 'name': 'newcomment', 'value': 'Your review', 'data-theme': 'c'
-      a 'href': '#', 'data-role': 'button', 'data-inline': 'true', ->
-        'Shout!'
+      form ->
+        label 'for': 'newcomment', 'id': 'ownid', ->
+          '{{ curuser.id }}: '
+        input 'type': 'text', 'name': 'newcomment', 'value': 'Your review', 'data-theme': 'c'
+        a 'href': '#', 'data-role': 'button', 'data-inline': 'true', ->
+          'Shout!'
+    hr ->
+    ul id: 'list-comments'
 
 
 ###
@@ -166,13 +179,13 @@ script type: 'text/template', id: 'comments-list', ->
 
 # Station comment
 script type: 'text/template', id: 'comment-list-item', ->
-  span class: 'comment-title', ->
-    h4 '{{ title }}'
-  span class: 'comment-author', ->
+  h4 class: 'comment-title', ->
+    '{{ title }}'
+  p class: 'comment-author', ->
     '{{ userId }}'
-  span class: 'comment-publish-date', ->
-    '{{ date }}'
-  span class: 'comment-content', -> 
+  p class: 'comment-publish-date', ->
+    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
+  p class: 'comment-content', -> 
     '{{ body }}'
 
 # Price-edit for station-details form

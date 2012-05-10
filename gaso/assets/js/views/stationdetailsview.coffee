@@ -26,7 +26,7 @@ class Gaso.StationDetailsView extends Backbone.View
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     
-    marker = new Gaso.StationMarker(@model, @map).render()
+    marker = new Gaso.StationMarker(@station, @map).render()
     google.maps.event.clearInstanceListeners(marker.marker)
 
     # Render comments
@@ -91,4 +91,4 @@ class Gaso.StationDetailsView extends Backbone.View
       @addPriceEdit p, animate: true
       
   openLargeMap: ->
-    Gaso.app.router.navigate "stationmap/#{ @model.id }", trigger: true
+    Gaso.app.router.navigate "stationmap/#{ @station.id }", trigger: true
