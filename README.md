@@ -48,6 +48,14 @@ To avoid need of re-running node app after each change use `nodemon`.
   1. `npm install nodemon -g`
   1. `nodemon app.coffee`
 
+To help debugging of the backend use `node-inspector`
+  1. `npm install node-inspector -g`
+  1. Start node-inspector: `node-inspector`
+  1. Run application (from another cmd-shell)
+    1. `coffee --nodejs --debug app.coffee` OR
+    1. Use the `gasodev.*` start scripts
+  1. Open browser to `http://127.0.0.1:8080/debug?port=5858` to see node-inspector debugging console.
+
 ## Known problems
 
 ### Libraries
