@@ -71,9 +71,29 @@ vows.describe('Setup before actual tests')
 
 
 ###
-  STATIONS TESTS
+  FUNCTIONAL TESTING AND TESTING OF APPLICATION INTERNALS
 ###
-vows.describe('Stations creation')
+vows.describe('Internals: Map/reduce for latest prices')
+
+  .addBatch
+    'when we test our latest prices reduction function':
+      topic: ->
+        return db._test.reduceLatestPricesFunc.apply @, mock.pricesMappingResult
+
+      'The reduction works and returns expected results for mock data': (prices) ->
+        assert.isNotNull prices
+        assert.equal prices['95E10'].count, 2
+        assert.equal prices['95E10'].price, 1.3
+        assert.equal prices['98E5'].count, 2
+        assert.equal prices['98E5'].price, 1.5
+
+  .export module
+
+
+###
+  DATABASE TESTS
+###
+vows.describe('DB: Stations creation')
 
   .addBatch
     'before testing saving':
@@ -111,7 +131,7 @@ vows.describe('Stations creation')
 # db.Station.findWithin
 
 
-vows.describe('Prices creation')
+vows.describe('DB: Prices creation')
 
   .addBatch
     'when we create prices for mock stations':
@@ -123,24 +143,8 @@ vows.describe('Prices creation')
   .export module
 
 
-vows.describe('Map/reduce for latest prices')
 
-  .addBatch
-    'when we test our latest prices reduction function':
-      topic: ->
-        return db._test.reduceLatestPricesFunc.apply @, mock.pricesMappingResult
-
-      'The reduction works and returns expected results for mock data': (prices) ->
-        assert.isNotNull prices
-        assert.equal prices['95E10'].count, 2
-        assert.equal prices['95E10'].price, 1.3
-        assert.equal prices['98E5'].count, 2
-        assert.equal prices['98E5'].price, 1.5
-
-  .export module
-
-
-vows.describe('Prices search')
+vows.describe('DB: Prices search')
 
   .addBatch
     'when we search latest prices for all of our mock stations':

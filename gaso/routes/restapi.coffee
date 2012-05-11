@@ -1,15 +1,31 @@
 # Requiring express-resouce will "monkey-patc" Express server for using app.resource.
 # See https://github.com/visionmedia/express-resource for documentation.
 require('express-resource')
-mock = require '../dev/mockdata'
+db     = require '../lib/persistence'
+mock   = require '../dev/mockdata'
+config = require '../config'
 
+# Helper variables
+productionEnv = config.env.production
+
+sendError = (res) ->
+  return res.send err unless productionEnv
+  res send "Error occurred."
+
+processCommonQueryParams = (q, req) ->
+  q.skip req.query.skip if req.query.skip?
+  q.limit 50 # Set hard limit for results
 
 class StationResource
 
   type = 'station'
 
   index: (req, res) ->
-    res.send mock.stations
+    q = db.Station.find()
+    processCommonQueryParams q, req
+    q.run (err, result) ->
+      return sendError(res) if err?
+      res.send result
 
   new: (req, res) ->
     res.send "TODO new #{type}"
@@ -18,7 +34,12 @@ class StationResource
     res.send "TODO create #{type}"
 
   show: (req, res) ->
-    res.send "TODO show #{type} #{req.params[type]}, type? #{req[type]}"
+    q = db.Station.findByOsmIds [req.params[type]]
+    processCommonQueryParams q, req
+    q.run (err, result) ->
+      return sendError(res) if err?
+      return res.send result[0] if result.length
+      res.send {}
 
   edit: (req, res) ->
     res.send "TODO edit #{type} #{req.params[type]}"

@@ -130,7 +130,7 @@ FuelPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callback)
   # TODO do incremental map-reduce (and sorting/limiting if needed) for improved performance, along these lines:
   ###
   options =
-    # Store prevStart to alternate document in the DB
+    # Store prevStart to some other document in the DB
     query: date: $gte: prevStart
     # sort: date: -1
     out: reduce: "latestprices"
