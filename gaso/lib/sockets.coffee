@@ -38,10 +38,23 @@ class Sync
       return callback err if err?
       list = [];
       # TODO do another query for latest prices and append prices into stations data to return.
-      stations.forEach (station) ->
-        list.push station.toJSON()
-      console.log "Sync stations to client: ", list.map (s) -> s.osmId
-      callback null, list
+      stationIds = stations.map (s) -> s.id
+      db.LatestPrice.searchLatestPrices stationIds, (err, prices) ->
+        stations.forEach (station) ->
+          stationData = station.toJSON()
+          temp = prices.filter (p) -> p.id == station.id
+          if temp and temp[0]
+            latestStationPrices = temp[0].toJSON()
+            stationData.prices = []
+            for own fuelType, priceData of latestStationPrices.value
+              priceObj =
+                type  : fuelType
+                value : priceData.price
+                date  : priceData.date
+              stationData.prices.push priceObj
+          list.push stationData
+        console.log "Sync stations to client: ", list.map (s) -> s.osmId
+        callback null, list
 
   ###
     getStations()
@@ -75,16 +88,20 @@ class Sync
     prices = clientdata.prices
     console.log "Save prices", prices
 
+    debugSavePrices = (err, data) ->
+      console.log "price save result", err, data
+
     db.Station.findOne osmId: clientdata.osmId, (err, station) ->
       if station?
-        console.log 'TODO station found from DB, handle update'
-        # TODO save non-zero prices of each type if latest price isn't equal to the price being saved already
+        console.log 'TODO station found from DB, handle updating of possible missing address data etc'
+        station.savePrices prices, debugSavePrices
       else
         # New station
         station = new db.Station(clientdata)
         station.save (err, data) ->
-          # TODO save non-zero prices
-          console.log "Station saved", @, err, data
+          console.log "Station save result", @, err, data
+          station.savePrices prices, debugSavePrices
+
 
 
   ###

@@ -13,7 +13,7 @@ now = ->
 
 addPrice = (station, type, value, date) ->
   p =
-    _station: station._id
+    _station: station.id
     type: type
     value: value
   p.date = date or now()

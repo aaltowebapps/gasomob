@@ -27,7 +27,6 @@ UserSchema = new Schema
 , strict: true
 
 
-
 ###
   FUEL PRICE SCHEMA
 ###
@@ -38,9 +37,11 @@ FuelPriceSchema = new Schema
     type      : ObjectId
     ref       : 'Station'
     index     : true
+    required  : true
   value     : 
     type      : Number
     min       : 0.001
+    required  : true
   type      :  
     type      : String
     enum      : ['98E5', '95E10', 'Diesel', 'Unleaded', 'E85']
@@ -237,10 +238,10 @@ StationSchema.pre 'remove', true, (next, done) ->
   # Remove any prices related to this station.
   stationId = @id
   FuelPrice.remove _station: stationId, (err, count) ->
-    console.log "Removed #{count} prices"
+    # console.log "Removed #{count} prices"
     # Forward any possible errors.
     LatestPrice.remove _id: stationId, (err, count) ->
-      console.log "Removed #{count} latest prices mapping"
+      # console.log "Removed #{count} latest prices mapping"
       # Forward any possible errors.
       done(err)
   next()
@@ -309,6 +310,13 @@ StationSchema.statics.findWithin = (box, fields..., callback) ->
   q.limit 100
   q.run callback if callback?
   return q
+
+StationSchema.methods.savePrices = (prices, callback) ->
+  prices.forEach (p) =>
+    p._station = @id
+    # Note: FuelPriceSchema validation will take care of not saving prices that don't have value.
+    # TODO don't needlessly save duplicate prices if latest price is the same?
+    new FuelPrice(p).save callback
 
 # Define models
 User        = mongoose.model 'User', UserSchema
