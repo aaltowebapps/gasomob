@@ -79,7 +79,7 @@ class Gaso.MapPage extends Backbone.View
   getInitialMapSettings: =>
     zoom: @user.get 'mapZoom'
     mapTypeId: google.maps.MapTypeId[@user.get 'mapTypeId']
-
+    disableDefaultUI: productionEnv
 
   changeMapLocation: =>
     coords = @user.get 'mapCenter'

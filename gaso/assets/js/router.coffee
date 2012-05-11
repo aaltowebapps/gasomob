@@ -93,6 +93,11 @@ class Gaso.AppRouter extends Backbone.Router
     station = @stations.get(id)
     if station?
       @changePage new Gaso.StationMapPage(model: station)
+    else 
+      Gaso.log 'Station not loaded, redirecting to map'
+      @navigate "map",
+        trigger: true
+        replace: true
   
   refuel: (id) =>
     station = @stations.get(id)
