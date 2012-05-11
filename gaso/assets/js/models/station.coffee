@@ -40,6 +40,12 @@ class Gaso.Station extends Backbone.Model
     ,
       type: "Diesel"
     ]
+    # TODO Improve: this is a bit hackish way of ensuring we have our default types listed in station details
+    if initData.prices?
+      for def in defaultPrices
+        typeExists = _.find initData.prices, (p) -> p.type == def.type
+        unless typeExists
+          initData.prices.push def
     @set 'prices', defaultPrices unless initData.prices?
 
   initialize: (stationData) ->
