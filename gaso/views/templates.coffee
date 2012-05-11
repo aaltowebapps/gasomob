@@ -201,8 +201,7 @@ script type: 'text/template', id: 'price-edit', ->
 # Stations-list list-item
 script type: 'text/template', id: 'station-list-item', ->
   a 'href' : '#stations/{{ osmId }}/refuel', ->
-      # TODO set some generic image if brand is not set?
-    #text '<% if (!brand) { brand = "question"; } %>'
+    text '<% if (!brand) { brand = "question"; } %>'
     #img src: "../images/stationlogos/{{ brand }}_100.png"
     # alternative approach:
     span class: 'ui-icon ui-icon-station ui-icon-{{ brand }}'
