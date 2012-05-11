@@ -82,9 +82,9 @@ vows.describe('Internals: Map/reduce for latest prices')
 
       'The reduction works and returns expected results for mock data': (prices) ->
         assert.isNotNull prices
-        assert.equal prices['95E10'].count, 2
+        assert.equal prices['95E10'].count, 5
         assert.equal prices['95E10'].price, 1.3
-        assert.equal prices['98E5'].count, 2
+        assert.equal prices['98E5'].count, 6
         assert.equal prices['98E5'].price, 1.5
 
   .export module
@@ -136,9 +136,9 @@ vows.describe('DB: Prices creation')
   .addBatch
     'when we create prices for mock stations':
       topic: api.saveAllMockPrices
-      "we'll have 17 prices for our mock stations saved in the DB": (err, count) ->
+      "we'll have 18 prices for our mock stations saved in the DB": (err, count) ->
         assert.isNull err
-        assert.equal count, 17
+        assert.equal count, 18
 
   .export module
 
@@ -149,15 +149,14 @@ vows.describe('DB: Prices search')
   .addBatch
     'when we search latest prices for all of our mock stations':
       topic: ->
-        db.FuelPrice.searchLatestPrices mockStationDBIds, @callback
+        db.LatestPrice.searchLatestPrices mockStationDBIds, @callback
         return
 
       "we'll get an array of prices for 3 stations": (err, prices) ->
         assert.isNull err
         assert.equal prices.length, 3
 
-      "and latest prices for station #1 are: 1.3 for 95E10, 1.8 for 98E5 and 1.5 for Diesel": (err, prices) ->
-        assert.isNull err
+      "latest prices and counts for each fuel type are correct": (err, prices) ->
         # Find station #1 from the results
         temp = prices.filter (s) -> s.id == mockStationDBIds[1]
         assert.equal temp.length, 1
@@ -167,9 +166,15 @@ vows.describe('DB: Prices search')
         assert.equal Object.keys(s1Prices.value).length, 3
         for own fuelType, priceData of s1Prices.value
           switch fuelType
-            when '95E10'  then assert.equal priceData.price, 1.3
-            when '98E5'   then assert.equal priceData.price, 1.8
-            when 'Diesel' then assert.equal priceData.price, 1.5
+            when '95E10'
+              assert.equal priceData.price, 1.3
+              assert.equal priceData.count, 4
+            when '98E5'
+              assert.equal priceData.price, 1.8
+              assert.equal priceData.count, 2
+            when 'Diesel'
+              assert.equal priceData.price, 1.5
+              assert.equal priceData.count, 1
             else assert.fail "Unexpected fuel type '#{fuelType}' in the results. There should be no other fuel types but the ones we tested."
 
   .export module

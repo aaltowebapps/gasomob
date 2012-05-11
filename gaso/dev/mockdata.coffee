@@ -97,7 +97,8 @@ addPrice s2, '95E10', 1.6, now().addDays -5
 addPrice s2, '95E10', 1.5, now().addDays -4
 addPrice s2, '95E10', 1.4, now().addDays -3
 addPrice s2, '95E10', 1.3, now().addDays -2
-addPrice s2, '98E5', 1.8, now().addDays -1
+addPrice s2, '98E5', 1.8, now()
+addPrice s2, '98E5', 1.5, now().addDays -1
 addPrice s2, 'Diesel', 1.5
 stations.push s2
 
@@ -131,6 +132,12 @@ pricesMappingResult = ->
 
   arr.push
     '95E10':
+      price: 1.4
+      date: now().addDays -3
+      count: 3
+
+  arr.push
+    '95E10':
       price: 1.3
       date: now().addDays -2
       count: 1
@@ -143,9 +150,15 @@ pricesMappingResult = ->
 
   arr.push
     '98E5':
-      price: 1.8
-      date: now().addDays -2
+      price: 1.6
+      date: now().addDays -3
       count: 1
+
+  arr.push
+    '98E5':
+      price: 1.8
+      date: now().addDays -4
+      count: 4
   return ["mockstation", arr]
 
 exports.comments = comments

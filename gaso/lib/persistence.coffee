@@ -70,6 +70,21 @@ FuelPriceSchema.statics.findByStationIds = (stationDBids, fields..., callback) -
     fields[0]
     callback
 
+FuelPriceSchema.post 'save', (price) ->
+  # TODO With this we needlessly run map reduce for each fueltype save, we should run it once per station price-set update.
+  LatestPrice.updateLatestPrices price
+
+###
+  LATEST PRICE SCHEMA
+  Extension to FuelPrice Schema through map/reduce -> LatestPrice.
+###
+LatestPriceSchema = new Schema
+  _id  :
+    type      : ObjectId
+    ref       : 'Station'
+    index     : true
+  value:
+    prices: {}
 
 mapLatestPricesFunc = -> 
   # Map/Reduce doesn't support Array as reduction result, so we define an object which has array in it.
@@ -111,6 +126,7 @@ reduceLatestPricesFunc = (station, priceMaps) ->
       priceInReducedSet = reducedPrices[fuelType]
       if not priceInReducedSet
         # This type of price hasn't been recorded yet into reduced set, so add it as is.
+        # priceData.count = 0
         reducedPrices[fuelType] = priceData
       else
         if priceInReducedSet.date < priceData.date
@@ -123,39 +139,33 @@ reduceLatestPricesFunc = (station, priceMaps) ->
   return reducedPrices
   
 
+LatestPriceSchema.statics.updateLatestPrices = (savedPrice, callback) ->
+  # TODO we want to do incremental map-reduce, what should be our update mechanism and incremental query like?
+  # Should we perhaps keep track of last updated time and update latest prices for all stations periodically, or what?
+  # Like: query = date: $gte: lastUpdated
 
-FuelPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callback) ->
+  # On the other hand it's starting to feel like map/reduce is overkill here and we'd be better off with just some de-normalized data
+  # i.e. directly replace latest price in the collection with the savedPrice we have here at hand.
+  # (But maybe if/when we want to keep track of average/min/max-prices, then map/reduce is actually really needed?)
   mapFunc = mapLatestPricesFunc.toString()
   reduceFunc = reduceLatestPricesFunc.toString()
-  # TODO do incremental map-reduce (and sorting/limiting if needed) for improved performance, along these lines:
-  ###
+  # With these options we update all data in latest prices for this station.
   options =
-    # Store prevStart to some other document in the DB
-    query: date: $gte: prevStart
-    # sort: date: -1
-    out: reduce: "latestprices"
-  ###
-  options =
-    out : "latestprices"
-  FuelPrice.collection.mapReduce mapFunc, reduceFunc, options, (err, result) -> 
+    query:
+      _station: savedPrice._station
+    out : merge: "latestprices"
+
+  FuelPrice.collection.mapReduce mapFunc, reduceFunc, options, (err, result) ->
+    return unless callback?
     return callback err if err?
-    # TODO query the latestprices for actual collection
-    LatestPrice.find
-      _id: $in: stationDBids
-      fields[0]
-      callback
+    callback null, result
 
+LatestPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callback) ->
+  @find
+    _id: $in: stationDBids
+    fields[0]
+    callback
 
-###
-  Extension to FuelPrice through map/reduce -> LatestPrice.
-###
-LatestPriceSchema = new Schema
-  _id  :
-    type      : ObjectId
-    ref       : 'Station'
-    index     : true
-  value:
-    prices: {}
 
 ###
   COMMENT SCHEMA
@@ -223,9 +233,14 @@ StationSchema.pre 'save', (next) ->
 ###
 StationSchema.pre 'remove', true, (next, done) ->
   # Remove any prices related to this station.
-  FuelPrice.remove _station: @id, (err, countremoved) ->
+  stationId = @id
+  FuelPrice.remove _station: stationId, (err, count) ->
+    console.log "Removed #{count} prices"
     # Forward any possible errors.
-    done(err)
+    LatestPrice.remove _id: stationId, (err, count) ->
+      console.log "Removed #{count} latest prices mapping"
+      # Forward any possible errors.
+      done(err)
   next()
 
 StationSchema.pre 'set', (next, path, val, type) ->
@@ -300,10 +315,11 @@ FuelPrice   = mongoose.model 'FuelPrice', FuelPriceSchema
 LatestPrice = mongoose.model 'LatestPrice', LatestPriceSchema
 
 # Export models
-exports.User      = User
-exports.Comment   = Comment
-exports.Station   = Station
-exports.FuelPrice = FuelPrice
+exports.User        = User
+exports.Comment     = Comment
+exports.Station     = Station
+exports.FuelPrice   = FuelPrice
+exports.LatestPrice = LatestPrice
 
 # Exports for testing
 exports._test =
