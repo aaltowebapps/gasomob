@@ -26,7 +26,7 @@ class Gaso.StationDetailsView extends Backbone.View
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     
-    marker = new Gaso.StationMarker(@station, @map).render()
+    marker = new Gaso.StationMarker(@station, @map, noAnimation: true).render()
     google.maps.event.clearInstanceListeners(marker.marker)
 
     # Render comments

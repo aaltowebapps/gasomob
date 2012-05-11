@@ -103,6 +103,7 @@ class Gaso.StationsListPage extends Backbone.View
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
+    #TODO insert directly to correct index?
     @$list.append item.el
     @$list.listview 'refresh'
 

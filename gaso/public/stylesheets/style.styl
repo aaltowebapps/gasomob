@@ -18,11 +18,8 @@ border-radius()
 
 
 /* COMMON */
-// Experimenting with stylus for defining station icons as bg images. Works, but still would need custom positioning for lists.
-// Img-tags in lists with jqm work out of the box so lets go there with that, at least for now.
-size = 100
+size = 50
 .ui-icon-station
-  float right
   //margin 1em
   width (size)px
   height (size)px
@@ -34,10 +31,10 @@ for s in stations
     background url(path) no-repeat
 .distance-direct
   background url("../images/distance_direct_16.png") no-repeat
-  padding-left 30px
+  padding-left 22px
 .distance-drive
-  background url("../images/car_26.png") no-repeat
-  padding-left 30px
+  background url("../images/car_16.png") no-repeat
+  padding-left 22px
 /* /COMMON */
 
 
@@ -57,9 +54,7 @@ for s in stations
   
   .ui-icon-station
     left 10px
-    top: 20px
-    width 50px
-    height 50px
+    top 20px
     background-size 100%
 
   .station-info
@@ -142,17 +137,23 @@ for s in stations
 
 /* STATION PAGE */
 #station-details
+  #small-map-canvas
+    width 100%
+    padding 0
+    height 180px
+
   .distance-direct
     background url("../images/distance_direct_24.png") no-repeat
+    padding-left 30px
   .address
     float right
-  #ownid
-    font-weight bold
-  #list-comments
-    list-style-type: none
-#small-map-canvas
-  width 100%
-  padding 0
-  height 180px
+
+  #comments
+    margin-top 1em
+
+    #ownid
+      font-weight bold
+    #list-comments
+      list-style-type: none
 /* /STATION PAGE */
 

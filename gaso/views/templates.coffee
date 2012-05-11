@@ -166,8 +166,8 @@ script type: 'text/template', id: 'comments-list', ->
         label 'for': 'newcomment', 'id': 'ownid', ->
           '{{ curuser.id }}: '
         input 'type': 'text', 'name': 'newcomment', 'value': 'Your review', 'data-theme': 'c'
-        a 'href': '#', 'data-role': 'button', 'data-inline': 'true', ->
-          'Shout!'
+        button 'type': 'submit', 'data-inline': 'true', 'data-theme': 'c', 'Shout!'
+        # a 'href': '#', 'data-role': 'button', 'data-inline': 'true', 'Shout!'
     hr ->
     ul id: 'list-comments'
 
