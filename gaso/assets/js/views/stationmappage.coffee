@@ -14,7 +14,10 @@ class Gaso.StationMapPage extends Backbone.View
     
     @map = new google.maps.Map @$el.find("#station-map-canvas")[0], @getInitialMapSettings()
     marker = new Gaso.StationMarker(@model, @map).render()
-    google.maps.event.clearInstanceListeners(marker.marker)
+    # Don't clear listeners to allow user to come back to details page also by clicking the marker again.
+    # If user for some reason comes to station page from an external link,
+    # the back button would just take them away from the site.
+    # google.maps.event.clearInstanceListeners(marker.marker)
 
     @bindEvents()
 

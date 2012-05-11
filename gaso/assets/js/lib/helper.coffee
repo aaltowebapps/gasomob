@@ -24,6 +24,15 @@ class Gaso.Helper
     for station in @stations.models
       dist = @setDistanceToUser station
 
+  findStationByOsmId: (osmId, callback) =>
+    @stations.fetch
+      add: true
+      data:
+        osmId: osmId
+      success: (collection, response) ->
+        callback null, response
+      error: (collection, response) ->
+        callback response
 
   #TODO not used yet
   getStationsDataWithinBounds: (bounds) =>

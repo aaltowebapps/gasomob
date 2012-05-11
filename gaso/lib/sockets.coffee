@@ -50,17 +50,20 @@ class Sync
       radius: Number (meters)
         OR
       bounds: [[lon, lat], [lon, lat]]
+        OR
+      osmId: station osm-id
   ###
   getStations: (data, callback) =>
     console.log "Get stations by", data
-
-    if data.point? and data.radius?
+    if data.osmId
+      db.Station.findByOsmIds [data.osmId], @syncStationsToClient(callback)
+    else if data.point? and data.radius?
       db.Station.findNearPoint data.point, data.radius, @syncStationsToClient(callback)
     else if data.bounds?
       db.Station.findWithin data.bounds, @syncStationsToClient(callback)
     else
       console.log "Unsupported query for stations", data
-      callback "Unsupported query #{data}"
+      callback "Unsupported query #{JSON.stringify(data)}"
 
 
   ###
@@ -70,6 +73,7 @@ class Sync
   updateStation: (clientdata, callback) ->
     console.log "Update station", clientdata.osmId, clientdata
     prices = clientdata.prices
+    console.log "Save prices", prices
 
     db.Station.findOne osmId: clientdata.osmId, (err, station) ->
       if station?
@@ -78,10 +82,9 @@ class Sync
       else
         # New station
         station = new db.Station(clientdata)
-
-      station.save (err, data) ->
-        # TODO save non-zero prices
-        console.log "Station saved", @, err, data
+        station.save (err, data) ->
+          # TODO save non-zero prices
+          console.log "Station saved", @, err, data
 
 
   ###

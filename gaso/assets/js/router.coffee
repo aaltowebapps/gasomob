@@ -89,30 +89,45 @@ class Gaso.AppRouter extends Backbone.Router
     # For now just handle as refuel, we might do something else with this later.
     @refuel id
 
-  stationMap: (id) ->
+  # TODO Refactor to DRY stationMap and refuel -functions
+
+  stationMap: (id, noFetch) ->
     station = @stations.get(id)
     if station?
       @changePage new Gaso.StationMapPage(model: station)
-    else 
-      Gaso.log 'Station not loaded, redirecting to map'
+    else if noFetch
+      Gaso.error "The station #{id} isn't still in the collection, it probably doesn't exist in the DB. Redirect to working page."
       @navigate "map",
         trigger: true
         replace: true
-  
-  refuel: (id) =>
+    else
+      $.mobile.showPageLoadingMsg()
+      # This can happen e.g. if landing directly to this page e.g. from bookmark or by refreshing the browser page.
+      Gaso.helper.findStationByOsmId id, (error, success) =>
+        Gaso.log "Fetching done, try opening station map page again. Response:", success
+        Gaso.error "Error finding station", error if error?
+        @stationMap(id, true)
+
+
+  refuel: (id, noFetch) =>
+    Gaso.log "Open station #{id} details: noFetch =", noFetch
     station = @stations.get(id)
     if station?
       @changePage new Gaso.StationDetailsView(station, @user, @comments)
       @comments.fetch
         data: station.id
-    else
-      Gaso.log 'TODO Station not loaded, redirecting to listing for now'
-      # TODO fetch station in the background and e.g. and change to page after callback.
-      # This can happen if landing directly to station details page or to an unknown id.
+    else if noFetch
+      Gaso.error "The station #{id} isn't still in the collection, it probably doesn't exist in the DB. Redirect to working page."
       @navigate "list",
         trigger: true
         replace: true
-
+    else
+      $.mobile.showPageLoadingMsg()
+      # This can happen e.g. if landing directly to this page e.g. from bookmark or by refreshing the browser page.
+      Gaso.helper.findStationByOsmId id, (error, success) =>
+        Gaso.log "Fetching done, try opening station map page again. Response:", success
+        Gaso.error "Error finding station", error if error?
+        @refuel(id, true)
 
   ###
     HELPER METHODS

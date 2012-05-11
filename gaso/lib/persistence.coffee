@@ -143,10 +143,12 @@ LatestPriceSchema.statics.updateLatestPrices = (savedPrice, callback) ->
   # TODO we want to do incremental map-reduce, what should be our update mechanism and incremental query like?
   # Should we perhaps keep track of last updated time and update latest prices for all stations periodically, or what?
   # Like: query = date: $gte: lastUpdated
+  # Additional note: with query "out: reduce : ..."" the count of the stations will be too big, at least with db-tests
+  # using mockdata. -> Are the tests buggy or is the reduce-function count-data handling invalid for incremental reduce?
 
-  # On the other hand it's starting to feel like map/reduce is overkill here and we'd be better off with just some de-normalized data
-  # i.e. directly replace latest price in the collection with the savedPrice we have here at hand.
-  # (But maybe if/when we want to keep track of average/min/max-prices, then map/reduce is actually really needed?)
+  # At the momeny map/reduce is overkill here and we'd be better off with just some de-normalized data
+  # i.e. directly replace latest price for the given type in the collection with the savedPrice we have here at hand.
+  # (But maybe if/when we want to keep track of average/min/max-prices, then map/reduce is actually really needed.)
   mapFunc = mapLatestPricesFunc.toString()
   reduceFunc = reduceLatestPricesFunc.toString()
   # With these options we update all data in latest prices for this station.
@@ -252,6 +254,7 @@ StationSchema.pre 'set', (next, path, val, type) ->
   Helpher methods for StationSchema.
 ###
 StationSchema.statics.removeByOsmIds = (ids, callback) ->
+  # Note: we are not using Station.remove because we want to use middleware.
   Station.findByOsmIds ids, (err, stations) ->
     return callback err if err?
     # Return already if no stations found.
