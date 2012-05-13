@@ -5,6 +5,7 @@ class Gaso.StationsListPage extends Backbone.View
 
   events:
     'click #fueltypes button' : 'onSelectFuelType'
+    'click .divider'          : 'toggleItems'
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
@@ -44,6 +45,8 @@ class Gaso.StationsListPage extends Backbone.View
       class       : 'divider'
       'data-role' : 'list-divider'
     
+  toggleItems: (event) ->
+    $items = $(event.target).nextUntil('.ui-li-divider').toggle()
 
   renderList: (refresh) =>
     @closeListItems()
