@@ -70,6 +70,7 @@ class Gaso.MapPage extends Backbone.View
   close: =>
     google.maps.event.clearInstanceListeners @map
     @off()
+    @$el.off 'pageshow.mappage'
     @stations.off 'add', @addStationMarker
     @user.off 'reCenter', @changeMapLocation
     @userMarker.close()

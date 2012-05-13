@@ -16,7 +16,7 @@ class Gaso.StationMapPage extends Backbone.View
     marker = new Gaso.StationMarker(@model, @map).render()
     # Don't clear listeners to allow user to come back to details page also by clicking the marker again.
     # If user for some reason comes to station page from an external link,
-    # the back button would just take them away from the site.
+    # the back button could just take them away from the site.
     # google.maps.event.clearInstanceListeners(marker.marker)
 
     @bindEvents()
@@ -28,11 +28,13 @@ class Gaso.StationMapPage extends Backbone.View
     @$el.off 'pageshow.stationmappage'
     @$el.on 'pageshow.stationmappage', (event) =>
       google.maps.event.trigger @map, 'resize'
-      @map.setCenter new google.maps.LatLng(@model.get('location')[1], @model.get('location')[0])
+      coords = @model.get 'location'
+      @map.setCenter new google.maps.LatLng(coords[1], coords[0])
       
       
   close: =>
     @off
+    @$el.off 'pageshow.stationmappage'
 
 
   getInitialMapSettings: =>
