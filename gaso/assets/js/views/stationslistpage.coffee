@@ -46,7 +46,7 @@ class Gaso.StationsListPage extends Backbone.View
       'data-role' : 'list-divider'
     
   toggleItems: (event) ->
-    $items = $(event.target).nextUntil('.ui-li-divider').toggle()
+    $items = $(event.target).nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
 
   renderList: (refresh) =>
     @closeListItems()
