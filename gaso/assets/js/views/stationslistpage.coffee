@@ -37,16 +37,37 @@ class Gaso.StationsListPage extends Backbone.View
 
     return @
 
+  createListDivider: (id, text) ->
+    $ '<li/>',
+      id          : id
+      text        : text
+      class       : 'divider'
+      'data-role' : 'list-divider'
+    
+
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
+    return unless @collection.sorted
     Gaso.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
-    # Create list items from stations.
+
+    # Helper variables
     itemsHTML = []
-    for station in @collection.models
-      $temp = $('<div/>').append @addStationListItem(station).$el
+    othersDivi = null
+
+    # Create list items from stations collection.
+    for station, i in @collection.models
+      $temp = $('<div/>')
+      distance = station.getDistance()
+      if i == 0 and distance <= 10
+        $temp.append @createListDivider 'stations-nearby', 'Stations nearby'
+      else if not othersDivi and distance > 10
+        othersDivi = @createListDivider 'stations-others', 'Other stations'
+        $temp.append othersDivi
+      $temp.append @addStationListItem(station).$el
       itemsHTML.push $temp.html()
 
+    # Show the list.
     if refresh
       @$list.fadeOut =>
         @$list.html itemsHTML.join('')
@@ -103,9 +124,15 @@ class Gaso.StationsListPage extends Backbone.View
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
-    #TODO insert directly to correct index?
-    @$list.append item.el
-    @$list.listview 'refresh'
+    # The old way:
+    # TODO insert directly to correct index instead of just append?
+    # @$list.append item.el
+    # @$list.listview 'refresh'
+
+    # The new way: Trying out alternative way of rendering the list when new stations are added.
+    # Instead of adding single items to the DOM, just render the whole list again.
+    # This is simpler, but lets see if this works performance-wise.
+    @renderList()
 
   addStationListItem: (station) =>
     newItem = new Gaso.StationListItem model: station

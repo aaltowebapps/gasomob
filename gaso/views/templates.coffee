@@ -135,7 +135,7 @@ script type: 'text/template', id: 'list-page', ->
       # TODO button for other fuel types
     # jQM Listview for station list items
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
-      li id: 'stations-nearby', 'data-role': 'list-divider', 'Nearby'
+      # li id: 'stations-nearby', 'data-role': 'list-divider', 'Stations nearby'
       # List items will be added using 'station-list-item'-template
     # Slider for affecting stations searching/ranking.
     # TODO change filter to partial and include it into map page also?

@@ -75,6 +75,7 @@ FuelPriceSchema.post 'save', (price) ->
   # TODO With this we needlessly run map reduce for each fueltype save, we should run it once per station price-set update.
   LatestPrice.updateLatestPrices price
 
+
 ###
   LATEST PRICE SCHEMA
   Extension to FuelPrice Schema through map/reduce -> LatestPrice.

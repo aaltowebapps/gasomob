@@ -49,11 +49,6 @@ class Gaso.MapPage extends Backbone.View
         @findNearbyStationsThrottled()()
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
-    ###
-     TODO the transition between pages here is still clunky. Maybe we could force
-     gMaps to draw initial map larger instead of the small box
-     in the top-left corner of the screen?
-    ###
     @$el.off 'pageshow.mappage'
     @$el.on 'pageshow.mappage', (event) =>
       Gaso.log "Resize map"

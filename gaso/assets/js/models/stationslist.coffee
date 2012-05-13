@@ -18,4 +18,5 @@ class Gaso.StationsList extends Backbone.Collection
 
   onDistancesChanged: =>
     console.log "Station distances changed. Manually re-sort of the collection."
+    @sorted = true
     @sort()
