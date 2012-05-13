@@ -5,8 +5,8 @@ class Gaso.AppRouter extends Backbone.Router
 
   routes:
     # Home-page
-    ""                      : "showMap"
-    "/"                     : "showMap"
+    ""                      : "home"
+    # "/"                     : "showMap"
     # Other pages
     "map"                   : "showMap"
     "list"                  : "showList"
@@ -69,6 +69,10 @@ class Gaso.AppRouter extends Backbone.Router
   ###
     ROUTES
   ###
+  home: ->
+    @navigate "map",
+      trigger: true
+      replace: true
 
   search: ->
     @changePage @searchPage
