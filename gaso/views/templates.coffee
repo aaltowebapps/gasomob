@@ -194,7 +194,7 @@ script type: 'text/template', id: 'price-edit', ->
   text '<% ptype = "price"+type; %>'
 
   label for: "{{ptype}}", "{{type}}"
-  input class: 'price-input', type: "text", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+  input class: 'price-input', type: "number", min: "0.001", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
 
 
 
