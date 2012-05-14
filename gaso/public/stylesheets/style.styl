@@ -42,6 +42,40 @@ for s in stations
 
 .clear
   clear both
+
+// Slider-related styles
+#ranking-slider
+  margin 0
+  padding 5px 0
+  height 35px
+
+  div
+    position absolute
+
+  #filterslider
+    left 68px
+    right 84px
+
+  .slidericon
+    &.money
+      top 2px
+      left 3px
+    &.distance
+      top 3px
+      right 8px
+
+  // Hide text box from slider. Can't be done with jqm parameters.
+  .ui-slider-input
+    display none
+
+  div.ui-slider
+    margin 0
+    width 100%
+    padding 5px 0
+  .ui-slider-handle
+    width 50px
+    top -3px
+    margin 0 -25px
 /* /COMMON */
 
 /* LIST PAGE */
@@ -96,36 +130,8 @@ for s in stations
     .fuel-type
       color gray
     
-  // Slider-related styles
-  #ranking-slider
-    margin 0
-    padding 5px 10px
-    #slidertable
-      width 100%
-      #filterslider
-        padding 0 25px 0 15px
-      .slidericon
-        width 40px
-        padding 0 5px
-    // Hide text box from slider. Can't be done with jqm parameters.
-    .ui-slider-input
-      display none
   #footer
     border-top 1px solid #999
-
-  div.ui-slider
-    margin 0
-    width 100%
-    padding 5px 0
-  .ui-slider-handle
-    width 50px
-    top -3px
-    margin 0 -25px
-
-  // Other stuff related to list
-  .ui-li-aside
-    padding-right 20px
-
 /* /LIST PAGE */
 
 
@@ -144,8 +150,9 @@ for s in stations
 
 
 /* SEARCH PAGE */
-#page-search form
-  padding 1em
+#page-search
+  form
+    padding 1em
 /* /SEARCH PAGE */
 
 

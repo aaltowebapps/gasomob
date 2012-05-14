@@ -140,16 +140,13 @@ script type: 'text/template', id: 'list-page', ->
     # Slider for affecting stations searching/ranking.
     # TODO change filter to partial and include it into map page also?
   gasofooter ->
-    div id: 'ranking-slider', 'data-role':'fieldcontain', class: 'ui-bar ui-bar-a', ->
-      table id: 'slidertable', ->
-        tr ->
-          td class : 'slidericon', ->
-            img src: 'images/euro.png', alt:'€'
-          td ->
-            form id: 'filterslider', ->
-              input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
-          td class : 'slidericon', ->
-            img src:'images/distance.png', alt:'km'
+    div id: 'ranking-slider', 'data-role': 'fieldcontain', class: 'ui-bar ui-bar-a', ->
+      div class : 'slidericon money', ->
+        img src: 'images/euro.png', alt: '&euro;'
+      div id: 'filterslider', ->
+        input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+      div class : 'slidericon distance', ->
+        img src:'images/distance.png', alt: 'km'
     partial 'navigation'
 
 
