@@ -147,11 +147,17 @@ class Gaso.AppRouter extends Backbone.Router
 
     # Don't animate the first page. Use default JQM transition if nothing else defined in view.
     transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
+    pageChangeOptions =
+      changeHash: false
+      transition: transition
+    if @currentPage?.outTransition?
+      _.extend pageChangeOptions, @currentPage.outTransition
 
+    if Gaso.loggingEnabled()
+      Gaso.log "Page change options", JSON.stringify pageChangeOptions
     # Change the JQM page.
     @currentPage = page
-    $.mobile.changePage $p, 
-      changeHash: false,
-      transition: transition
+    $.mobile.changePage $p, pageChangeOptions
+
 
     

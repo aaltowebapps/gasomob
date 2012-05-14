@@ -11,6 +11,10 @@ class Gaso.StationDetailsView extends Backbone.View
   constructor: (@station, @user, @comments) ->
     @template = _.template Gaso.util.getTemplate 'station-details'
     @setElement $('<div id="station-details"/>')
+    @transition = 'slide'
+    @outTransition = 
+      transition: 'slide'
+      reverse: true
   
   render: (eventName) -> 
     @priceEdits = []
@@ -45,6 +49,8 @@ class Gaso.StationDetailsView extends Backbone.View
       google.maps.event.trigger @map, 'resize'
       @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
     @station.on 'change:address', @displayAddress
+    @$el.on 'swiperight.stationdetailsview', (event) =>
+      window.history.back()
 
   close: =>
     @off
