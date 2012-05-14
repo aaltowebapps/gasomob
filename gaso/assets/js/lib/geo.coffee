@@ -28,6 +28,7 @@ class GeoLib
 
     @gooGeocoder.geocode latLng: latlng, (results, status) ->
       if status == google.maps.GeocoderStatus.OK
+        Gaso.log "Reverse geocoding results for address finding:", results
 
         address = results[0]
         if address
@@ -41,6 +42,7 @@ class GeoLib
             city: citymatch[0] if citymatch?
             street: $.trim parts[0]
             zip: zipmatch[0] if zipmatch?
+
           callback parsedAddress
         else
           Gaso.log "No address found"

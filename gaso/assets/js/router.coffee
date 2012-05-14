@@ -108,7 +108,7 @@ class Gaso.AppRouter extends Backbone.Router
       $.mobile.showPageLoadingMsg()
       # This can happen e.g. if landing directly to this page e.g. from bookmark or by refreshing the browser page.
       Gaso.helper.findStationByOsmId id, (error, success) =>
-        Gaso.log "Fetching done, try opening station map page again. Response:", success
+        Gaso.log "Fetching done, trying to open station map page again. Response:", success
         Gaso.error "Error finding station", error if error?
         @stationMap(id, true)
 
@@ -129,7 +129,7 @@ class Gaso.AppRouter extends Backbone.Router
       $.mobile.showPageLoadingMsg()
       # This can happen e.g. if landing directly to this page e.g. from bookmark or by refreshing the browser page.
       Gaso.helper.findStationByOsmId id, (error, success) =>
-        Gaso.log "Fetching done, try opening station map page again. Response:", success
+        Gaso.log "Fetching done, trying to open station details page again. Response:", success
         Gaso.error "Error finding station", error if error?
         @refuel(id, true)
 
