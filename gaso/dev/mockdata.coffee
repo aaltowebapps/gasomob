@@ -110,7 +110,7 @@ s3 = new db.Station
   address:
     country  : 'Finland'
     city     : 'Espoo'
-    street   : 'Mikäsenytolikatu 45'
+    street   : 'Mikäsenytoli jokupitkä kadunnimi 45'
     zip      : '00430'
   location : [24.945, 60.16968]
 

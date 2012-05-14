@@ -1,6 +1,6 @@
 # Navigation bar
 div 'data-role': 'navbar', ->
-  ul ->
+  ul id: 'navigation', ->
     li ->
       a 'href': '#search', 'data-icon': 'search', 'Find'
     li ->

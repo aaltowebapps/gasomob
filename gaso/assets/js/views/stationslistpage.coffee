@@ -49,6 +49,7 @@ class Gaso.StationsListPage extends Backbone.View
   toggleItems: (event) ->
     $items = $(event.target).nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
 
+  # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
@@ -80,6 +81,15 @@ class Gaso.StationsListPage extends Backbone.View
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
+      @$list.listview 'refresh' if @pageInitialized
+      @$list.show()
+
+  rateLimitedRenderFunc = null
+  renderListRateLimited: (refresh) =>
+    if rateLimitedRenderFunc?
+      return rateLimitedRenderFunc(refresh);
+    rateLimitedRenderFunc = _.debounce(@renderList,100)
+    @renderListRateLimited(refresh);
 
   bindEvents: ->
     @$el.on 'pageinit', @onPageInit
@@ -125,7 +135,7 @@ class Gaso.StationsListPage extends Backbone.View
     @user.save()
 
   onCollectionReset: =>
-    @renderList true
+    @renderListRateLimited true
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
@@ -137,7 +147,7 @@ class Gaso.StationsListPage extends Backbone.View
     # The new way: Trying out alternative way of rendering the list when new stations are added.
     # Instead of adding single items to the DOM, just render the whole list again.
     # This is simpler, but lets see if this works performance-wise.
-    @renderList()
+    @renderListRateLimited true
 
   addStationListItem: (station) =>
     newItem = new Gaso.StationListItem model: station
