@@ -23,6 +23,8 @@ class Gaso.StationDetailsView extends Backbone.View
     @$el.attr "data-add-back-btn", "true"
 
     @$el.html @template @station.toJSON()
+
+    @station.updateAddress()
     
     @map = new google.maps.Map @$el.find("#small-map-canvas")[0], @getMapSettings()
     
