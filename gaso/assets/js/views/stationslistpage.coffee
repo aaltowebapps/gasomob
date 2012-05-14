@@ -59,17 +59,19 @@ class Gaso.StationsListPage extends Backbone.View
 
     # Helper variables
     itemsHTML = []
-    othersDivi = null
+    $othersDivider = null
+    $nearbyDivider = null
 
     # Create list items from stations collection.
     for station, i in @collection.models
       $temp = $('<div/>')
       distance = station.getDistance()
       if i == 0 and distance <= 10
-        $temp.append @createListDivider 'stations-nearby', 'Stations nearby'
-      else if not othersDivi and distance > 10
-        othersDivi = @createListDivider 'stations-others', 'Other stations'
-        $temp.append othersDivi
+        $nearbyDivider = @createListDivider 'stations-nearby', 'Stations nearby'
+        $temp.append $nearbyDivider
+      else if $nearbyDivider and not $othersDivider and distance > 10
+        $othersDivider = @createListDivider 'stations-others', 'Other stations'
+        $temp.append $othersDivider
       $temp.append @addStationListItem(station).$el
       itemsHTML.push $temp.html()
 
