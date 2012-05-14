@@ -14,6 +14,8 @@ class GasoApp
   # Logging
   log: (args...) ->
     console.log args... unless productionEnv
+  loggingEnabled: ->
+    not productionEnv
   error: (args...) ->
     console.error args... unless productionEnv
   fatal: (args...) ->

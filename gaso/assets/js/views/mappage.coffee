@@ -31,22 +31,29 @@ class Gaso.MapPage extends Backbone.View
 
   bindEvents: ->
     Gaso.log "Bind events to", @
-    # Save new location and fetch stations on drag end event.
-    google.maps.event.addListener @map, 'dragend', =>
-      @saveMapLocation()
-      # IMPROVE not the most intuitive to immediately run a function returned by function.
-      @findNearbyStationsThrottled()()
 
     # Save new zoom level to user model when map zoom has changed.
-    google.maps.event.addListener @map, 'zoom_changed', =>
+    google.maps.event.addListener @map, 'zoom_changed', _.debounce =>
+      prevZoom = @user.get 'mapZoom'
       newZoom = @map.getZoom()
       Gaso.log "Zoom level set to", newZoom
-
-      prevZoom = @user.get 'mapZoom'
       @user.set 'mapZoom', newZoom
       @user.save()
       if newZoom < prevZoom 
-        @findNearbyStationsThrottled()()
+        @findNearbyStations()
+    , 300
+
+    # Save new location and fetch stations when map bounds change.
+    google.maps.event.addListener @map, 'bounds_changed', _.debounce =>
+      if Gaso.loggingEnabled()
+        Gaso.log "Map bounds changed to", @map.getBounds()?.toString()
+      # TODO don't look for nearby stations if new bounds are completely within the bounds where we searched last time
+      # We can use LatLngBounds.union(oldBounds).equals(newBounds) for this, then we can also forget finding
+      # the stations on user zoom change.
+      # See https://developers.google.com/maps/documentation/javascript/reference#LatLngBounds
+      @saveMapLocation()
+      @findNearbyStations()
+    , 300
 
     # Redraw map on jQM page change, otherwise it won't fill the screen.
     @$el.off 'pageshow.mappage'
@@ -56,7 +63,7 @@ class Gaso.MapPage extends Backbone.View
       coords = @user.get 'mapCenter'
       # return object in google.maps options format, see https://developers.google.com/maps/documentation/javascript/reference#MapOptions
       @map.setCenter new google.maps.LatLng(coords.lat, coords.lon)
-      @findNearbyStationsThrottled()()
+      @findNearbyStations()
 
     @stations.on 'add', @addStationMarker
     # TODO handle station remove
@@ -81,7 +88,7 @@ class Gaso.MapPage extends Backbone.View
     coords = @user.get 'mapCenter'
     Gaso.log "Pan map to", coords
     @map.panTo new google.maps.LatLng(coords.lat, coords.lon)
-    @findNearbyStations()
+    # @findNearbyStations()
 
 
   saveMapLocation: =>
@@ -96,14 +103,12 @@ class Gaso.MapPage extends Backbone.View
     @stationMarkers.push new Gaso.StationMarker(station, @map).render()
 
 
-  findNearbyStationsThrottled: =>
-    _.throttle @findNearbyStations, 2000
-
-
   findNearbyStations: =>
-    Gaso.log "Find nearby stations"
-
     mapBounds = @map.getBounds()
+
+    if Gaso.loggingEnabled()
+      Gaso.log "Find stations within", mapBounds?.toString()
+
     #Try again after a moment if map is not yet ready.
     if not mapBounds?
       setTimeout =>
