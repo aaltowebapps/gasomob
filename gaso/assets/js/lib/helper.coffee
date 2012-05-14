@@ -34,13 +34,11 @@ class Gaso.Helper
       error: (collection, response) ->
         callback response
 
-  #TODO not used yet
   getStationsDataWithinBounds: (bounds) =>
     @stations.fetch
       add : true
       data:
         bounds: bounds
-
 
   getStationsDataNearby: =>
     userpos = @user.get 'position'
@@ -49,7 +47,6 @@ class Gaso.Helper
       data:
         point: [userpos.lon, userpos.lat]
         radius: 10
-
 
   findStationsWithinGMapBounds: (mapBounds) ->
     @getStationsDataWithinBounds Gaso.geo.gMapBoundsToArray mapBounds
@@ -66,7 +63,7 @@ class Gaso.Helper
 
     if existingModel?
       if settings.update
-        Gaso.log "TODO update station model with possible new/extra data, e.g. prices"
+        Gaso.log "TODO update station model with possible new/extra data we don't have yet"
     else
       # Calculate direct distance to user before adding to collection.
       # This way we avoid extra re-renderings and make collection sort initially better.

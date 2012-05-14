@@ -25,7 +25,7 @@ class Gaso.User extends Backbone.Model
     # Init with initial position.
     Gaso.util.getDevicePosition (error, position) =>
       if error?
-        return Gaso.log "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
+        return Gaso.error "Couldn't get initial device location.\nCode: #{error.code}\nError: #{error.message}"
       @updateUserPosition null, position
       # Initialize map to device position.
       @centerOnPosition @get 'position'
@@ -46,11 +46,12 @@ class Gaso.User extends Backbone.Model
 
   updateUserPosition: (error, position) =>
     if error?
+      @set 'positionAccuracy', null
       switch error.code
         when error.TIMEOUT
-          Gaso.log "Device position watching timed out, retrying."
+          Gaso.error "Device position watching timed out, retrying."
           @geoWatchID = Gaso.util.watchDevicePosition @updateUserPosition
-        else Gaso.log "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
+        else Gaso.error "Couldn't update device location.\nCode: #{error.code}\nError: #{error.message}"
       return
 
     coords = position.coords
@@ -63,3 +64,7 @@ class Gaso.User extends Backbone.Model
   isPositionAccurate: ->
     accuracy = @get 'positionAccuracy'
     accuracy? and accuracy < 10000
+
+  isPositionTrackingOK: ->
+    # We're lazy, just use the logic from position accuracy testing for now.
+    @isPositionAccurate()

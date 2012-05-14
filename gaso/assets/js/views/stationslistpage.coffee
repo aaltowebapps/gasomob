@@ -39,6 +39,7 @@ class Gaso.StationsListPage extends Backbone.View
     return @
 
   createListDivider: (id, text) ->
+    # TODO add some icon to say that "hey i'm clickable divider"
     $ '<li/>',
       id          : id
       text        : text
@@ -51,7 +52,8 @@ class Gaso.StationsListPage extends Backbone.View
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
-    return unless @collection.sorted
+    # Render only if stations collection is already sorted by distance/ranking OR if user position tracking is not active.
+    return unless @collection.sorted or not @user.isPositionTrackingOK()
     Gaso.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
 
     # Helper variables
