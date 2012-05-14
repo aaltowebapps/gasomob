@@ -225,15 +225,10 @@ script type: 'text/template', id: 'station-list-item', ->
     # TODO Improve price rendering, it is a bit clumsy to have this much logic here in the template
     text '<% _ftype = Gaso.app.router.user.get("myFuelType"); %>'
     text '<% _priceToDisplay = _.find(prices, function(p) {return p.type === _ftype}); %>'
-    text '<% if (_priceToDisplay != null && _priceToDisplay.value) { %>'
-    text '<% _priceToDisplay = _priceToDisplay.value %>'
-    text '<% } else { %>'
-    text '<% _priceToDisplay = ""; %>'
-    text '<% } %>'
+    text '<% if (_priceToDisplay) { _priceToDisplay = _priceToDisplay.value; } %>'
     p class: 'station-info station-info-price', ->
       text '<% if (_priceToDisplay) { %>'
       span class: 'currency', '&euro;' 
       span class: 'price-value', '{{ _priceToDisplay }}'
       span class: 'fuel-type', '{{ "(" + _ftype + ")" }}'
-
       text '<% } %>'
