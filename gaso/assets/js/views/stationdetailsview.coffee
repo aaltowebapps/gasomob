@@ -12,12 +12,6 @@ class Gaso.StationDetailsView extends Backbone.View
     @template = _.template Gaso.util.getTemplate 'station-details'
     @setElement $('<div id="station-details"/>')
   
-  bindEvents: ->
-    @$el.off 'pageshow.stationdetailsview'
-    @$el.on 'pageshow.stationdetailsview', (event) =>
-      google.maps.event.trigger @map, 'resize'
-      @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
-  
   render: (eventName) -> 
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
@@ -44,7 +38,22 @@ class Gaso.StationDetailsView extends Backbone.View
     @bindEvents()
     
     return @
-    
+
+  bindEvents: ->
+    @$el.off 'pageshow.stationdetailsview'
+    @$el.on 'pageshow.stationdetailsview', (event) =>
+      google.maps.event.trigger @map, 'resize'
+      @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
+    @station.on 'change:address', @displayAddress
+
+  close: =>
+    @off
+    @$el.off '.stationdetailsview'
+    @station.off 'change:address', @displayAddress
+    for input in @priceEdits
+      input.close()
+    @commentsView.close()
+
   getMapSettings: =>
     zoom: 16
     mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -57,13 +66,14 @@ class Gaso.StationDetailsView extends Backbone.View
       input.updateModel()
     @station.save()
 
-  close: =>
-    @off
-    #@station.off ...
-    for input in @priceEdits
-      input.close()
-    @commentsView.close()
-
+  displayAddress: =>
+    # We could have own view for just the address that would render automatically, but meh
+    $temp = $(@template @station.toJSON())
+    @$el.find('.address').fadeOut ->
+      self = $(@)
+      self.hide() # Is it the span or what, but without explicity hide() the fading doesn't seem to work.
+      self.html $temp.find('.address').html()
+      self.fadeIn()
 
   addPriceEdit: (price, options) =>
     defaults =
