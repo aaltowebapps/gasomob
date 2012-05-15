@@ -17,7 +17,7 @@ class Gaso.StationsList extends Backbone.Collection
     if d1 < d2 then -1 else if d1 > d2 then 1 else 0
 
   onDistancesChanged: =>
-    Gaso.log "Station distances changed. Manually re-sort of the collection."
+    Gaso.log "Station distances changed. Manually re-sort the collection."
     @sorted = true
     @sort()
 
@@ -26,9 +26,11 @@ class Gaso.StationsList extends Backbone.Collection
       Gaso.log "Add single Station model to collection", data
       # Expect distance to be set for ready Station models
       super data, options
+      @sorted = true
     else
-      Gaso.log "Add stations to collection, should be an array of raw data objects", data
-      for tation in data
+      if data.length
+        Gaso.log "Add #{data.length} stations to collection from raw data"
+      for station in data
         # Expect raw data
         if station instanceof Gaso.Station
           Gaso.fatal "Not expecting array of Station models, TODO implement"
