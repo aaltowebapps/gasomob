@@ -89,8 +89,10 @@ for s in stations
 
 /* LIST PAGE */
 #page-list
-  .ui-select .ui-icon
-    right 20px
+  @media screen and (max-width: 480px)
+    .ui-select .ui-icon
+      right 20px
+  
 
   #fueltypes
     .ui-btn
