@@ -31,6 +31,7 @@ html ->
 
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
+    link rel: 'stylesheet', href: '/stylesheets/themes/gasotheme.min.css'
 
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"

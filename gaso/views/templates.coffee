@@ -140,7 +140,7 @@ script type: 'text/template', id: 'list-page', ->
     # Slider for affecting stations searching/ranking.
     # TODO change filter to partial and include it into map page also?
   gasofooter ->
-    div id: 'ranking-slider', 'data-role': 'fieldcontain', class: 'ui-bar ui-bar-a', ->
+    div id: 'ranking-slider', 'data-role': 'fieldcontain', class: 'ui-bar ui-bar-c', ->
       div class : 'slidericon money', ->
         img src: 'images/euro.png', alt: '&euro;'
       div id: 'filterslider', ->
@@ -162,7 +162,7 @@ script type: 'text/template', id: 'comments-list', ->
       form ->
         label 'for': 'newcomment', 'id': 'ownid', ->
           '{{ curuser.id }}: '
-        input 'type': 'text', 'name': 'newcomment', 'value': 'Your review', 'data-theme': 'c'
+        input 'type': 'text', 'name': 'newcomment', 'value': 'Your review'
         button 'type': 'submit', 'data-inline': 'true', 'data-theme': 'c', 'Shout!'
         # a 'href': '#', 'data-role': 'button', 'data-inline': 'true', 'Shout!'
     hr ->
