@@ -22,27 +22,16 @@ class Gaso.AppRouter extends Backbone.Router
     @initModels()
     # Init helper controller.
     Gaso.helper = new Gaso.Helper(@user, @stations, @searchContext)
-    # @initViews()
     @bindEvents()
     return
 
   initModels: ->
-    #TODO hmm should we put these into Gaso.models... or not?
     @comments           = new Gaso.CommentsList()
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
     @user               = new Gaso.User()
     # Load cached user data directly from localstorage.
     @user.fetch()
-
-
-  initViews: ->
-    #TODO hmm should we put these into Gaso.views... or not?
-    @listPage     = new Gaso.StationsListPage(@stations, @user)
-    @settingsPage = new Gaso.UserSettingsPage(@user)
-    @mapPage      = new Gaso.MapPage(@stations, @user)
-    @menuPage     = new Gaso.MenuPage(@user)
-    @searchPage   = new Gaso.SearchPage(@user)
 
 
   bindEvents: ->
@@ -56,21 +45,17 @@ class Gaso.AppRouter extends Backbone.Router
       event.preventDefault()
 
     # Remove page from DOM when it's being replaced
-    # Try to make transition between pages smoother by using 'pagechange' instead of 'pagehide' when cleaning up after
-    # our View pages.
     $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
-      return if self.prevPage?
-      # Only remove the element from the DOM like this if there's no prevPage (happens on page load).
-      $(@).remove()
-
-    $doc.on 'pagechange', 'div[data-role="page"]', (event) ->
       Gaso.log "Remove page", @
       # Expect page-views to implement a close() -method that cleans up the view properly.
       Gaso.log "Call 'close' to ", self.prevPage
       self.prevPage?.close()
-      self.prevPage?.remove()
+      # Only remove the element from the DOM like this if there's no prevPage (happens on page load).
+      unless self.prevPage?
+        $(@).remove()
+      else
+        self.prevPage?.remove()
       self.prevPage = self.currentPage
-
 
 
   ###
