@@ -3,7 +3,7 @@
 class GasoApp
 
   window.noMobileDebug = navigator.userAgent.indexOf('Chrome/') >= 0
-  mobileDebug = (args...) ->
+  mobileDebug = (error, args...) ->
     return if productionEnv or noMobileDebug
     $debug = $ '#debug'
     unless $debug.length
@@ -22,8 +22,9 @@ class GasoApp
         
     oldContent = $debug.html()
     oldTail = oldContent.substring oldContent.length - 1000
-    $debug.html oldTail + args.join('') + '<br>'
-  
+    newContent = oldTail + if error then "<em>#{args.join('')}</em><br>" else "#{args.join('')}<br>"
+    $debug.html newContent
+
   ###
     Public stuff.
   ###
@@ -37,18 +38,18 @@ class GasoApp
   # Logging
   log: (args...) ->
     console.log args... unless productionEnv
-    mobileDebug args...
+    mobileDebug no, args...
   loggingEnabled: ->
     not productionEnv
   error: (args...) ->
     console.error args... unless productionEnv
-    mobileDebug args...
+    mobileDebug yes, args...
   fatal: (args...) ->
     if productionEnv
       alert args.join ""
     else
       console.error args...
-      mobileDebug args...
+      mobileDebug yes, args...
 
   # Utilities: template handling etc.
   util: 
