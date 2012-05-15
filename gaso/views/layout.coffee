@@ -25,9 +25,9 @@ html ->
 
     # Lib styles
     if productionEnv
-      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css'
+      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css'
     else
-      link rel: 'stylesheet', href: '/lib/jquery.mobile-1.1.0-rc.2.css'
+      link rel: 'stylesheet', href: '/lib/jquery.mobile-1.1.0.css'
 
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
@@ -72,9 +72,9 @@ html ->
     text assets.js 'mobileinit'
     text '\n'
     if productionEnv
-      script src: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.js'
+      script src: 'http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js'
     else
-      script src: '/lib/jquery.mobile-1.1.0-rc.2.js'
+      script src: '/lib/jquery.mobile-1.1.0.js'
 
     script -> "productionEnv = #{productionEnv}; tmplVer = #{templatesversion};"
     
