@@ -109,4 +109,6 @@ class Gaso.StationDetailsView extends Backbone.View
       @addPriceEdit p, animate: true
       
   openLargeMap: ->
+    @outTransition.reverse = false
     Gaso.app.router.navigate "stationmap/#{ @station.id }", trigger: true
+    @outTransition.reverse = true

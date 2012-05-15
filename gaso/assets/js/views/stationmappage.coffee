@@ -6,6 +6,9 @@ class Gaso.StationMapPage extends Backbone.View
     console.log "model", @model
     @template = _.template Gaso.util.getTemplate 'station-map-page'
     @setElement $('<div id="page-station-map"/>')
+    @outTransition = 
+      transition: 'slide'
+      reverse: true
     
     
   render: =>
