@@ -16,8 +16,26 @@ border-radius()
   background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
 /* /NAVIGATION BAR */
 
+/* MOBILE DEBUGGING */
+#debug
+  position fixed
+  top 0
+  left 0
+  right 0
+  z-index 1000
+  font-size 10px
+  line-height 10px
+  opacity .7
+  background white
+  min-height 40px
 
 /* COMMON */
+.ui-page
+  // Tryomg tp get rid of jquerymobile page flicker.
+  // NOTE: This might cause problems with Android form inputs
+  // (see comments in https://github.com/jquery/jquery-mobile/issues/455)
+  -webkit-backface-visibility hidden
+
 size = 50
 .ui-icon-station
   //margin 1em
@@ -80,11 +98,11 @@ for s in stations
     top -3px
     margin 0 -25px
 
-.ui-page
-  // Tryomg tp get rid of jquerymobile page flicker.
-  // NOTE: This might cause problems with Android form inputs
-  // (see comments in https://github.com/jquery/jquery-mobile/issues/455)
-  -webkit-backface-visibility hidden
+#footer
+  // Remove ugly green border
+  border none
+  // add a top 'gleam' effect to make footer look a bit nicer
+  border-top 1px solid #aaa
 /* /COMMON */
 
 /* LIST PAGE */
@@ -149,15 +167,12 @@ for s in stations
     line-height 30px
     min-height 20px
 
-  #footer
-    // This page has the slider in the footer, add a top 'gleam' effect to make footer look a bit nicer.
-    border none
-    border-top 1px solid #999
 /* /LIST PAGE */
 
 
 
 /* MAP PAGE */
+/*
 #page-map
 #map-canvas
 #page-map .ui-content
@@ -167,6 +182,13 @@ for s in stations
   padding 0
   min-height 380px
   min-width 280px
+*/
+#map-canvas
+  position absolute !important
+  width 100%
+  height 100%
+  top 0
+  left 0
 
 #page-map #map-buttons
   position: absolute;

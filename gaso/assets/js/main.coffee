@@ -11,18 +11,39 @@ class GasoApp
   # Running app and other data, to be defined/initialized.
   app: {} 
 
+  window.noMobileDebug = navigator.userAgent.indexOf('Chrome/') >= 0
+  mobileDebug = (args...) ->
+    return if productionEnv or noMobileDebug
+    $debug = $ '#debug'
+    unless $debug.length
+      $debug = $('<div id="debug" />').appendTo 'body'
+      $debug.on 'click', ->
+        self = $(@)
+        self.hide()
+        setTimeout ->
+          self.fadeIn()
+        , 5000
+      $debug.on 'swipeleft', ->
+        $debug.html ''
+    oldContent = $debug.html()
+    oldTail = oldContent.substring oldContent.length - 1000
+    $debug.html oldTail + args.join('') + '<br>'
+
   # Logging
   log: (args...) ->
     console.log args... unless productionEnv
+    mobileDebug args...
   loggingEnabled: ->
     not productionEnv
   error: (args...) ->
     console.error args... unless productionEnv
+    mobileDebug args...
   fatal: (args...) ->
     if productionEnv
       alert args.join ""
     else
       console.error args...
+      mobileDebug args...
 
   # Utilities: template handling etc.
   util: 
