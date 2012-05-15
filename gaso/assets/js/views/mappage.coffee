@@ -63,6 +63,7 @@ class Gaso.MapPage extends Backbone.View
       coords = @user.get 'mapCenter'
       # return object in google.maps options format, see https://developers.google.com/maps/documentation/javascript/reference#MapOptions
       @map.setCenter new google.maps.LatLng(coords.lat, coords.lon)
+      @saveMapLocation()
       @findNearbyStations()
 
     @stations.on 'add', @addStationMarker

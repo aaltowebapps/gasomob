@@ -19,16 +19,21 @@ border-radius()
 
 /* COMMON */
 size = 50
-.ui-icon-station
-  //margin 1em
-  width (size)px
-  height (size)px
-  box-shadow 0 0 10px #222
-stations = abc shell nesteoil seo teboil st1 question
-for s in stations
-  .ui-icon-{s}
-    path = "../images/stationlogos/%s_%s.png" % (s size)
-    background url(path) no-repeat
+.ui-content
+  .ui-icon-station
+    //margin 1em
+    width (size)px
+    height (size)px
+    box-shadow 0 0 10px #222
+  stations = abc shell nesteoil seo teboil st1 question
+  for s in stations
+    .ui-icon-{s}
+      path = "../images/stationlogos/%s_%s.png" % (s size)
+      background url(path) no-repeat
+
+.ui-icon-centermap
+  background url("../images/center.png") no-repeat !important
+  width 100px !important
 
 .distance-direct
   background url("../images/distance_direct_16.png") no-repeat
@@ -73,9 +78,16 @@ for s in stations
     width 100%
     padding 5px 0
   .ui-slider-handle
+    background #338
     width 50px
     top -3px
     margin 0 -25px
+
+.ui-page
+  // Tryomg tp get rid of jquerymobile page flicker.
+  // NOTE: This might cause problems with Android form inputs
+  // (see comments in https://github.com/jquery/jquery-mobile/issues/455)
+  -webkit-backface-visibility hidden
 /* /COMMON */
 
 /* LIST PAGE */
@@ -114,13 +126,14 @@ for s in stations
 
     .currency
       font-size 16px
-      padding-left 0.5em
+      padding-right .3em
 
     .price-value
     .distance-direct
     .distance-drive
     .fuel-type
       vertical-align top
+      padding-right .5em
 
     .fuel-type
       color gray
@@ -148,6 +161,12 @@ for s in stations
   padding 0
   min-height 380px
   min-width 280px
+
+#page-map #map-buttons
+  position: absolute;
+  top: 30px;
+  right: 15px;
+
 /* /MAP PAGE */
 
 

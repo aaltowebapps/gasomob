@@ -19,23 +19,9 @@ class Gaso.StationsListPage extends Backbone.View
     @$list = @$el.find 'ul#list-stations'
     @bindEvents()
     @renderList()
-    # TODO tried to get rid of FOUC with slider, when moving from map page to list page. no success yet
-    # @$el.trigger('create')
-    # @$el.find('#ranking-slider').fadeIn()
-
-
-    
-    # Tried different approaches to activate button that user has selected as the fuel type.
-    # @$el.find(":contains(@user.get 'myFuelType')").button()
-    # and
-    # @$el.trigger('create')
-    # with
-
-
     # Note: delegateEvents() is called automatically once in View constructor, however since we re-use the list-page
     # we must make sure that event listeners are bound again when we re-visit the list page.
     @delegateEvents()
-
     return @
 
   createListDivider: (id, text) ->
@@ -51,6 +37,7 @@ class Gaso.StationsListPage extends Backbone.View
 
   # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
   renderList: (refresh) =>
+    #TODO renderList gets called on map page, why? Something is left unbound?
     @closeListItems()
     @listItems = []
     # Render only if stations collection is already sorted by distance/ranking OR if user position tracking is not active.
@@ -95,19 +82,21 @@ class Gaso.StationsListPage extends Backbone.View
 
   bindEvents: ->
     @$el.on 'pageinit', @onPageInit
-    @collection.on 'add', @onCollectionAdd
-    @collection.on 'reset', @onCollectionReset
-
     # Updates top-page fuel type selection buttons to reflect current user choice. Initial selection must be set
     # after jQM has enhanced the page content, therefore we listen to 'pagebeforeshow' event.
     @$el.on 'pagebeforeshow', @setActiveFuelTypeButton
+
+    @collection.on 'add', @onCollectionAdd
+    @collection.on 'reset', @onCollectionReset
+
     @user.on 'change:myFuelType', @onUserFuelTypeChanged
 
   close: =>
     @off()
     @$el.off 'pageinit', @onPageInit
-    @$el.off 'pagebeforeshow'
+    @$el.off 'pagebeforeshow', @setActiveFuelTypeButton
     @collection.off 'add', @onCollectionAdd
+    @collection.off 'reset', @onCollectionReset
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
     @closeListItems()
 

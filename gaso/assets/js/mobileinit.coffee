@@ -9,4 +9,8 @@ $doc.bind 'mobileinit', (event) ->
     hashListeningEnabled : false
     pushStateEnabled     : false
 
+  # For phonegap
+  # $.mobile.allowCrossDomainPages = true
+  # $.support.cors = true
+
 

@@ -2,7 +2,7 @@
 Search page
 ###
 class Gaso.SearchPage extends Backbone.View
-  constructor: (@user) ->
+  constructor: (@user, @searchContext) ->
     @template = _.template Gaso.util.getTemplate 'search-page'
     @setElement $('<div id="page-search"/>')
     @transition = 'pop'
