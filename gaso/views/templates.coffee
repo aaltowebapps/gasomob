@@ -35,6 +35,8 @@ conditionalStationDistance = (options) ->
 script type: 'text/template', id: 'map-page', ->
   div 'data-role': 'content', ->
     div id: 'map-canvas'
+    div id: 'map-buttons', ->
+      a href: '#', 'data-role': 'button', 'data-icon': 'centermap', 'data-iconpos': 'notext', 'Center on location'
   gasofooter ->
     partial 'navigation'
 
@@ -155,7 +157,7 @@ script type: 'text/template', id: 'list-page', ->
 ###
 
 script type: 'text/template', id: 'comments-list', ->
-  div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'b', 'data-content-theme': 'e', ->
+  div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'a', 'data-content-theme': 'a', ->
     h3 'Comments'
     
     div 'data-role': 'fieldcontain', ->
@@ -163,7 +165,7 @@ script type: 'text/template', id: 'comments-list', ->
         label 'for': 'newcomment', 'id': 'ownid', ->
           '{{ curuser.id }}: '
         input 'type': 'text', 'name': 'newcomment', 'value': 'Your review'
-        button 'type': 'submit', 'data-inline': 'true', 'data-theme': 'c', 'Shout!'
+        button 'type': 'submit', 'data-inline': 'true', 'Shout!'
         # a 'href': '#', 'data-role': 'button', 'data-inline': 'true', 'Shout!'
     hr ->
     ul id: 'list-comments'
