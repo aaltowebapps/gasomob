@@ -44,10 +44,9 @@ class Gaso.MapPage extends Backbone.View
 
     @$el.on 'pagebeforehide.mappage', (event) =>
       # Transition from the map page caused new map center to be saved incorrectly during/right after
-      # the transition.
+      # the transition. Therefore set the flag to false before transition begins.
       @mapReady = false
     
-
     # Redraw map on jQM page change, otherwise it won't fill the screen.
     @$el.on 'pageshow.mappage', (event) =>
       Gaso.log "Resize map on jQM 'pageshow'"
