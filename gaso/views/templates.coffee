@@ -131,7 +131,7 @@ script type: 'text/template', id: 'list-page', ->
       div class: "ui-block-a", -> button 'data-fueltype': '95E10', 'data-mini': 'true', '95'
       div class: "ui-block-b", -> button 'data-fueltype': '98E5', 'data-mini': 'true', '98'
       div class: "ui-block-c", -> button 'data-fueltype': 'Diesel', 'data-mini': 'true', 'Di'
-      div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:'
+      div class: "ui-block-d", -> fuelTypeSelect()
       # TODO button for other fuel types
     # jQM Listview for station list items
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
