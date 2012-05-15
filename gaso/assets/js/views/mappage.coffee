@@ -33,19 +33,11 @@ class Gaso.MapPage extends Backbone.View
   bindEvents: ->
     Gaso.log "Bind events to", @
 
-    # Save new zoom level to user model when map zoom has changed.
-    google.maps.event.addListener @map, 'zoom_changed', _.debounce =>
-      prevZoom = @user.get 'mapZoom'
-      newZoom = @map.getZoom()
-      Gaso.log "Zoom level set to", newZoom
-      @user.set 'mapZoom', newZoom
-      @user.save()
-    , 300
-
     # Save new location and fetch stations when map bounds change.
     google.maps.event.addListener @map, 'bounds_changed', _.debounce =>
       if Gaso.loggingEnabled()
         Gaso.log "Map bounds changed to", @map.getBounds()?.toString()
+        @saveZoomLevel()
         @saveMapLocation()
         @findNearbyStations()
     , 300
@@ -90,6 +82,13 @@ class Gaso.MapPage extends Backbone.View
     Gaso.log "Pan map to", coords
     @map.panTo new google.maps.LatLng(coords.lat, coords.lon)
 
+  saveZoomLevel: =>
+    prevZoom = @user.get 'mapZoom'
+    newZoom = @map.getZoom()
+    if prevZoom != newZoom
+      Gaso.log "Zoom level changed to", newZoom
+    @user.set 'mapZoom', newZoom
+    @user.save()
 
   saveMapLocation: =>
     return if not @mapReady
