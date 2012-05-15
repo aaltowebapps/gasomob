@@ -12,7 +12,7 @@ class GeoLib
       return_location: true
       boundsOnly: true
       bounds: @gMapBoundsToCMBounds mapBounds
-      resultsNumber: 20
+      resultsNumber: 50
 
     # Run search
     @cmGeocoder.getLocations "", callback, options
