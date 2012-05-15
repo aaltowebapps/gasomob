@@ -25,12 +25,13 @@ html ->
 
     # Lib styles
     if productionEnv
-      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css'
+      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile.structure-1.1.0-rc.1.min.css'
     else
-      link rel: 'stylesheet', href: '/lib/jquery.mobile-1.1.0-rc.2.css'
+      link rel: 'stylesheet', href: '/lib/jquery.mobile.structure-1.1.0-rc.1.css'
 
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
+    link rel: 'stylesheet', href: '/stylesheets/themes/gasotheme.min.css'
 
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
