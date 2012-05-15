@@ -2,10 +2,10 @@
 div 'data-role': 'navbar', ->
   ul id: 'navigation', ->
     li ->
-      a 'href': '#search', 'data-icon': 'search', 'Find'
+      a 'href': '#search', 'Find'
     li ->
-      a 'href': '#map', 'data-icon': 'home', 'Map'
+      a 'href': '#map', 'Map'
     li ->
-      a 'href': '#list', 'data-icon': 'grid', 'List'
+      a 'href': '#list', 'List'
     li ->
-      a 'href': '#menu', 'data-icon': 'home', 'Menu'
+      a 'href': '#menu', 'Menu'
