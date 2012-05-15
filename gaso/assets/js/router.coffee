@@ -22,7 +22,7 @@ class Gaso.AppRouter extends Backbone.Router
     @initModels()
     # Init helper controller.
     Gaso.helper = new Gaso.Helper(@user, @stations, @searchContext)
-    @initViews()
+    # @initViews()
     @bindEvents()
     return
 
@@ -32,7 +32,7 @@ class Gaso.AppRouter extends Backbone.Router
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
     @user               = new Gaso.User()
-    # Load cache user data directly from localstorage.
+    # Load cached user data directly from localstorage.
     @user.fetch()
 
 
@@ -56,12 +56,19 @@ class Gaso.AppRouter extends Backbone.Router
       event.preventDefault()
 
     # Remove page from DOM when it's being replaced
+    # Try to make transition between pages smoother by using 'pagechange' instead of 'pagehide' when cleaning up after
+    # our View pages.
     $doc.on 'pagehide', 'div[data-role="page"]', (event) ->
+      return if self.prevPage?
+      # Only remove the element from the DOM like this if there's no prevPage (happens on page load).
+      $(@).remove()
+
+    $doc.on 'pagechange', 'div[data-role="page"]', (event) ->
       Gaso.log "Remove page", @
       # Expect page-views to implement a close() -method that cleans up the view properly.
       Gaso.log "Call 'close' to ", self.prevPage
       self.prevPage?.close()
-      $(@).remove()
+      self.prevPage?.remove()
       self.prevPage = self.currentPage
 
 
@@ -75,19 +82,19 @@ class Gaso.AppRouter extends Backbone.Router
       replace: true
 
   search: ->
-    @changePage @searchPage
+    @changePage new Gaso.SearchPage(@user, @searchContext)
 
   showList: ->
-    @changePage @listPage
+    @changePage new Gaso.StationsListPage(@stations, @user)
 
   settings: ->
-    @changePage @settingsPage
+    @changePage new Gaso.UserSettingsPage(@user)
 
   showMap: ->
-    @changePage @mapPage
+    @changePage new Gaso.MapPage(@stations, @user)
 
   showMenu: ->
-    @changePage @menuPage
+    @changePage new Gaso.MenuPage(@user)
 
   stationDetails: (id) ->
     # For now just handle as refuel, we might do something else with this later.

@@ -1,12 +1,17 @@
 class Gaso.StationMarker extends Backbone.View
 
+  # Keep a static counter to make cooler animation when adding multiple markers at once.
+  counter = 0
+  resetCounter = _.debounce ->
+    counter = 0
+  , 100
+
   constructor: (@model, @map, @options) ->
     # no ops
 
   render: =>
     loc = @model.get 'location'
     opts =
-      map       : @map
       title     : @model.get 'name'
       position  : new google.maps.LatLng(loc[1], loc[0])
       animation : google.maps.Animation.DROP unless @options?.noAnimation
@@ -16,6 +21,12 @@ class Gaso.StationMarker extends Backbone.View
     opts.icon = "images/stationlogos/#{ brand }_50.png" if brand
 
     @marker = new google.maps.Marker(opts)
+
+    if opts.animation
+      setTimeout @delayedAdd, counter++ * 40
+    else
+      @marker.setMap @map
+
     @bindEvents()
     
     return @
@@ -25,6 +36,11 @@ class Gaso.StationMarker extends Backbone.View
 
   close: =>
     google.maps.event.clearInstanceListeners(@marker)
+
+
+  delayedAdd: =>
+    @marker.setMap @map
+    resetCounter()
   
   showDetails: =>  
     Gaso.app.router.navigate "stations/#{ @model.id }", trigger: true

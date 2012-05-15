@@ -79,6 +79,12 @@ for s in stations
     width 50px
     top -3px
     margin 0 -25px
+
+.ui-page
+  // Tryomg tp get rid of jquerymobile page flicker.
+  // NOTE: This might cause problems with Android form inputs
+  // (see comments in https://github.com/jquery/jquery-mobile/issues/455)
+  -webkit-backface-visibility hidden
 /* /COMMON */
 
 /* LIST PAGE */
@@ -118,13 +124,14 @@ for s in stations
 
     .currency
       font-size 16px
-      padding-left 0.5em
+      padding-right .3em
 
     .price-value
     .distance-direct
     .distance-drive
     .fuel-type
       vertical-align top
+      padding-right .5em
 
     .fuel-type
       color gray
