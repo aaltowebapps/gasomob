@@ -19,21 +19,19 @@ border-radius()
 
 /* COMMON */
 size = 50
-.ui-content
-  .ui-icon-station
-    //margin 1em
-    width (size)px
-    height (size)px
-    box-shadow 0 0 10px #222
-  stations = abc shell nesteoil seo teboil st1 question
-  for s in stations
-    .ui-icon-{s}
-      path = "../images/stationlogos/%s_%s.png" % (s size)
-      background url(path) no-repeat
+.ui-icon-station
+  //margin 1em
+  width (size)px
+  height (size)px
+  box-shadow 0 0 10px #222
+stations = abc shell nesteoil seo teboil st1 question
+for s in stations
+  .ui-icon-{s}
+    path = "../images/stationlogos/%s_%s.png" % (s size)
+    background url(path) no-repeat
 
 .ui-icon-centermap
   background url("../images/center.png") no-repeat !important
-  width 100px !important
 
 .distance-direct
   background url("../images/distance_direct_16.png") no-repeat
@@ -78,7 +76,6 @@ size = 50
     width 100%
     padding 5px 0
   .ui-slider-handle
-    background #338
     width 50px
     top -3px
     margin 0 -25px

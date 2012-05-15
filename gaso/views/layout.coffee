@@ -30,8 +30,8 @@ html ->
       link rel: 'stylesheet', href: '/lib/jquery.mobile.structure-1.1.0.css'
 
     #link rel: 'icon', href: '/favicon.png'
-    link rel: 'stylesheet', href: '/stylesheets/style.css'
     link rel: 'stylesheet', href: '/stylesheets/themes/gasotheme.min.css'
+    link rel: 'stylesheet', href: '/stylesheets/style.css'
 
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"

@@ -136,7 +136,7 @@ script type: 'text/template', id: 'list-page', ->
       div class: "ui-block-d", -> fuelTypeSelect()
       # TODO button for other fuel types
     # jQM Listview for station list items
-    ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'b', 'data-filter': true, ->
+    ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'c', 'data-filter': true, ->
       # li id: 'stations-nearby', 'data-role': 'list-divider', 'Stations nearby'
       # List items will be added using 'station-list-item'-template
     # Slider for affecting stations searching/ranking.
