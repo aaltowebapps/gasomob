@@ -92,6 +92,7 @@ class Gaso.StationsListPage extends Backbone.View
     @user.on 'change:myFuelType', @onUserFuelTypeChanged
 
   close: =>
+    rateLimitedRenderFunc = null
     @off()
     @$el.off 'pageinit', @onPageInit
     @$el.off 'pagebeforeshow', @setActiveFuelTypeButton
