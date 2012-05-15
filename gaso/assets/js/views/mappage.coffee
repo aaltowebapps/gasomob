@@ -35,11 +35,10 @@ class Gaso.MapPage extends Backbone.View
 
     # Save new location and fetch stations when map bounds change.
     google.maps.event.addListener @map, 'bounds_changed', _.debounce =>
-      if Gaso.loggingEnabled()
-        Gaso.log "Map bounds changed to", @map.getBounds()?.toString()
-        @saveZoomLevel()
-        @saveMapLocation()
-        @findNearbyStations()
+      Gaso.log "Map bounds changed to", @map.getBounds()?.toString() if Gaso.loggingEnabled()
+      @saveZoomLevel()
+      @saveMapLocation()
+      @findNearbyStations()
     , 300
 
     @$el.on 'pagebeforehide.mappage', (event) =>
@@ -86,14 +85,13 @@ class Gaso.MapPage extends Backbone.View
     newZoom = @map.getZoom()
     if prevZoom != newZoom
       Gaso.log "Zoom level changed to", newZoom
-    @user.set 'mapZoom', newZoom
-    @user.save()
+      @user.set 'mapZoom', newZoom
+      @user.save()
 
   saveMapLocation: =>
     return if not @mapReady
     currCenter = @map.getCenter()
-    if Gaso.loggingEnabled()
-      Gaso.log "Save map location", currCenter.toString()
+    Gaso.log "Save map location", currCenter.toString() if Gaso.loggingEnabled()
     @user.set 'mapCenter'
       lat: currCenter.lat()
       lon: currCenter.lng()
@@ -121,8 +119,7 @@ class Gaso.MapPage extends Backbone.View
     # - new bounds are completely within the bounds where we searched last time.
     if @user.get('mapZoom') >= 7
       if @isBoundsFromNewArea mapBounds
-        if Gaso.loggingEnabled()
-          Gaso.log "Find stations within", mapBounds?.toString()
+        Gaso.log "Find stations within", mapBounds?.toString() if Gaso.loggingEnabled()
         Gaso.helper.findStationsWithinGMapBounds mapBounds
     else
       Gaso.log "Zoomed too far out, not fetching stations"

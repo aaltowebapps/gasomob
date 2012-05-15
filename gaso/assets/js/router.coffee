@@ -144,9 +144,8 @@ class Gaso.AppRouter extends Backbone.Router
       transition: transition
     if @currentPage?.outTransition?
       _.extend pageChangeOptions, @currentPage.outTransition
-
-    if Gaso.loggingEnabled()
-      Gaso.log "Page change options", JSON.stringify pageChangeOptions
+    
+    Gaso.log "Page change options", JSON.stringify pageChangeOptions if Gaso.loggingEnabled()
     # Change the JQM page.
     @currentPage = page
     $.mobile.changePage $p, pageChangeOptions

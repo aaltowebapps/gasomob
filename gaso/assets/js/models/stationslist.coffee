@@ -27,9 +27,8 @@ class Gaso.StationsList extends Backbone.Collection
       # Expect distance to be set for ready Station models
       super data, options
       @sorted = true
-    else
-      if data.length
-        Gaso.log "Add #{data.length} stations to collection from raw data"
+    else if data?.length
+      Gaso.log "Add #{data.length} stations to collection from raw data"
       for station in data
         # Expect raw data
         if station instanceof Gaso.Station
