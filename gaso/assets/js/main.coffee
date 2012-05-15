@@ -1,15 +1,6 @@
 
 # Define own "Gaso" namespace and base structurefor the app.
 class GasoApp
-  ###
-    Public stuff.
-  ###
-
-  # Some Constants
-  CM_API_KEY: 'a82f9aaf9fca4a1aa2e81ff9c514f0b2'
-
-  # Running app and other data, to be defined/initialized.
-  app: {} 
 
   window.noMobileDebug = navigator.userAgent.indexOf('Chrome/') >= 0
   mobileDebug = (args...) ->
@@ -24,10 +15,24 @@ class GasoApp
           self.fadeIn()
         , 5000
       $debug.on 'swipeleft', ->
-        $debug.html ''
+        $(@).html ''
+      $debug.on 'swiperight', ->
+        $(@).remove()
+        window.noMobileDebug = true
+        
     oldContent = $debug.html()
     oldTail = oldContent.substring oldContent.length - 1000
     $debug.html oldTail + args.join('') + '<br>'
+  
+  ###
+    Public stuff.
+  ###
+
+  # Some Constants
+  CM_API_KEY: 'a82f9aaf9fca4a1aa2e81ff9c514f0b2'
+
+  # Running app and other data, to be defined/initialized.
+  app: {} 
 
   # Logging
   log: (args...) ->
