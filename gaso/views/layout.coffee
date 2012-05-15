@@ -25,9 +25,9 @@ html ->
 
     # Lib styles
     if productionEnv
-      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css'
+      link rel: 'stylesheet', href: 'http://code.jquery.com/mobile/1.1.0/jquery.mobile.structure-1.1.0.css'
     else
-      link rel: 'stylesheet', href: '/lib/jquery.mobile-1.1.0.css'
+      link rel: 'stylesheet', href: '/lib/jquery.mobile.structure-1.1.0.css'
 
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
