@@ -41,7 +41,8 @@ class Gaso.StationsListPage extends Backbone.View
     @closeListItems()
     @listItems = []
     # Render only if stations collection is already sorted by distance/ranking OR if user position tracking is not active.
-    return unless @collection.sorted or not @user.isPositionTrackingOK()
+    if @user.isPositionTrackingOK() and not @collection.sorted
+      return
     Gaso.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
 
     # Helper variables
