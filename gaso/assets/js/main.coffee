@@ -1,6 +1,30 @@
 
 # Define own "Gaso" namespace and base structurefor the app.
 class GasoApp
+
+  window.noMobileDebug = navigator.userAgent.indexOf('Chrome/') >= 0
+  mobileDebug = (error, args...) ->
+    return if productionEnv or noMobileDebug
+    $debug = $ '#debug'
+    unless $debug.length
+      $debug = $('<div id="debug" />').appendTo 'body'
+      $debug.on 'click', ->
+        self = $(@)
+        self.hide()
+        setTimeout ->
+          self.fadeIn()
+        , 5000
+      $debug.on 'swipeleft', ->
+        $(@).html ''
+      $debug.on 'swiperight', ->
+        $(@).remove()
+        window.noMobileDebug = true
+        
+    oldContent = $debug.html()
+    oldTail = oldContent.substring oldContent.length - 1000
+    newContent = oldTail + if error then "<em>#{args.join('')}</em><br>" else "#{args.join('')}<br>"
+    $debug.html newContent
+
   ###
     Public stuff.
   ###
@@ -14,15 +38,18 @@ class GasoApp
   # Logging
   log: (args...) ->
     console.log args... unless productionEnv
+    mobileDebug no, args...
   loggingEnabled: ->
     not productionEnv
   error: (args...) ->
     console.error args... unless productionEnv
+    mobileDebug yes, args...
   fatal: (args...) ->
     if productionEnv
       alert args.join ""
     else
       console.error args...
+      mobileDebug yes, args...
 
   # Utilities: template handling etc.
   util: 
