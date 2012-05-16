@@ -15,13 +15,20 @@ class Gaso.StationMarker extends Backbone.View
       title     : @model.get 'name'
       position  : new google.maps.LatLng(loc[1], loc[0])
       animation : google.maps.Animation.DROP unless @options?.noAnimation
+      optimized : false
 
+    # Set custom station logo
     brand = @model.get 'brand'
+    if brand 
+      opts.icon = new google.maps.MarkerImage "images/stationmarkers/#{ brand }_128.png",
+        null # size, default ok
+        null # origin, default ok
+        null # anchor, default ok
+        # Scaled size for retina display
+        new google.maps.Size(64, 64)
 
-    opts.icon = "images/stationmarkers/#{ brand }_128.png" if brand
-
+    # Add the marker
     @marker = new google.maps.Marker(opts)
-
     if opts.animation
       setTimeout @delayedAdd, counter++ * 40
     else
