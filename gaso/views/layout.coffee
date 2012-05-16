@@ -36,7 +36,9 @@ html ->
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
     # Libs: Google Maps + geometry library
-    script src: 'http://maps.googleapis.com/maps/api/js?key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&libraries=geometry&sensor=true'
+    # Note: v3.6 required to use Retina-optimized icons, see
+    # http://stackoverflow.com/questions/9208916/google-map-custom-markers-retina-resolution
+    script src: 'http://maps.googleapis.com/maps/api/js?v=3.6&key=AIzaSyDcg6vsxZ6HaI32Nn24kAzrclo9SL3Rz7M&libraries=geometry&sensor=true'
 
     # Libs: Socket.io for websockets
     script src: '/socket.io/socket.io.js'

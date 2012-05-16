@@ -17,13 +17,15 @@ class Gaso.UserMarker extends Backbone.View
   renderLocationIndicator: =>
     pos = @model.get 'position'
 
-    image = new google.maps.MarkerImage 'images/blue_ball16.png',
-      # This marker is 16 pixels wide by 16 pixels tall.
-      new google.maps.Size(16, 16)
+    image = new google.maps.MarkerImage 'images/blue_ball32.png',
+      # Marker size
+      null
       # The origin for this image is 0,0. (i.e. we could use a icon-sprite-file and define another origin point)
       new google.maps.Point(0, 0)
       # The anchor for this image is the center of the ball.
       new google.maps.Point(8, 8)
+      # Scaled size
+      new google.maps.Size(16, 16)
 
     opts =
       map: @map
@@ -31,6 +33,9 @@ class Gaso.UserMarker extends Backbone.View
       position: new google.maps.LatLng(pos.lat, pos.lon)
       icon: image
       animation: google.maps.Animation.DROP
+      # Added option for using Retina-optimized icons, see
+      # http://stackoverflow.com/questions/9208916/google-map-custom-markers-retina-resolution
+      optimized: false
 
     @marker = new google.maps.Marker(opts)
 
