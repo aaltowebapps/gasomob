@@ -82,6 +82,7 @@ class Gaso.StationDetailsView extends Backbone.View
     if totalAmt and totalPrice
       @station.updatePrice @user.get('myFuelType'), totalPrice / totalAmt
       @user.get('refills').push
+        station: @station.id
         amt: totalAmt
         price: totalPrice
         date: new Date()
