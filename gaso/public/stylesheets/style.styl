@@ -49,6 +49,12 @@ for s in stations
   .ui-icon-{s}
     path = "../images/stationlogos/%s_%s.png" % (s size)
     background url(path) no-repeat
+    background-size 100%
+  // TODO It would be better to have separate css for high resolution stuff (less @media definitions), but for now: meh.
+  @media all and (min-device-pixel-ratio: 2)
+    .ui-icon-{s}
+      path = "../images/stationlogos/%s_%s.png" % (s size)
+      background-image url(path)
 
 .ui-icon-centermap
   background url("../images/center.png") no-repeat !important
