@@ -210,8 +210,17 @@ script type: 'text/template', id: 'price-edit', ->
   text '<% if (typeof value === "undefined") { value = ""; } %>'
   text '<% ptype = "price"+type; %>'
 
-  label for: "{{ptype}}", "{{type}}"
+  text '<% if (typeof date !== "undefined") { %>'
+  div class: 'timeago-info', ->
+    span 'Updated '
+    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
+  text '<% } %>'
+
+  label for: "{{ptype}}", ->
+    span class: 'fueltype', "{{type}}"
+
   input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+  
 
 
 

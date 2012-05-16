@@ -45,7 +45,7 @@ class Gaso.StationsList extends Backbone.Collection
         existing = @get station.osmId
         if existing
           # Don't add existing stations, only update data
-          Gaso.log "Station", existing, "already in collection, update prices etc, if available ", station.prices
+          Gaso.log "TODO Station", existing, "already in collection, update prices etc, if available ", station.prices
         else
           @sorted = false unless distanceSet
           super station, options

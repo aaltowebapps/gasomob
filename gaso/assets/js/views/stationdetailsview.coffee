@@ -77,15 +77,15 @@ class Gaso.StationDetailsView extends Backbone.View
     @station.save()
 
   saveRefuel: ->
-    totalAmt = @.$('#refuel-amt').val()
+    totalAmt   = @.$('#refuel-amt').val()
     totalPrice = @.$('#refuel-price').val()
     if totalAmt and totalPrice
       @station.updatePrice @user.get('myFuelType'), totalPrice / totalAmt
       @user.get('refills').push
-        station: @station.id
-        amt: totalAmt
-        price: totalPrice
-        date: new Date()
+        station : @station.id
+        amt     : totalAmt
+        price   : totalPrice
+        date    : new Date()
       @user.save()
 
 

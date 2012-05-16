@@ -10,6 +10,8 @@ class Gaso.StationPriceEdit extends Backbone.View
 
   render: (eventName) -> 
     @$el.html @template @price
+    console.log "pricee", JSON.stringify @price
+    @$el.find("time.timeago").timeago()
     return @
     
   updateModel: ->

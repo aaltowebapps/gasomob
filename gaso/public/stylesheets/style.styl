@@ -111,7 +111,7 @@ for s in stations
 
 /* LIST PAGE */
 #page-list
-  @media screen and (max-width: 480px)
+  @media screen and (max-width: 480px) and (orientation: portrait)
     .ui-select .ui-icon
       right 20px
   
@@ -239,6 +239,20 @@ for s in stations
     padding-left 30px
   .address
     float right
+
+  #prices
+    .timeago-info
+      position relative
+      right 16%
+      text-align right
+      //float right
+      font-size 80%
+      font-style italic
+      color gray
+    @media screen and (max-width: 480px) and (orientation: portrait)
+      .timeago-info
+        right 0
+        float right
 
   #comments
     margin-top 1em
