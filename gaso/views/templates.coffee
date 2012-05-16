@@ -14,7 +14,12 @@ gasofooter = (callback) ->
 
 fuelTypeSelect = (options) ->
   firstOptionLabel = options?.firstOptionLabel or ''
-  select id: 'otherType', name: 'otherType', 'data-mini': 'true', ->
+  selOpts =
+    id: 'otherType'
+    name: 'otherType'
+  if options?.mini
+    selOpts['data-mini'] = true
+  select selOpts, ->
     option value: '', firstOptionLabel
     option value: 'E85', 'E85'
     option value: 'Unleaded', 'Unleaded'
@@ -109,11 +114,24 @@ script type: 'text/template', id: 'station-details', ->
         text '{{ address.street }}, {{ address.city }}'
         text '<% } %>'
 
-    div id: 'prices'
+    div class: 'clear'
+    div 'data-role': 'collapsible-set', ->
+      div 'data-role': 'collapsible', 'data-collapsed': true, ->
+        h3 'I just filled my tank'
+        div 'data-role': "fieldcontain", ->
+          label for: 'refuel-amt', placeholder: 'Total amount', 'Amount'
+          input id: 'refuel-amt', name: 'refuel-amt', type: 'number', placeholder: 'Amount of {{ curuser.myFuelType }} refueled'
+        div 'data-role': "fieldcontain", ->
+          label for: 'refuel-price', placeholder: 'Total price', 'Price'
+          input id: 'refuel-price', name: 'refuel-price', type: 'number', placeholder: 'Total price'
 
-    div id: "addOtherPrice", 'data-role': "fieldcontain", ->
-      label for: 'otherType', 'Other fuel types:'
-      fuelTypeSelect()
+
+      div 'data-role': 'collapsible', 'data-collapsed': true, ->
+        h3 'I will just update the prices'
+        div id: 'prices'
+        div id: "addOtherPrice", 'data-role': "fieldcontain", ->
+          label for: 'otherType', 'Other fuel types:'
+          fuelTypeSelect()
 
     input id: 'saveButton', type: 'submit', value: 'Save'
 
@@ -133,7 +151,7 @@ script type: 'text/template', id: 'list-page', ->
       div class: "ui-block-a", -> button 'data-fueltype': '95E10', 'data-mini': 'true', '95'
       div class: "ui-block-b", -> button 'data-fueltype': '98E5', 'data-mini': 'true', '98'
       div class: "ui-block-c", -> button 'data-fueltype': 'Diesel', 'data-mini': 'true', 'Di'
-      div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:'
+      div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:', mini: true
       # TODO button for other fuel types
     # jQM Listview for station list items
     ul id: 'list-stations', 'data-role': 'listview', 'data-split-theme': 'c', 'data-filter': true, ->
@@ -164,7 +182,7 @@ script type: 'text/template', id: 'comments-list', ->
       form ->
         label 'for': 'newcomment', 'id': 'ownid', ->
           '{{ curuser.id }}: '
-        input 'type': 'text', 'name': 'newcomment', 'value': 'Your review'
+        textarea id: 'newcomment', name: 'newcomment', placeholder: 'Your review or comment...'
         button 'type': 'submit', 'data-inline': 'true', 'Shout!'
         # a 'href': '#', 'data-role': 'button', 'data-inline': 'true', 'Shout!'
     hr ->
@@ -193,7 +211,7 @@ script type: 'text/template', id: 'price-edit', ->
   text '<% ptype = "price"+type; %>'
 
   label for: "{{ptype}}", "{{type}}"
-  input class: 'price-input', type: "number", min: "0.001", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+  input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
 
 
 

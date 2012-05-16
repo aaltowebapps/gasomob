@@ -20,7 +20,10 @@ class Gaso.StationDetailsView extends Backbone.View
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
-    @$el.html @template @station.toJSON()
+    templateData = @station.toJSON()
+    _.extend templateData,
+      curuser: @user.toJSON()
+    @$el.html @template templateData
 
     @station.updateAddress()
     
@@ -70,7 +73,20 @@ class Gaso.StationDetailsView extends Backbone.View
   savePrices: ->
     for input in @priceEdits
       input.updateModel()
+    @saveRefuel()
     @station.save()
+
+  saveRefuel: ->
+    totalAmt = @.$('#refuel-amt').val()
+    totalPrice = @.$('#refuel-price').val()
+    if totalAmt and totalPrice
+      @station.updatePrice @user.get('myFuelType'), totalPrice / totalAmt
+      @user.get('refills').push
+        amt: totalAmt
+        price: totalPrice
+        date: new Date()
+      @user.save()
+
 
   displayAddress: =>
     # We could have own view for just the address that would render automatically, but meh

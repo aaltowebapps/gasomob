@@ -22,6 +22,7 @@ class Gaso.User extends Backbone.Model
     mapTypeId: 'ROADMAP'
 
   initialize: ->
+    @set 'refills', []
     # Init with initial position.
     Gaso.util.getDevicePosition (error, position) =>
       if error?
