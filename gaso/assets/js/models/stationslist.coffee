@@ -24,15 +24,22 @@ class Gaso.StationsList extends Backbone.Collection
   add: (data, options) ->
     if data instanceof Gaso.Station
       Gaso.log "Add single Station model to collection", data
-      # Expect distance to be set for ready Station models
-      super data, options
-      @sorted = true
+      # Expect distance to be set for ready Station models, not testing for it
+      unless @duplicateExistsAlready data
+        super data, options
+        # TODO The logic with this isn't bulletproof, @sorted=false can get overridden.
+        # (But actually for now the result is what we want:
+        # Station list renders if it contains only data acquired from external services and not from our DB and
+        # the list will actually be re-sorted just as soon as the calculations complete.)
+        @sorted = true
     else if data?.length
       Gaso.log "Add #{data.length} stations to collection from raw data"
       for station in data
         # Expect raw data
         if station instanceof Gaso.Station
           Gaso.fatal "Not expecting array of Station models, TODO implement"
+
+        #TODO calculate distance here!
 
         distanceSet = station.directDistance? or station.drivingDistance?
         existing = @get station.osmId
@@ -43,3 +50,6 @@ class Gaso.StationsList extends Backbone.Collection
           @sorted = false unless distanceSet
           super station, options
 
+  duplicateExistsAlready: (station) ->
+    # TODO test for duplicates based on distance and brand to all stations in the collection.
+    return false
