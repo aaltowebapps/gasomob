@@ -18,7 +18,7 @@ class Gaso.StationMarker extends Backbone.View
 
     brand = @model.get 'brand'
 
-    opts.icon = "images/stationmarkers/#{ brand }_50.png" if brand
+    opts.icon = "images/stationmarkers/#{ brand }_128.png" if brand
 
     @marker = new google.maps.Marker(opts)
 
