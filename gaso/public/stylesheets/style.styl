@@ -39,22 +39,18 @@ border-radius()
   -webkit-backface-visibility hidden
 
 size = 50
+stations = abc shell nesteoil seo teboil st1 question
 .ui-icon-station
   //margin 1em
   width (size)px
   height (size)px
   box-shadow 0 0 10px #222
-stations = abc shell nesteoil seo teboil st1 question
+  
 for s in stations
   .ui-icon-{s}
     path = "../images/stationlogos/%s_%s.png" % (s size)
     background url(path) no-repeat
     background-size 100%
-  // TODO It would be better to have separate css for high resolution stuff (less @media definitions), but for now: meh.
-  @media all and (min-device-pixel-ratio: 2)
-    .ui-icon-{s}
-      path = "../images/stationlogos/%s_%s.png" % (s size)
-      background-image url(path)
 
 .ui-icon-centermap
   background url("../images/center.png") no-repeat !important

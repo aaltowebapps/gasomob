@@ -32,6 +32,8 @@ html ->
     #link rel: 'icon', href: '/favicon.png'
     link rel: 'stylesheet', href: '/stylesheets/themes/gasotheme.min.css'
     link rel: 'stylesheet', href: '/stylesheets/style.css'
+    # High pixel density displays
+    link rel: 'stylesheet', href:'/stylesheets/highres.css', media:'only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2)'
 
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"
