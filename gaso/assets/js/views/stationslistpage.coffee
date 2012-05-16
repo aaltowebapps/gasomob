@@ -71,8 +71,9 @@ class Gaso.StationsListPage extends Backbone.View
         @$list.fadeIn()
     else
       @$list.html itemsHTML.join('')
-      @$list.listview 'refresh' if @pageInitialized
-      @$list.show()
+      if @pageInitialized
+        @$list.listview 'refresh' 
+        @$list.show()
 
   rateLimitedRenderFunc = null
   renderListRateLimited: (refresh) =>
