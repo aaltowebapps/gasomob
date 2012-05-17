@@ -13,11 +13,13 @@ $doc.bind 'mobileinit', (event) ->
   # $.mobile.allowCrossDomainPages = true
   # $.support.cors = true
 
-  # Get rid of flickering between page transitions.
+  # Tryigng to get rid of flickering between page transitions.
+  # However, flickering still seems to be an issue even with this fix. :/ --Markus
   # See e.g. https://github.com/jquery/jquery-mobile/issues/455
   if navigator.userAgent.match /iPhone|iPad|iPod/i
     $ '<link/>',
-      text  : '.ui-page {-webkit-backface-visibility: hidden;}'
+      rel   : 'stylesheet'
+      text  : '.ui-page {-webkit-backface-visibility: hidden !important;}'
     .appendTo 'head'
 
 
