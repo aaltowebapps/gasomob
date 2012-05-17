@@ -19,9 +19,18 @@ html ->
     meta name: 'viewport', content:'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no'
     meta name: 'apple-mobile-web-app-capable', content: 'yes'
     meta rel: 'apple-touch-icon', href: '/apple-touch-icon.png' 
-    meta rel: 'apple-touch-startup-image', href: '/apple-touch-icon.png' 
     
     link(rel: 'canonical', href: @canonical) if @canonical?
+
+    # Special startup images for iOS
+    # 320x460 for iPhone 3GS
+    link rel:"apple-touch-startup-image", media: "(max-device-width: 480px) and not (-webkit-min-device-pixel-ratio: 2)", href: "/startup-iphone.png"
+    # 640x920 for retina display
+    link rel: "apple-touch-startup-image", media: "(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)", href: "/startup-iphone4.png"
+    # iPad Portrait 768x1004
+    link rel: "apple-touch-startup-image", media: "(min-device-width: 768px) and (orientation: portrait)", href: "/startup-iPad-portrait.png"
+    # iPad Landscape 1024x748
+    link rel: "apple-touch-startup-image", media: "(min-device-width: 768px) and (orientation: landscape)", href: "/startup-iPad-landscape.png"
 
     # Lib styles
     if productionEnv
