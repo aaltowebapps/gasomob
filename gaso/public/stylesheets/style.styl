@@ -27,7 +27,11 @@ border-radius()
   line-height 10px
   opacity .7
   background white
-  min-height 40px
+  min-height 50px
+  max-height 100px
+  overflow-y scroll
+  -webkit-overflow-scrolling touch
+  border-bottom 1px solid gray
   em
     font-weight bold
 
@@ -262,4 +266,15 @@ for s in stations
     #list-comments
       list-style-type: none
 /* /STATION PAGE */
+
+
+/* iPads (portrait and landscape) */
+//@media screen and (min-device-width : 768px) and (max-device-width : 1024px)
+
+/* iPads (landscape)  */
+//@media screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)
+
+/* iPads (portrait)  */
+//@media screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)
+
 

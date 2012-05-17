@@ -8,14 +8,17 @@ class GasoApp
     $debug = $ '#debug'
     unless $debug.length
       $debug = $('<div id="debug" />').appendTo 'body'
+      # Hide debug view temporarily with click/tap.
       $debug.on 'click', ->
         self = $(@)
         self.hide()
         setTimeout ->
           self.fadeIn()
         , 5000
+      # Etmpy debug content with left swipe.
       $debug.on 'swipeleft', ->
         $(@).html ''
+      # Remove debug view completely with right swipe.
       $debug.on 'swiperight', ->
         $(@).remove()
         window.noMobileDebug = true
@@ -24,6 +27,7 @@ class GasoApp
     oldTail = oldContent.substring oldContent.length - 1000
     newContent = oldTail + if error then "<em>#{args.join('')}</em><br>" else "#{args.join('')}<br>"
     $debug.html newContent
+    $debug.scrollTop 10000
 
   ###
     Public stuff.
