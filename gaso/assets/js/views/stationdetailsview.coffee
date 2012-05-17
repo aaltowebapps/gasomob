@@ -47,6 +47,7 @@ class Gaso.StationDetailsView extends Backbone.View
     return @
 
   bindEvents: ->
+    google.maps.event.clearInstanceListeners @map
     @$el.off 'pageshow.stationdetailsview'
     @$el.on 'pageshow.stationdetailsview', (event) =>
       google.maps.event.trigger @map, 'resize'
@@ -56,7 +57,7 @@ class Gaso.StationDetailsView extends Backbone.View
       window.history.back()
 
   close: =>
-    @off
+    @off()
     @$el.off '.stationdetailsview'
     @station.off 'change:address', @displayAddress
     for input in @priceEdits

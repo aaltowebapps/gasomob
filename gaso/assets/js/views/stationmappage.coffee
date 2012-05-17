@@ -36,7 +36,7 @@ class Gaso.StationMapPage extends Backbone.View
       
       
   close: =>
-    @off
+    @off()
     @$el.off 'pageshow.stationmappage'
 
 

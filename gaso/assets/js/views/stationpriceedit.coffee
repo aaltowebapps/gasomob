@@ -18,7 +18,7 @@ class Gaso.StationPriceEdit extends Backbone.View
     @model.updatePrice @price.type, @.$('.price-input').val()
 
   close: =>
-    @off
+    @off()
     #@model.off ...
 
 

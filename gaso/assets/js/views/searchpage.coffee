@@ -14,5 +14,5 @@ class Gaso.SearchPage extends Backbone.View
     return @
   
   close: =>
-    @off
+    @off()
     #@model.off ...

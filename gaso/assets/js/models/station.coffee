@@ -58,6 +58,7 @@ class Gaso.Station extends Backbone.Model
 
   cleanupModel: =>
     @ioUnbindAll()
+    @off()
     return @
 
   clear: =>

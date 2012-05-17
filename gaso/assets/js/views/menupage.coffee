@@ -14,5 +14,5 @@ class Gaso.MenuPage extends Backbone.View
     return @
   
   close: =>
-    @off
+    @off()
     #@model.off ...
