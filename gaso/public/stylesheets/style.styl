@@ -36,11 +36,18 @@ border-radius()
     font-weight bold
 
 /* COMMON */
+/*
+  Trying to get rid of jquerymobile page flicker between transitions.
+  NOTE: This might cause problems with Android form inputs
+  (see comments in https://github.com/jquery/jquery-mobile/issues/455)
 .ui-page
-  // Tryomg tp get rid of jquerymobile page flicker.
-  // NOTE: This might cause problems with Android form inputs
-  // (see comments in https://github.com/jquery/jquery-mobile/issues/455)
   -webkit-backface-visibility hidden
+
+  NOTE 2: Tested Gaso shortly on Android: After special transitions parts of the page didn't get displayed,
+  and I suspects it's because of this CSS. Therefore leaving this away from here now,
+  instead see mobileinit.coffee, where this CSS is added dynamically for certain user agents.
+  --Markus 17.5.2012
+*/
 
 size = 50
 stations = abc shell nesteoil seo teboil st1 question
