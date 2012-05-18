@@ -71,6 +71,8 @@ class Gaso.Helper
       @setDistanceToUser station
       @stations.add station
 
+  message: (msg, options) =>
+    new Gaso.FeedbackMessage(msg, options).render()
 
   ###
     Private methods and other stuff

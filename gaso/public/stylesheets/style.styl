@@ -11,6 +11,14 @@ border-radius()
 /* /MIXINS */
 
 /* NAVIGATION BAR */
+#footer
+  // Remove ugly green border
+  border none
+
+#navigation
+  // add a top 'gleam' effect to make footer look a bit nicer
+  border-top 1px solid #aaa
+
 // Custom jQM icons
 .ui-icon-drop
   background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
@@ -113,11 +121,20 @@ for s in stations
     top -3px
     margin 0 -25px
 
-#footer
-  // Remove ugly green border
-  border none
-  // add a top 'gleam' effect to make footer look a bit nicer
-  border-top 1px solid #aaa
+
+#messages
+  position fixed
+  top 10px
+  left 20%
+  right 20%
+  border 1px solid #E7C53B
+  background #FFF36E
+  background-image -webkit-radial-gradient(circle, #FFF36E, #E7D93B)
+  font-family Helvetica,Arial,sans-serif
+  text-align center
+  padding 0.5em
+  .feedback
+    color black
 /* /COMMON */
 
 /* LIST PAGE */

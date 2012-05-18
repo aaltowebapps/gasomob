@@ -85,22 +85,34 @@ class Sync
   ###
   updateStation: (clientdata, callback) ->
     console.log "Update station", clientdata.osmId, clientdata
-    prices = clientdata.prices
-    console.log "Save prices", prices
+    # Just ignore empty prices
+    prices = clientdata.prices.filter (p) -> p.value
+    console.log "Prices to save", prices
 
-    debugSavePrices = (err, data) ->
+    responseSent = false
+    priceSaveCallbacksProcessed = 0
+    savePricesCallback = (err, data) ->
+      priceSaveCallbacksProcessed++
       console.log "price save result", err, data
+      unless responseSent
+        if err?
+          callback 'Saving of price data failed.'
+          responseSent = true
+        else if priceSaveCallbacksProcessed == prices.length
+          callback null, "ok" 
+          responseSent = true
 
     db.Station.findOne osmId: clientdata.osmId, (err, station) ->
       if station?
         console.log 'TODO station found from DB, handle updating of possible missing address data etc'
-        station.savePrices prices, debugSavePrices
+        station.savePrices prices, savePricesCallback
       else
         # New station
         station = new db.Station(clientdata)
         station.save (err, data) ->
           console.log "Station save result", @, err, data
-          station.savePrices prices, debugSavePrices
+          return callback 'Saving of station data failed.' if err?
+          station.savePrices prices, savePricesCallback
 
 
 

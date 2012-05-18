@@ -19,7 +19,9 @@ $doc.bind 'mobileinit', (event) ->
   if navigator.userAgent.match /iPhone|iPad|iPod/i
     $ '<link/>',
       rel   : 'stylesheet'
-      text  : '.ui-page {-webkit-backface-visibility: hidden !important;}'
+      # text  : '.ui-page {-webkit-backface-visibility: hidden !important;}'
+      # Trying to set style for body instead of .ui-page, any luck?
+      text  : 'body {-webkit-backface-visibility: hidden !important;}'
     .appendTo 'head'
 
 

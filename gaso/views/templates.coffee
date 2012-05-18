@@ -116,7 +116,7 @@ script type: 'text/template', id: 'station-details', ->
 
     div class: 'clear'
     div 'data-role': 'collapsible-set', ->
-      div 'data-role': 'collapsible', 'data-collapsed': true, ->
+      div 'data-role': 'collapsible', 'data-collapsed': false, ->
         h3 'I just filled my tank'
         div 'data-role': "fieldcontain", ->
           label for: 'refuel-amt', placeholder: 'Total amount', 'Amount'
@@ -127,7 +127,7 @@ script type: 'text/template', id: 'station-details', ->
 
 
       div 'data-role': 'collapsible', 'data-collapsed': true, ->
-        h3 'I will just update the prices'
+        h3 'I only want to update the prices'
         div id: 'prices'
         div id: "addOtherPrice", 'data-role': "fieldcontain", ->
           label for: 'otherType', 'Other fuel types:'
@@ -189,6 +189,8 @@ script type: 'text/template', id: 'comments-list', ->
     ul id: 'list-comments'
 
 
+script type: 'text/template', id: 'feedback-message-container', ->
+  div id: 'messages', class: 'ui-corner-all ui-shadow'
 ###
   MODEL TEMPLATES
 ###
@@ -220,8 +222,6 @@ script type: 'text/template', id: 'price-edit', ->
     span class: 'fueltype', "{{type}}"
 
   input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
-  
-
 
 
 # Stations-list list-item

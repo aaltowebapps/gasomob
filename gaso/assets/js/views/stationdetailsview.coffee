@@ -48,18 +48,22 @@ class Gaso.StationDetailsView extends Backbone.View
 
   bindEvents: ->
     google.maps.event.clearInstanceListeners @map
+
     @$el.off 'pageshow.stationdetailsview'
     @$el.on 'pageshow.stationdetailsview', (event) =>
       google.maps.event.trigger @map, 'resize'
       @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
-    @station.on 'change:address', @displayAddress
     @$el.on 'swiperight.stationdetailsview', (event) =>
       window.history.back()
+
+    @station.on 'change:address', @displayAddress
+    @station.on 'sync', @displaySaveSuccess
 
   close: =>
     @off()
     @$el.off '.stationdetailsview'
     @station.off 'change:address', @displayAddress
+    @station.off 'sync', @displaySaveSuccess
     for input in @priceEdits
       input.close()
     @commentsView.close()
@@ -75,6 +79,7 @@ class Gaso.StationDetailsView extends Backbone.View
     for input in @priceEdits
       input.updateModel()
     @saveRefuel()
+    Gaso.helper.message 'Saving...'
     @station.save()
 
   saveRefuel: ->
@@ -86,6 +91,7 @@ class Gaso.StationDetailsView extends Backbone.View
         station : @station.id
         amt     : totalAmt
         price   : totalPrice
+        # TODO we could allow user to choose some other date
         date    : new Date()
       @user.save()
 
@@ -98,6 +104,9 @@ class Gaso.StationDetailsView extends Backbone.View
       self.hide() # Is it the span or what, but without explicity hide() the fading doesn't seem to work.
       self.html $temp.find('.address').html()
       self.fadeIn()
+
+  displaySaveSuccess: =>
+    Gaso.helper.message 'Saved!', lifetime: 2, replace: true
 
   addPriceEdit: (price, options) =>
     defaults =
