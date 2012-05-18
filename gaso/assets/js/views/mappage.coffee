@@ -117,11 +117,12 @@ class Gaso.MapPage extends Backbone.View
     # Don't look for nearby stations if
     # - user has zoomed too far out
     # - new bounds are completely within the bounds where we searched last time.
-    if @user.get('mapZoom') >= 7
+    if @user.get('mapZoom') >= 11
       if @isBoundsFromNewArea mapBounds
         Gaso.log "Find stations within", mapBounds?.toString() if Gaso.loggingEnabled()
         Gaso.helper.findStationsWithinGMapBounds mapBounds
     else
+      Gaso.helper.message "Zoom in closer to search nearby stations.", replace: true
       Gaso.log "Zoomed too far out, not fetching stations"
 
 
