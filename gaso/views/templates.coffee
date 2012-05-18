@@ -116,7 +116,7 @@ script type: 'text/template', id: 'station-details', ->
 
     div class: 'clear'
     div 'data-role': 'collapsible-set', ->
-      div 'data-role': 'collapsible', 'data-collapsed': false, ->
+      div 'data-role': 'collapsible', 'data-collapsed': 'false', ->
         h3 'I just filled my tank'
         div 'data-role': "fieldcontain", ->
           label for: 'refuel-amt', placeholder: 'Total amount', 'Amount'
@@ -126,7 +126,7 @@ script type: 'text/template', id: 'station-details', ->
           input id: 'refuel-price', name: 'refuel-price', type: 'number', placeholder: 'Total price'
 
 
-      div 'data-role': 'collapsible', 'data-collapsed': true, ->
+      div 'data-role': 'collapsible', 'data-collapsed': 'true', ->
         h3 'I only want to update the prices'
         div id: 'prices'
         div id: "addOtherPrice", 'data-role': "fieldcontain", ->
@@ -154,7 +154,7 @@ script type: 'text/template', id: 'list-page', ->
       div class: "ui-block-d", -> fuelTypeSelect firstOptionLabel: 'Other:', mini: true
       # TODO button for other fuel types
     # jQM Listview for station list items
-    ul id: 'list-stations', 'data-role': 'listview', 'data-dividertheme': 'c', 'data-split-theme': 'c', 'data-filter': true, ->
+    ul id: 'list-stations', 'data-role': 'listview', 'data-dividertheme': 'c', 'data-split-theme': 'c', 'data-filter': 'true', ->
       # li id: 'stations-nearby', 'data-role': 'list-divider', 'Stations nearby'
       # List items will be added using 'station-list-item'-template
     # Slider for affecting stations searching/ranking.
@@ -251,9 +251,9 @@ script type: 'text/template', id: 'station-list-item', ->
     # TODO Improve price rendering, it is a bit clumsy to have this much logic here in the template
     text '<% _ftype = Gaso.app.router.user.get("myFuelType"); %>'
     text '<% _priceToDisplay = _.find(prices, function(p) {return p.type === _ftype}); %>'
-    text '<% if (_priceToDisplay) { _priceToDisplay = _priceToDisplay.value; } %>'
+    text '<% if (_priceToDisplay) { _priceToDisplay = parseFloat(_priceToDisplay.value).toFixed(3); } %>'
     p class: 'station-info station-info-price', ->
-      text '<% if (_priceToDisplay) { %>'
+      text '<% if ( _priceToDisplay && !isNaN(_priceToDisplay) ) { %>'
       span class: 'currency', '&euro;' 
       span class: 'price-value', '{{ _priceToDisplay }}'
       span class: 'fuel-type', '{{ "(" + _ftype + ")" }}'

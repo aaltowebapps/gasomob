@@ -139,10 +139,14 @@ for s in stations
 
 /* LIST PAGE */
 #page-list
+  .ui-content
+    // Add some margin, otherwise the last list item will be behind the slider.
+    margin-bottom 40px
+
   @media screen and (max-width: 480px) and (orientation: portrait)
+    // Hackish fix for the jQm custom-select arrow icon
     .ui-select .ui-icon
       right 20px
-  
 
   #fueltypes
     .ui-btn
