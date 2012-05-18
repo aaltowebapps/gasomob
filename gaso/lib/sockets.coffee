@@ -102,17 +102,23 @@ class Sync
           callback null, "ok" 
           responseSent = true
 
+    savePrices = (station) ->
+      if prices?.length
+          station.savePrices prices, savePricesCallback
+        else
+          callback null, "ok"
+
     db.Station.findOne osmId: clientdata.osmId, (err, station) ->
       if station?
         console.log 'TODO station found from DB, handle updating of possible missing address data etc'
-        station.savePrices prices, savePricesCallback
+        savePrices station
       else
         # New station
         station = new db.Station(clientdata)
         station.save (err, data) ->
           console.log "Station save result", @, err, data
           return callback 'Saving of station data failed.' if err?
-          station.savePrices prices, savePricesCallback
+          savePrices station
 
 
 

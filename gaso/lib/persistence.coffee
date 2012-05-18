@@ -290,8 +290,9 @@ StationSchema.statics.findNearPoint = (point, radius, fields..., callback) ->
   near = point
   # Divide radius by average earth radius to get radians.
   near.push radius / 6371
-  q = Station.find {}, fields[0]
-  q.where location: $nearSphere: near
+  q = Station.find
+    location: $nearSphere: near
+    fields[0]
   # Force maximum results
   q.limit 100
   q.run callback if callback?
