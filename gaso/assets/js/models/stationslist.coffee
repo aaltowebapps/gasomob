@@ -21,7 +21,9 @@ class Gaso.StationsList extends Backbone.Collection
     @sorted = true
     @sort()
 
+  # Override add method to add some own logic for syncing/updating the collection.
   add: (data, options) ->
+    # Single ready Stations are added when we query data e.g. from CloudMade
     if data instanceof Gaso.Station
       Gaso.log "Add single Station model to collection", data
       # Expect distance to be set for ready Station models, not testing for it
@@ -32,6 +34,7 @@ class Gaso.StationsList extends Backbone.Collection
         # Station list renders if it contains only data acquired from external services and not from our DB and
         # the list will actually be re-sorted just as soon as the calculations complete.)
         @sorted = true
+    # We get raw data arrays from our own DB
     else if data?.length
       Gaso.log "Add #{data.length} stations to collection from raw data"
       for station in data
@@ -39,17 +42,26 @@ class Gaso.StationsList extends Backbone.Collection
         if station instanceof Gaso.Station
           Gaso.fatal "Not expecting array of Station models, TODO implement"
 
-        #TODO calculate distance here!
+        #TODO calculate distance/ranking here, that way we won't have to do this @sorted stuff!
 
         distanceSet = station.directDistance? or station.drivingDistance?
         existing = @get station.osmId
         if existing
           # Don't add existing stations, only update data
-          Gaso.log "TODO Station", existing, "already in collection, update prices etc, if available ", station.prices
+          Gaso.log "TODO Update address data for existing station ", existing, " already in collection"
+          if station.prices?
+            for p in station.prices
+              existing.updatePriceFull p.type, p
+
         else
           @sorted = false unless distanceSet
           super station, options
 
+  # Test for duplicates based on distance and brand to all stations in the collection.
   duplicateExistsAlready: (station) ->
-    # TODO test for duplicates based on distance and brand to all stations in the collection.
+    newStationLoc = station.get 'location'
+    newStationBrand = station.get 'brand'
+    for existing in @models
+      dist = Gaso.geo.calculateDistanceBetween(newStationLoc, existing.get 'location')
+      return true if dist < 50 and newStationBrand == existing.get('brand')
     return false

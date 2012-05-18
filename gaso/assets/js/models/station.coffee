@@ -66,6 +66,15 @@ class Gaso.Station extends Backbone.Model
     @cleanupModel()
     @destroy
 
+  updatePriceFull: (type, priceData) =>
+    prices = @get 'prices'
+    pricesUpdated = _updatePrice prices, priceData.type, priceData.value
+    if pricesUpdated
+      currPrice = _.find prices, (p) -> p.type == priceData.type
+      currPrice.date = priceData.date
+    # Modifying the array won't automatically trigger backbone event, lets trigger it ourself.
+    @trigger 'change:prices', @ if pricesUpdated
+
   updatePrice: (type, value) =>
     prices = @get 'prices'
     pricesUpdated = _updatePrice prices, type, value
