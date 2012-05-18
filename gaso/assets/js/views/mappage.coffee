@@ -99,8 +99,19 @@ class Gaso.MapPage extends Backbone.View
 
 
   addStationMarker: (station) =>
-    @stationMarkers.push new Gaso.StationMarker(station, @map).render()
+    @stationMarkers.push new Gaso.StationMarker(station, @map, hidden: @markersHidden).render()
 
+  temporarilyHideMarkers: =>
+    unless @markersHidden
+      for m in @stationMarkers
+        m.hide()
+      @markersHidden = true
+
+  showMarkers: =>
+    if @markersHidden
+      for m in @stationMarkers
+        m.show()
+      @markersHidden = false
 
   findNearbyStations: =>
     return if not @mapReady
@@ -117,12 +128,20 @@ class Gaso.MapPage extends Backbone.View
     # Don't look for nearby stations if
     # - user has zoomed too far out
     # - new bounds are completely within the bounds where we searched last time.
-    if @user.get('mapZoom') >= 11
+    # Don't use the zoom level, because it is dependent on the display resolution?
+    # if @user.get('mapZoom') >= 12
+    # Instead we calculate the diameter between displayed map corners.
+    mapBoundsDiameter = Gaso.geo.calculateDistanceBetween(mapBounds.getSouthWest(), mapBounds.getNorthEast())
+    Gaso.log "Map bounds diameter", mapBoundsDiameter
+    if mapBoundsDiameter < 30000
+      @showMarkers()
       if @isBoundsFromNewArea mapBounds
+        # @zoomFeedback?.instantRemove()
         Gaso.log "Find stations within", mapBounds?.toString() if Gaso.loggingEnabled()
         Gaso.helper.findStationsWithinGMapBounds mapBounds
     else
-      Gaso.helper.message "Zoom in closer to search nearby stations.", replace: true
+      @temporarilyHideMarkers()
+      @zoomFeedback = Gaso.helper.message "Zoom in closer to search nearby stations.", replace: true
       Gaso.log "Zoomed too far out, not fetching stations"
 
 

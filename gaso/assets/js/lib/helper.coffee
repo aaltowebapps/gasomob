@@ -2,8 +2,8 @@
 class Gaso.Helper
 
   constructor: (@user, @stations, @searchContext) ->
-    @stations.on 'add', @setDistanceToUser
-    @user.on 'change:position', @updateStationDistancesToUSer
+    # @stations.on 'add', @setDistanceToUser
+    @user.on 'change:position', @updateStationDistancesToUser
     @user.on 'reCenter', @getStationsDataNearby
 
 
@@ -20,7 +20,7 @@ class Gaso.Helper
     station.set 'directDistance', dist
 
 
-  updateStationDistancesToUSer: =>
+  updateStationDistancesToUser: =>
     for station in @stations.models
       dist = @setDistanceToUser station
 

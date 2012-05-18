@@ -9,7 +9,6 @@ class Gaso.StationsListPage extends Backbone.View
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
-    # TODO for some reason we must explicitly call setElement, otherwise view.el property doesn't exist?
     @setElement $('<div id="page-list"/>')
 
 
@@ -37,13 +36,9 @@ class Gaso.StationsListPage extends Backbone.View
 
   # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
   renderList: (refresh) =>
-    #TODO renderList gets called on map page, why? Something is left unbound?
     @closeListItems()
     @listItems = []
-    # Render only if stations collection is already sorted by distance/ranking OR if user position tracking is not active.
-    if @user.isPositionTrackingOK() and not @collection.sorted
-      return
-    Gaso.log "DEBUG collection order during list render()", @collection.models.map (n) -> n.get 'directDistance'
+    Gaso.log "DEBUG collection distances during list render()", @collection.models.map (n) -> n.get 'directDistance'
 
     # Helper variables
     itemsHTML = []
@@ -133,11 +128,6 @@ class Gaso.StationsListPage extends Backbone.View
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
-    # The old way:
-    # TODO insert directly to correct index instead of just append?
-    # @$list.append item.el
-    # @$list.listview 'refresh'
-
     # The new way: Trying out alternative way of rendering the list when new stations are added.
     # Instead of adding single items to the DOM, just render the whole list again.
     # This is simpler, but lets see if this works performance-wise.

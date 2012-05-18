@@ -11,7 +11,7 @@ class Gaso.FeedbackMessage extends Backbone.View
   constructor: (@msg, options) ->
     @settings = _.extend {}, defaults, options
     # @template = _.template Gaso.util.getTemplate 'feedback-message'
-    @setElement $('<div class="feedback" style="display: none;" />')
+    @setElement $('<div class="feedback" />')
 
   render: (eventName) ->
     # Not needing a template for now, just using plain text content.
@@ -24,14 +24,14 @@ class Gaso.FeedbackMessage extends Backbone.View
     return @
 
   renderContainer: ->
+    oldMsgCount = messageCount
     @clearMessages() if @settings.replace
-    @getMessagesContainer().fadeIn() unless messageCount
+    @getMessagesContainer().stop().fadeIn() unless oldMsgCount
     
   renderMessage: ->
     messageCount++
     @$el.text @msg
     @$el.prependTo @getMessagesContainer()
-    @$el.fadeIn()
     # Note: delayedRemove can't be fadeIn callback, else "too early" clearMessages() won't remove the timer for this message.
     @delayedRemove()
 
@@ -39,12 +39,17 @@ class Gaso.FeedbackMessage extends Backbone.View
     @off()
     @remove()
 
+  # Something still bugs with instantRemove. The container is sometimes left with display:none when zooming in and out. --Markus
+  instantRemove: =>
+    messageCount--
+    if messageCount
+      @$el.fadeOut @close
+    @getMessagesContainer().fadeOut @close unless messageCount
+
   delayedRemove: =>
     if @settings.lifetime
       timer = setTimeout =>
-        messageCount--
-        @$el.fadeOut @close
-        @getMessagesContainer().fadeOut() unless messageCount
+        @instantRemove()
         timers = _.without timers, timer
       , @settings.lifetime * 1000
       timers.push timer

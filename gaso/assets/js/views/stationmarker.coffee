@@ -11,7 +11,7 @@ class Gaso.StationMarker extends Backbone.View
 
   render: =>
     loc = @model.get 'location'
-    opts =
+    @markerOptions =
       title     : @model.get 'name'
       position  : new google.maps.LatLng(loc[1], loc[0])
       animation : google.maps.Animation.DROP unless @options?.noAnimation
@@ -20,7 +20,7 @@ class Gaso.StationMarker extends Backbone.View
     # Set custom station logo
     brand = @model.get 'brand'
     if brand 
-      opts.icon = new google.maps.MarkerImage "images/stationmarkers/#{ brand }_128.png",
+      @markerOptions.icon = new google.maps.MarkerImage "images/stationmarkers/#{ brand }_128.png",
         null # size, default ok
         null # origin, default ok
         null # anchor, default ok
@@ -28,11 +28,8 @@ class Gaso.StationMarker extends Backbone.View
         new google.maps.Size(64, 64)
 
     # Add the marker
-    @marker = new google.maps.Marker(opts)
-    if opts.animation
-      setTimeout @delayedAdd, counter++ * 40
-    else
-      @marker.setMap @map
+    @marker = new google.maps.Marker(@markerOptions)
+    @show() unless @options?.hidden
 
     @bindEvents()
     
@@ -40,10 +37,24 @@ class Gaso.StationMarker extends Backbone.View
 
   bindEvents: ->
     google.maps.event.addListener(@marker, 'click', @showDetails)
+    @model.on 'clear', @close
 
   close: =>
+    @off()
+    @model.off 'clear', @close
     google.maps.event.clearInstanceListeners(@marker)
+    @hide()
+    @map = null
 
+  show: ->
+    if @markerOptions.animation
+      @timer = setTimeout @delayedAdd, counter++ * 40
+    else
+      @marker.setMap @map
+
+  hide: ->
+    clearTimeout @timer
+    @marker.setMap null
 
   delayedAdd: =>
     @marker.setMap @map

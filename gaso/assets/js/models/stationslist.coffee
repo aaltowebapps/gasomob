@@ -19,7 +19,9 @@ class Gaso.StationsList extends Backbone.Collection
   onDistancesChanged: =>
     Gaso.log "Station distances changed. Manually re-sort the collection."
     @sorted = true
-    @sort()
+    @sort silent: true
+    @cleanupList()
+    @trigger 'reset'
 
   # Override add method to add some own logic for syncing/updating the collection.
   add: (data, options) ->
@@ -28,21 +30,20 @@ class Gaso.StationsList extends Backbone.Collection
       Gaso.log "Add single Station model to collection", data
       # Expect distance to be set for ready Station models, not testing for it
       unless @duplicateExistsAlready data
+        data.addedToList = new Date()
         super data, options
         # TODO The logic with this isn't bulletproof, @sorted=false can get overridden.
         # (But actually for now the result is what we want:
         # Station list renders if it contains only data acquired from external services and not from our DB and
         # the list will actually be re-sorted just as soon as the calculations complete.)
         @sorted = true
-    # We get raw data arrays from our own DB
+    # We get raw data arrays (or nulls) from our own DB
     else if data?.length
       Gaso.log "Add #{data.length} stations to collection from raw data"
       for station in data
         # Expect raw data
         if station instanceof Gaso.Station
           Gaso.fatal "Not expecting array of Station models, TODO implement"
-
-        #TODO calculate distance/ranking here, that way we won't have to do this @sorted stuff!
 
         distanceSet = station.directDistance? or station.drivingDistance?
         existing = @get station.osmId
@@ -55,7 +56,12 @@ class Gaso.StationsList extends Backbone.Collection
 
         else
           @sorted = false unless distanceSet
-          super station, options
+          stationModel = new Gaso.Station station
+          stationModel.addedToList = new Date()
+          Gaso.helper.setDistanceToUser stationModel
+          super stationModel, options
+    @cleanupList()
+
 
   # Test for duplicates based on distance and brand to all stations in the collection.
   duplicateExistsAlready: (station) ->
@@ -65,3 +71,13 @@ class Gaso.StationsList extends Backbone.Collection
       dist = Gaso.geo.calculateDistanceBetween(newStationLoc, existing.get 'location')
       return true if dist < 50 and newStationBrand == existing.get('brand')
     return false
+
+  # Prevent performance problems by cleaning up old models
+  cleanupList: =>
+    limit = 100
+    modelsSortedByDate = _.sortBy @models, (m) -> -m.addedToList
+    for m, i in modelsSortedByDate
+      if i >= limit
+        @remove m.id
+        m.clear()
+

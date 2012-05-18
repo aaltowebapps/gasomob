@@ -71,7 +71,9 @@ class GeoLib
 
 
   latLonTogMapLatLng: (obj) ->
-    if _.isArray obj
+    if obj instanceof google.maps.LatLng
+      return obj
+    else if _.isArray obj
       latlon =
         lat: obj[1]
         lon: obj[0]

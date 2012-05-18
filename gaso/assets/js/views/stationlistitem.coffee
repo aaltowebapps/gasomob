@@ -18,4 +18,5 @@ class Gaso.StationListItem extends Backbone.View
   close: =>
     @off()
     @model.off 'clear', @close
+    # If removing here, the fading out of the whole list doesn't work.
     #@remove()
