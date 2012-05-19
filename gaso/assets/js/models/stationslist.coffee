@@ -18,7 +18,6 @@ class Gaso.StationsList extends Backbone.Collection
 
   onDistancesChanged: =>
     Gaso.log "Station distances changed. Manually re-sort the collection."
-    @sorted = true
     @sort silent: true
     @cleanupList()
     @trigger 'reset'
@@ -32,11 +31,6 @@ class Gaso.StationsList extends Backbone.Collection
       unless @duplicateExistsAlready data
         data.addedToList = new Date()
         super data, options
-        # TODO The logic with this isn't bulletproof, @sorted=false can get overridden.
-        # (But actually for now the result is what we want:
-        # Station list renders if it contains only data acquired from external services and not from our DB and
-        # the list will actually be re-sorted just as soon as the calculations complete.)
-        @sorted = true
     # We get raw data arrays (or nulls) from our own DB
     else if data?.length
       Gaso.log "Add #{data.length} stations to collection from raw data"
@@ -55,7 +49,6 @@ class Gaso.StationsList extends Backbone.Collection
               existing.updatePriceFull p.type, p
 
         else
-          @sorted = false unless distanceSet
           stationModel = new Gaso.Station station
           stationModel.addedToList = new Date()
           Gaso.helper.setDistanceToUser stationModel
