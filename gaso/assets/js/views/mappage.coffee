@@ -12,7 +12,7 @@ class Gaso.MapPage extends Backbone.View
     @mapReady = false
 
   events:
-    'click #center-user' : 'onCenterToUser'
+    'tap #center-user' : 'onCenterToUser'
 
   render: =>
     @$el.html @template @stations.toJSON()
