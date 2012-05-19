@@ -18,10 +18,6 @@ border-radius()
 #navigation
   // add a top 'gleam' effect to make footer look a bit nicer
   border-top 1px solid #aaa
-
-// Custom jQM icons
-.ui-icon-drop
-  background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
 /* /NAVIGATION BAR */
 
 /* MOBILE DEBUGGING */
@@ -42,6 +38,17 @@ border-radius()
   border-bottom 1px solid gray
   em
     font-weight bold
+
+
+/* CUSTOM JQM OVERRIDES */
+// Custom jQM icons
+.ui-icon-drop
+  background url("../images/drop18.png") no-repeat rgba(0, 0, 0, 0.4) !important
+  background-size 100% 100%
+.ui-icon-centermap
+  background url("../images/center.png") no-repeat !important
+  background-size 100% 100%
+/* /CUSTOM JQM OVERRIDES */
 
 /* COMMON */
 /*
@@ -70,9 +77,6 @@ for s in stations
     path = "../images/stationlogos/%s_%s.png" % (s size)
     background url(path) no-repeat
     background-size 100%
-
-.ui-icon-centermap
-  background url("../images/center.png") no-repeat !important
 
 .distance-direct
   background url("../images/distance_direct_16.png") no-repeat

@@ -39,7 +39,6 @@ class Gaso.StationsList extends Backbone.Collection
         if station instanceof Gaso.Station
           Gaso.fatal "Not expecting array of Station models, TODO implement"
 
-        distanceSet = station.directDistance? or station.drivingDistance?
         existing = @get station.osmId
         if existing
           # Don't add existing stations, only update data

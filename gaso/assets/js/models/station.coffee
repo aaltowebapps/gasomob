@@ -100,7 +100,7 @@ class Gaso.Station extends Backbone.Model
     parseFloat d
 
   identifyBrand: (name) =>
-    Gaso.log "Identify brand from", name
+    # Gaso.log "Identify brand from", name
     if (/abc/ig).test name
       @set 'brand', 'abc' 
     else if (/neste/ig).test name

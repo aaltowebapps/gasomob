@@ -41,7 +41,8 @@ script type: 'text/template', id: 'map-page', ->
   div 'data-role': 'content', ->
     div id: 'map-canvas'
     div id: 'map-buttons', ->
-      a href: '#', 'data-role': 'button', 'data-icon': 'centermap', 'data-iconpos': 'notext', 'Center on location'
+      a href: '#', id: 'center-user', 'data-role': 'button', 'class': 'ui-shadow ui-icon ui-icon-centermap', 'data-iconpos': 'notext', 'Center on location'
+      # button type: 'button', id: 'center-user', 'data-role': 'button', 'class': 'ui-icon ui-icon-centermap'
   gasofooter ->
     partial 'navigation'
 
