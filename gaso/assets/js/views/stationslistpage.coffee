@@ -4,8 +4,9 @@ Stations list
 class Gaso.StationsListPage extends Backbone.View
 
   events:
-    'click #fueltypes button' : 'onSelectFuelType'
-    'click .divider'          : 'toggleItems'
+    'click #fueltypes button'  : 'onSelectFuelType'
+    'change #fueltypes select' : 'onSelectFuelType'
+    'click .divider'           : 'toggleItems'
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
@@ -81,7 +82,7 @@ class Gaso.StationsListPage extends Backbone.View
     @$el.on 'pageinit', @onPageInit
     # Updates top-page fuel type selection buttons to reflect current user choice. Initial selection must be set
     # after jQM has enhanced the page content, therefore we listen to 'pagebeforeshow' event.
-    @$el.on 'pagebeforeshow', @setActiveFuelTypeButton
+    @$el.on 'pagebeforeshow', @setActiveFuelTypeInput
 
     @collection.on 'add', @onCollectionAdd
     @collection.on 'reset', @onCollectionReset
@@ -92,7 +93,7 @@ class Gaso.StationsListPage extends Backbone.View
     rateLimitedRenderFunc = null
     @off()
     @$el.off 'pageinit', @onPageInit
-    @$el.off 'pagebeforeshow', @setActiveFuelTypeButton
+    @$el.off 'pagebeforeshow', @setActiveFuelTypeInput
     @collection.off 'add', @onCollectionAdd
     @collection.off 'reset', @onCollectionReset
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
@@ -103,25 +104,35 @@ class Gaso.StationsListPage extends Backbone.View
       for item in @listItems
         item.close()
 
-  setActiveFuelTypeButton: =>
+  setActiveFuelTypeInput: =>
     currentFuelType = @user.get 'myFuelType'
-    $btns = @$el.find("#fueltypes .ui-btn")
-    $btnToActivate = $btns.filter(":has([data-fueltype='#{currentFuelType}'])")
-    $btns.not($btnToActivate).removeClass('ui-btn-active')
-    $btnToActivate.addClass('ui-btn-active')
+    $inputs = @$el.find("#fueltypes").find('.ui-btn, #otherType')
+    $inputToActivate = $inputs.filter(":has([data-fueltype='#{currentFuelType}'])")
+    $inputs.not($inputToActivate).removeClass('ui-btn-active')
+    $inputToActivate.addClass('ui-btn-active')
+
+    # Make sure correct select option is selected on initial page render.
+    $otherType = $('#otherType')
+    optVal = $otherType.find("[data-fueltype='#{currentFuelType}']").val()
+    $otherType.val(optVal)
+    $otherType.selectmenu 'refresh'
 
   onPageInit: =>
     Gaso.log "Stations page initialized by jQM"
     @pageInitialized = true
 
   onUserFuelTypeChanged: =>
-    @setActiveFuelTypeButton()
-    newType = @user.get 'myFuelType'
+    @setActiveFuelTypeInput()
     @renderList true
 
   onSelectFuelType: (event) ->
-    @user.set 'myFuelType', $(event.target).attr('data-fueltype')
-    @user.save()
+    tgtType = $(event.target).attr('data-fueltype')
+    unless tgtType
+      # Check if some fuel type was selected from the select box
+      tgtType = $(event.target).find(':selected').attr('data-fueltype')
+    if tgtType
+      @user.set 'myFuelType', tgtType
+      @user.save()
 
   onCollectionReset: =>
     @renderListRateLimited true

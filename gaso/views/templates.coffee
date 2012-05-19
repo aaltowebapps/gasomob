@@ -21,8 +21,8 @@ fuelTypeSelect = (options) ->
     selOpts['data-mini'] = true
   select selOpts, ->
     option value: '', firstOptionLabel
-    option value: 'E85', 'E85'
-    option value: 'Unleaded', 'Unleaded'
+    option 'data-fueltype': 'E85', value: 'E85', 'E85'
+    option 'data-fueltype': 'Unleaded', value: 'Unleaded', 'Unleaded'
 
 conditionalStationDistance = (options) ->
   text '<% if (drivingDistance) { %>'

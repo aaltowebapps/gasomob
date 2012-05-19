@@ -26,7 +26,6 @@ class Gaso.OnlineUsersView extends Backbone.View
 
 
   onUsersCountChanged: (count) =>
-    console.log "count change", count
     @render()
 
   showMessage: ->
