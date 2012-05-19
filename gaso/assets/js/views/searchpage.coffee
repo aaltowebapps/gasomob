@@ -39,7 +39,7 @@ class Gaso.SearchPage extends Backbone.View
     Gaso.log "Execute address search"
     event.preventDefault()
     Gaso.helper.message 'Searching...', lifetime: 2
-    coords = Gaso.geo.findAddress @getSearchTerm(), (coords) =>
+    coords = Gaso.geo.findAddress @getSearchTerm(), (err, coords) =>
       loc =
         lat: coords.lat()
         lon: coords.lng()
