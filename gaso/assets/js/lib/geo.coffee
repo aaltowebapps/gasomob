@@ -17,6 +17,13 @@ class GeoLib
     # Run search
     @cmGeocoder.getLocations "", callback, options
 
+  findAddress: (address, callback) ->
+    @gooGeocoder.geocode address: address, (results, status) ->
+      if status == google.maps.GeocoderStatus.OK
+        callback results[0].geometry.location
+      else
+        Gaso.fatal "Finding the address failed. Error code: " + status
+
 
   ###
     NOTE: Spamming getAddress() will pretty quickly get us a 'OVER_QUERY_LIMIT' error from the google maps API.

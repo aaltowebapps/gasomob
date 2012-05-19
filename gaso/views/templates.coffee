@@ -91,11 +91,12 @@ script type: 'text/template', id: 'search-page', ->
   header 'data-role': 'header', ->
     h1 'Station search'
   div 'data-role': 'content', ->
-    form class: 'ui-body-b', ->
-      h2 'Please type in an address.'
-      label 'for': 'search', 'Find stations near'
-      input 'type': 'search', 'name': 'address', 'id': 'field-address'
-      button 'type': 'submit', 'GO!'
+    form id: 'searchform', class: 'form ui-body-b ui-corner-all', ->
+      # h2 'Please type in an address.'
+      div 'data-role': "fieldcontain", ->
+        label 'for': 'field-address', 'Find stations near'
+        input 'type': 'search', 'name': 'field-address', 'id': 'field-address'
+      button id: 'address-search', type: 'button', 'GO!'
   gasofooter ->
     partial 'navigation'
 
