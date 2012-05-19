@@ -4,7 +4,7 @@ mock = require '../dev/mockdata'
 
 db = require './persistence'
 
-totalUserCount = 0
+io = null
 
 class Sync
 
@@ -139,14 +139,14 @@ class Sync
 
 
 onConnect = (socket) ->
-  totalUserCount++
+  totalUserCount = io.sockets.clients().length
   socket.emit 'notifications:allUsersCount', totalUserCount
   socket.broadcast.emit 'notifications:allUsersCount', totalUserCount
 
   new Sync(socket)
 
   socket.on 'disconnect', ->
-    totalUserCount--
+    totalUserCount = io.sockets.clients().length
     console.log "User left. Users online: ", totalUserCount
     socket.broadcast.emit 'notifications:allUsersCount', totalUserCount
 
