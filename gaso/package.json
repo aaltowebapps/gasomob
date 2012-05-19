@@ -1,6 +1,6 @@
 {
   "description": "Gaso: HTML5 mobile gas price application",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "express": "2.5.8",
