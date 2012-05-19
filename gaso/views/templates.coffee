@@ -193,6 +193,8 @@ script type: 'text/template', id: 'comments-list', ->
 
 script type: 'text/template', id: 'feedback-message-container', ->
   div id: 'messages', class: 'ui-corner-all ui-shadow'
+
+
 ###
   MODEL TEMPLATES
 ###
@@ -209,21 +211,6 @@ script type: 'text/template', id: 'comment-list-item', ->
   p class: 'comment-content', -> 
     '{{ body }}'
 
-# Price-edit for station-details form
-script type: 'text/template', id: 'price-edit', ->
-  text '<% if (typeof value === "undefined") { value = ""; } %>'
-  text '<% ptype = "price"+type; %>'
-
-  text '<% if (typeof date !== "undefined") { %>'
-  div class: 'timeago-info', ->
-    span 'Updated '
-    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
-  text '<% } %>'
-
-  label for: "{{ptype}}", ->
-    span class: 'fueltype', "{{type}}"
-
-  input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
 
 
 # Stations-list list-item
@@ -260,3 +247,31 @@ script type: 'text/template', id: 'station-list-item', ->
       span class: 'price-value', '{{ _priceToDisplay }}'
       span class: 'fuel-type', '{{ "(" + _ftype + ")" }}'
       text '<% } %>'
+
+
+###
+  OTHER / PARTIALS
+###
+
+# Price-edit for station-details form
+script type: 'text/template', id: 'price-edit', ->
+  text '<% if (typeof value === "undefined") { value = ""; } %>'
+  text '<% ptype = "price"+type; %>'
+
+  text '<% if (typeof date !== "undefined") { %>'
+  div class: 'timeago-info', ->
+    span 'Updated '
+    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
+  text '<% } %>'
+
+  label for: "{{ptype}}", ->
+    span class: 'fueltype', "{{type}}"
+
+  input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+
+
+# Online users display
+script type: 'text/template', id: 'online-users', ->
+  div id: 'online-users', 'data-theme': 'a', ->
+    span class: 'ui-icon-person'
+    span class: 'user-count', '{{ allUsersCount }}'

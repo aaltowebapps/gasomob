@@ -4,6 +4,7 @@ mock = require '../dev/mockdata'
 
 db = require './persistence'
 
+totalUserCount = 0
 
 class Sync
 
@@ -19,6 +20,10 @@ class Sync
 
     # station:create is called when we .save() a new station model that doesn't have an id yet on client-side.
     socket.on 'station:create', @createStation
+
+    socket.on 'notifications:read', @getNotifications
+
+
 
   getComments: (data, callback) ->
     console.log "Get comments by", data
@@ -129,16 +134,21 @@ class Sync
     console.log "Create station", data
 
 
+  getNotifications: (data, callback) ->
+    console.log "Get notifications", data
 
-usercount = 0
+
 onConnect = (socket) ->
-  usercount++
+  totalUserCount++
+  socket.emit 'notifications:allUsersCount', totalUserCount
+  socket.broadcast.emit 'notifications:allUsersCount', totalUserCount
 
   new Sync(socket)
 
   socket.on 'disconnect', ->
-    usercount--
-    console.log "User left. User count", usercount
+    totalUserCount--
+    console.log "User left. Users online: ", totalUserCount
+    socket.broadcast.emit 'notifications:allUsersCount', totalUserCount
 
 
 exports.init = (app) ->

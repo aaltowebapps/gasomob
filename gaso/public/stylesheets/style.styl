@@ -68,6 +68,8 @@ border-radius()
   instead see mobileinit.coffee, where this CSS is added dynamically for certain user agents.
   --Markus 17.5.2012
 */
+body
+  font-family Helvetica,Arial,sans-serif
 
 size = 50
 stations = abc shell nesteoil seo teboil st1 question
@@ -140,12 +142,29 @@ for s in stations
   border 1px solid #E7C53B
   background #FFF36E
   background-image -webkit-radial-gradient(circle, #FFF36E, #E7D93B)
-  font-family Helvetica,Arial,sans-serif
   text-align center
   padding 0.5em
   .feedback
     color black
+
+
+#online-users
+  z-index: 10
+  position fixed
+  top 3px
+  right 5px
+  padding 6px
+  .ui-icon-person
+    display inline-block
+    width 20px
+    height 20px
+  .user-count
+    font-size 18px
+    font-weight bold
+    line-height 18px
+    vertical-align top
 /* /COMMON */
+
 
 /* LIST PAGE */
 #page-list

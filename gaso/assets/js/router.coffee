@@ -23,6 +23,7 @@ class Gaso.AppRouter extends Backbone.Router
     # Init helper controller.
     Gaso.helper = new Gaso.Helper(@user, @stations, @searchContext)
     @bindEvents()
+    @initStaticViews()
     return
 
   initModels: ->
@@ -30,9 +31,14 @@ class Gaso.AppRouter extends Backbone.Router
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
     @user               = new Gaso.User()
+    @notifications      = new Gaso.Notifications()
+    @notifications.setUser @user
     # Load cached user data directly from localstorage.
     @user.fetch()
 
+  initStaticViews: ->
+    @onlineUsersView    = new Gaso.OnlineUsersView(collection: @notifications).render()
+    @notificationsView  = new Gaso.NotificationView().render()
 
   bindEvents: ->
     # Helper variables.

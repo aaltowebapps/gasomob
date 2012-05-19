@@ -74,9 +74,10 @@ class Gaso.MapPage extends Backbone.View
       marker.close()
 
   getInitialMapSettings: =>
-    zoom: @user.get 'mapZoom'
-    mapTypeId: google.maps.MapTypeId[@user.get 'mapTypeId']
-    disableDefaultUI: productionEnv
+    zoom             : @user.get 'mapZoom'
+    mapTypeId        : google.maps.MapTypeId[@user.get 'mapTypeId']
+    disableDefaultUI : productionEnv
+    mapTypeControl   : false
 
   onCenterToUser: (event) ->
     event.preventDefault()
