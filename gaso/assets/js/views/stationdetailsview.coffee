@@ -16,14 +16,17 @@ class Gaso.StationDetailsView extends Backbone.View
       transition: 'slide'
       reverse: true
   
+  getTemplateData: ->
+    templateData = @station.toJSON()
+    _.extend templateData,
+      curuser: @user.toJSON()
+    return templateData
+
   render: (eventName) -> 
     @priceEdits = []
     @$el.attr "data-add-back-btn", "true"
 
-    templateData = @station.toJSON()
-    _.extend templateData,
-      curuser: @user.toJSON()
-    @$el.html @template templateData
+    @$el.html @template @getTemplateData()
 
     @station.updateAddress()
     
@@ -98,7 +101,7 @@ class Gaso.StationDetailsView extends Backbone.View
 
   displayAddress: =>
     # We could have own view for just the address that would render automatically, but meh
-    $temp = $(@template @station.toJSON())
+    $temp = $(@template @getTemplateData())
     @$el.find('.address').fadeOut ->
       self = $(@)
       self.hide() # Is it the span or what, but without explicity hide() the fading doesn't seem to work.
