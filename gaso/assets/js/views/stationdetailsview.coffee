@@ -3,9 +3,8 @@ stationdetailsview.coffee
 ###
 class Gaso.StationDetailsView extends Backbone.View
   events:
-    "click #saveButton": "savePrices"
+    "tap #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
-    'click #small-map-canvas': 'openLargeMap'
     'tap #small-map-canvas': 'openLargeMap'
 
   constructor: (@station, @user, @comments) ->
