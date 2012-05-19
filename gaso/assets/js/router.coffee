@@ -136,6 +136,7 @@ class Gaso.AppRouter extends Backbone.Router
     $p.attr 'data-role', 'page'
     page.render()
     $('body').append $p
+    @fixNavBar page
 
     # Don't animate the first page. Use default JQM transition if nothing else defined in view.
     transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
@@ -150,5 +151,17 @@ class Gaso.AppRouter extends Backbone.Router
     @currentPage = page
     $.mobile.changePage $p, pageChangeOptions
 
+  fixNavBar: (page) ->
+    # Check if the page we are navigating to is one of the 'root' pages. If not found, keep the active navbar state as it is.
+    if page instanceof Gaso.SearchPage
+      @latestRoute = 'search'
+    else if page instanceof Gaso.MapPage
+      @latestRoute = 'map'
+    else if page instanceof Gaso.StationsListPage
+      @latestRoute = 'list'
+    else if page instanceof Gaso.MenuPage
+      @latestRoute = 'menu'
 
+    # Fix the navbar in the DOM.
+    page.$("#navigation a[href='##{@latestRoute}']").addClass('ui-btn-active') if @latestRoute
     
