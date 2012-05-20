@@ -175,15 +175,18 @@ for s in stations
     margin-bottom 40px
   */
 
-  @media screen and (max-width: 480px) and (orientation: portrait)
-    // Hackish fix for the jQm custom-select arrow icon
-    .ui-select .ui-icon
-      right 20px
 
   #fueltypes
     .ui-btn
     .ui-select
-      margin 0px 5px 2px
+      margin 0px 2px 2px
+      .ui-btn-inner
+        padding-right 20px
+
+    @media screen and (max-width: 480px) and (orientation: portrait)
+      // Hackish fix for the jQm custom-select arrow icon
+      .ui-select .ui-icon
+        right 9px
 
   .ui-listview-filter 
     margin-top 10px

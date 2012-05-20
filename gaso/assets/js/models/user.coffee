@@ -23,6 +23,10 @@ class Gaso.User extends Backbone.Model
     mapZoom: 14
     mapTypeId: 'ROADMAP'
 
+    # Some UI-related settings
+    useSwipeToGoBack: false
+    useSpecialTransitions: false
+
   initialize: ->
     @set 'refills', []
     # Init with initial position.

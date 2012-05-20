@@ -36,7 +36,8 @@ class Gaso.StationMarker extends Backbone.View
     return @
 
   bindEvents: ->
-    google.maps.event.addListener(@marker, 'click', @showDetails)
+    # Use mousedown instead of click for better tap responsiveness.
+    google.maps.event.addListener(@marker, 'mousedown', @showDetails)
     @model.on 'clear', @close
 
   close: =>
@@ -60,5 +61,5 @@ class Gaso.StationMarker extends Backbone.View
     @marker.setMap @map
     resetCounter()
   
-  showDetails: =>  
+  showDetails: => 
     Gaso.app.router.navigate "stations/#{ @model.id }", trigger: true

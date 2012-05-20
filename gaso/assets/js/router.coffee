@@ -47,7 +47,7 @@ class Gaso.AppRouter extends Backbone.Router
     $doc = $ document
 
     # Fix jQM back-button behaviour.
-    $doc.on 'click', '.back, [data-rel="back"]', (event) ->
+    $doc.on 'tap', '.back, [data-rel="back"]', (event) ->
       window.history.back()
       event.preventDefault()
 
@@ -146,12 +146,15 @@ class Gaso.AppRouter extends Backbone.Router
     @fixNavBar page
 
     # Don't animate the first page. Use default JQM transition if nothing else defined in view.
-    transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
+    transition = if not @currentPage? then 'none' else $.mobile.defaultPageTransition
     pageChangeOptions =
       changeHash: false
       transition: transition
-    if @currentPage?.outTransition?
-      _.extend pageChangeOptions, @currentPage.outTransition
+    if @user.get 'useSpecialTransitions'
+      if page.transition?
+        pageChangeOptions.transition = page.transition
+      if @currentPage?.outTransition?
+        _.extend pageChangeOptions, @currentPage.outTransition
     
     Gaso.log "Page change options", JSON.stringify pageChangeOptions if Gaso.loggingEnabled()
     # Change the JQM page.

@@ -9,7 +9,7 @@ class GasoApp
     unless $debug.length
       $debug = $('<div id="debug" />').appendTo 'body'
       # Hide debug view temporarily with click/tap.
-      $debug.on 'click', ->
+      $debug.on 'tap', ->
         self = $(@)
         self.hide()
         setTimeout ->

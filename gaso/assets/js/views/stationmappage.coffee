@@ -3,7 +3,6 @@ Map page for a single station
 ###
 class Gaso.StationMapPage extends Backbone.View
   initialize: ->
-    console.log "model", @model
     @template = _.template Gaso.util.getTemplate 'station-map-page'
     @setElement $('<div id="page-station-map"/>')
     @outTransition = 

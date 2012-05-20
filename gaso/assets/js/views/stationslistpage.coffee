@@ -4,9 +4,9 @@ Stations list
 class Gaso.StationsListPage extends Backbone.View
 
   events:
-    'click #fueltypes button'   : 'onSelectFuelType'
+    'tap #fueltypes button'     : 'onSelectFuelType'
     'change #fueltypes select'  : 'onSelectFuelType'
-    'click .divider'            : 'toggleItems'
+    'mousedown .divider'        : 'toggleItems'
     'change #money-vs-distance' : 'onSliderChange'
 
   constructor: (@collection, @user) ->

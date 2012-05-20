@@ -21,7 +21,7 @@ class Gaso.SearchPage extends Backbone.View
   bindEvents: ->
     # Note: We need to bind on form submit like this to be able to prevent jQM/normal form processing.
     @.$('#searchform').on 'submit', @searchAddress
-    @.$('#address-search').on 'click', @searchAddress
+    @.$('#address-search').on 'tap', @searchAddress
     @$el.on 'pageshow.searchpage', (event) =>
       @.$(addressSelector).focus()
   
