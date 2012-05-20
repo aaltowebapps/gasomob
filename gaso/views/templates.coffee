@@ -32,6 +32,15 @@ conditionalStationDistance = (options) ->
   if not options?.leaveOpen
     text '<% } %>'
 
+flipSwitch = (options, text) ->
+  return unless options?.for
+  id = options.id or options.for
+  div 'data-role': "fieldcontain", ->
+    label for: id, text
+    select id: id, name: options.for, 'data-role': "slider", 'data-theme': "a", ->
+      option value: "", 'No'
+      option value: "yes", 'Yes'
+
 ###
   PAGE TEMPLATES
 ###
@@ -81,8 +90,10 @@ script type: 'text/template', id: 'menu-page', ->
 script type: 'text/template', id: 'user-settings-page', ->
   header 'data-role': 'header', ->
     h1 'Settings'
-  div 'data-role': 'content', ->
-    # TODO content
+  div 'data-role': 'content', 'data-theme': 'c', ->
+    # Note: Use directly to property name in user model for 'for' option.
+    flipSwitch for: 'useSpecialTransitions', 'Use special transitions between pages'
+    flipSwitch for: 'useSwipeToGoBack', 'Allow swipe for Back-navigation'
   gasofooter ->
     partial 'navigation'
 
