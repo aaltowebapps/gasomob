@@ -23,8 +23,9 @@ class Gaso.Notifications extends Backbone.Collection
     @bindUserEvents()
 
   bindUserEvents: ->
-    Gaso.log "TODO bind user events"
+    Gaso.log "TODO bind user events (e.g. when user's city changes, join a socketio room for that city)"
 
   updateAllUsersCount: (count) =>
-    @allUsersCount = count
-    @trigger 'change:allUsersCount', count
+    unless count == @allUsersCount
+      @allUsersCount = count
+      @trigger 'change:allUsersCount', count

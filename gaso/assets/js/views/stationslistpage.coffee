@@ -4,9 +4,10 @@ Stations list
 class Gaso.StationsListPage extends Backbone.View
 
   events:
-    'click #fueltypes button'  : 'onSelectFuelType'
-    'change #fueltypes select' : 'onSelectFuelType'
-    'click .divider'           : 'toggleItems'
+    'click #fueltypes button'   : 'onSelectFuelType'
+    'change #fueltypes select'  : 'onSelectFuelType'
+    'click .divider'            : 'toggleItems'
+    'change #money-vs-distance' : 'onSliderChange'
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
@@ -16,6 +17,7 @@ class Gaso.StationsListPage extends Backbone.View
   render: (eventName) ->
     @pageInitialized = false
     @$el.html @template @collection.toJSON()
+    @.$('#money-vs-distance').attr 'value', @user.get('distancePriceFactor')
     @$list = @$el.find 'ul#list-stations'
     @bindEvents()
     @renderList()
@@ -23,6 +25,7 @@ class Gaso.StationsListPage extends Backbone.View
     # we must make sure that event listeners are bound again when we re-visit the list page.
     @delegateEvents()
     return @
+
 
   createListDivider: (id, text) ->
     # TODO add some icon to say that "hey i'm clickable divider"
@@ -35,11 +38,16 @@ class Gaso.StationsListPage extends Backbone.View
   toggleItems: (event) ->
     $items = $(event.target).nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
 
+
   # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
-    Gaso.log "DEBUG collection distances during list render()", @collection.models.map (n) -> n.get 'directDistance'
+    if Gaso.loggingEnabled()
+      fueltype = @user.get('myFuelType')
+      Gaso.log "DEBUG collection distances during list render(), distances", @collection.models.map (n) -> n.getDistance()
+      Gaso.log "DEBUG collection prices during list render(), prices", @collection.models.map (n) -> n.getPrice(fueltype)?.value
+      Gaso.log "DEBUG collection prices during list render(), rankings", @collection.models.map (n) -> n.ranking
 
     # Helper variables
     itemsHTML = []
@@ -71,12 +79,14 @@ class Gaso.StationsListPage extends Backbone.View
         @$list.listview 'refresh' 
         @$list.show()
 
+
   rateLimitedRenderFunc = null
   renderListRateLimited: (refresh) =>
     if rateLimitedRenderFunc?
       return rateLimitedRenderFunc(refresh);
     rateLimitedRenderFunc = _.debounce(@renderList,100)
     @renderListRateLimited(refresh);
+
 
   bindEvents: ->
     @$el.on 'pageinit', @onPageInit
@@ -89,8 +99,10 @@ class Gaso.StationsListPage extends Backbone.View
 
     @user.on 'change:myFuelType', @onUserFuelTypeChanged
 
+
   close: =>
     rateLimitedRenderFunc = null
+    rateLimitedSliderValueSaveFunc = null
     @off()
     @$el.off 'pageinit', @onPageInit
     @$el.off 'pagebeforeshow', @setActiveFuelTypeInput
@@ -99,10 +111,12 @@ class Gaso.StationsListPage extends Backbone.View
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
     @closeListItems()
 
+
   closeListItems: =>
     if @listItems?
       for item in @listItems
         item.close()
+
 
   setActiveFuelTypeInput: =>
     currentFuelType = @user.get 'myFuelType'
@@ -117,13 +131,15 @@ class Gaso.StationsListPage extends Backbone.View
     $otherType.val(optVal)
     $otherType.selectmenu 'refresh'
 
+
   onPageInit: =>
     Gaso.log "Stations page initialized by jQM"
     @pageInitialized = true
 
+
   onUserFuelTypeChanged: =>
     @setActiveFuelTypeInput()
-    @renderList true
+
 
   onSelectFuelType: (event) ->
     tgtType = $(event.target).attr('data-fueltype')
@@ -134,8 +150,10 @@ class Gaso.StationsListPage extends Backbone.View
       @user.set 'myFuelType', tgtType
       @user.save()
 
+
   onCollectionReset: =>
     @renderListRateLimited true
+
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
@@ -144,7 +162,23 @@ class Gaso.StationsListPage extends Backbone.View
     # This is simpler, but lets see if this works performance-wise.
     @renderListRateLimited true
 
+
+  rateLimitedSliderValueSaveFunc = null
+  onSliderChange: (event) =>
+    if rateLimitedSliderValueSaveFunc?
+      return rateLimitedSliderValueSaveFunc(event);
+    rateLimitedSliderValueSaveFunc = _.debounce(@saveDistancePriceFactor,300)
+    @onSliderChange(event);
+
+
+  saveDistancePriceFactor: (event) =>
+    @user.set 'distancePriceFactor', parseFloat $(event.target).val()
+    @user.save()
+
+
   addStationListItem: (station) =>
     newItem = new Gaso.StationListItem model: station
     @listItems.push newItem
     newItem.render()
+
+

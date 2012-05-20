@@ -27,10 +27,11 @@ class Gaso.AppRouter extends Backbone.Router
     return
 
   initModels: ->
+    @user               = new Gaso.User()
     @comments           = new Gaso.CommentsList()
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
-    @user               = new Gaso.User()
+    @stations.setUser @user
     @notifications      = new Gaso.Notifications()
     @notifications.setUser @user
     # Load cached user data directly from localstorage.

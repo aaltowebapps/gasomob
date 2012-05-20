@@ -65,10 +65,7 @@ class Gaso.Helper
       if settings.update
         Gaso.log "TODO update station model with possible new/extra data we don't have yet"
     else
-      # Calculate direct distance to user before adding to collection.
-      # This way we avoid extra re-renderings and make collection sort initially better.
       station = new Gaso.Station(stationData)
-      @setDistanceToUser station
       @stations.add station
 
   message: (msg, options) =>

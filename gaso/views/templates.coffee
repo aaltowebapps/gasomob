@@ -166,7 +166,7 @@ script type: 'text/template', id: 'list-page', ->
       div class : 'slidericon money', ->
         img src: 'images/euro.png', alt: '&euro;'
       div id: 'filterslider', ->
-        input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+        input 'type':'range', 'name':'slider', 'id':'money-vs-distance', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
       div class : 'slidericon distance', ->
         img src:'images/distance.png', alt: 'km'
     partial 'navigation'

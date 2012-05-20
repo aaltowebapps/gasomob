@@ -9,6 +9,7 @@ class Gaso.User extends Backbone.Model
   defaults:
     id: 'anonymous'
     myFuelType: '95E10'
+    distancePriceFactor: 50
 
     positionAccuracy: null
     city: null
