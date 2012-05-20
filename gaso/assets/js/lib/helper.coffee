@@ -19,10 +19,18 @@ class Gaso.Helper
     dist = @calculateDistanceToUser station.get 'location'
     station.set 'directDistance', dist
 
-
+  distancesLastUpdatedAt = null
   updateStationDistancesToUser: =>
-    for station in @stations.models
-      dist = @setDistanceToUser station
+    shouldUpdateDistances = true
+    userpos = @user.get 'position'
+    if distancesLastUpdatedAt?
+      distMeters = Gaso.geo.calculateDistanceBetween distancesLastUpdatedAt, userpos
+      shouldUpdateDistances = distMeters >= 100
+      Gaso.log "Should we update station distances? Distance from last update spot: ", distMeters
+    if shouldUpdateDistances
+      for station in @stations.models
+        dist = @setDistanceToUser station
+      distancesLastUpdatedAt = _.extend {}, userpos
 
   findStationByOsmId: (osmId, callback) =>
     @stations.fetch
