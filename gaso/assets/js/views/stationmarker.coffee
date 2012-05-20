@@ -37,7 +37,7 @@ class Gaso.StationMarker extends Backbone.View
 
   bindEvents: ->
     # Use mousedown instead of click for better tap responsiveness.
-    google.maps.event.addListener(@marker, 'mousedown', @showDetails)
+    google.maps.event.addListener(@marker, 'click', @showDetails)
     @model.on 'clear', @close
 
   close: =>
