@@ -72,8 +72,6 @@ script type: 'text/template', id: 'menu-page', ->
     ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', 'data-dividertheme': 'a', ->
       li 'data-role': 'list-divider', ->
         'Find gas near you'
-      li 'data-role': 'list-divider', ->
-        'test'
       li ->
         a href:'#map'
           'Map view'

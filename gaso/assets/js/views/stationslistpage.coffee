@@ -32,15 +32,24 @@ class Gaso.StationsListPage extends Backbone.View
 
 
   createListDivider: (id, text) ->
-    # TODO add some icon to say that "hey i'm clickable divider"
-    $ '<li/>',
+    $li = $ '<li/>',
       id          : id
-      text        : text
       class       : 'divider'
       'data-role' : 'list-divider'
+    $icon = $ "<span/>",
+        class: 'dir ui-icon ui-icon-arrow-d'
+    $icon.appendTo $li
+    $text = $ "<span/>",
+      text: text
+    $text.appendTo $li
+    return $li
     
   toggleItems: (event) ->
-    $items = $(event.target).nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
+    $divider = $(event.target).closest('li')
+    $items = $divider.nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
+    itemsVisible = $items.is(':visible')
+    $divider.find('.dir').toggleClass('ui-icon-arrow-r', !itemsVisible).toggleClass('ui-icon-arrow-d', itemsVisible)
+
 
 
   # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
