@@ -35,4 +35,4 @@ class Gaso.OnlineUsersView extends Backbone.View
       when 1 then msg = "You're all alone! Recommend Gaso to your friends."
       else msg = "There are #{count} users online. Great!"
 
-    Gaso.helper.message msg if msg
+    Gaso.helper.message msg, replace: true if msg
