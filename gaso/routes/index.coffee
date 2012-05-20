@@ -30,4 +30,6 @@ exports.init = (app) ->
   app.get '/', index
   app.get '/templates', templates
   app.get '/apple-touch-icon.png', touchIcon
-  app.get '/cache.appcache', cacheManifest
+  # NOTE: Deactivated appcache at least for the demo, not interested in troubleshooting this before that.
+  # See layout.coffee for more ramblings.
+  # app.get "/cache-#{config.env.current}.appcache", cacheManifest

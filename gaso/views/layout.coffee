@@ -9,7 +9,15 @@ templatesversion = "'#{@config.version}'" if productionEnv
 
 
 doctype 5
-html manifest: '/cache.appcache', ->
+
+# NOTE: Deactivated appcache at least for the demo, not interested in troubleshooting this before that. --Markus
+# This causes problems between switching devel-production modes when testing stuff.
+# Main problem is that the main page (i.e. this page) ends up as 'master' in cached resources.
+# TODO things that would need to be solved:
+# * Production mode: Our main scripts (mobileinit, application) have dynamic urls that change each time
+# server is restarted. -> When this index page is loaded from cache, the old urls are not valid anymore.
+html ->
+# html manifest: "cache-#{@config.env.current}.appcache", ->
   head ->
     meta charset: 'utf-8'
 
@@ -43,6 +51,28 @@ html manifest: '/cache.appcache', ->
     link rel: 'stylesheet', href: '/stylesheets/style.css'
     # High pixel density displays
     link rel: 'stylesheet', href:'/stylesheets/highres.css', media:'only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2)'
+
+    # Handlers for application cache updating.
+    coffeescript ->
+      checkApplicationCache = ->
+        switch applicationCache.status
+          when applicationCache.UPDATEREADY
+            # Browser downloaded a new app cache.
+            # Swap it in and reload the page to get the new hotness.
+            applicationCache.swapCache()
+            if confirm 'A new version of this site is available. Load it?'
+              location.reload()
+          when applicationCache.OBSOLETE
+            location.reload()
+          else
+            # Manifest hasn't changed.
+        return
+        
+      window.addEventListener 'load', ->
+        applicationCache.addEventListener 'updateready', checkApplicationCache, false
+        applicationCache.addEventListener 'obsolete', checkApplicationCache, false
+        return
+      , false
 
     # Libs: CloudMade maps for stations data, maybe later use only this for visual maps, too.
     script src: "http://tile.cloudmade.com/wml/latest/web-maps-lite.js"

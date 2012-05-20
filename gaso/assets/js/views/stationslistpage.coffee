@@ -4,10 +4,14 @@ Stations list
 class Gaso.StationsListPage extends Backbone.View
 
   events:
-    'tap #fueltypes button'     : 'onSelectFuelType'
-    'change #fueltypes select'  : 'onSelectFuelType'
-    'mousedown .divider'        : 'toggleItems'
-    'change #money-vs-distance' : 'onSliderChange'
+    'tap #fueltypes button'        : 'onSelectFuelType'
+    'change #fueltypes select'     : 'onSelectFuelType'
+    'mousedown .divider'           : 'toggleItems'
+    'change #money-vs-distance'    : 'onSliderChange'
+    'tap #list-stations li.ui-btn' : 'activate'
+
+  activate: (event) ->
+    $(event.target).closest('.ui-btn').addClass 'ui-btn-active'
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
