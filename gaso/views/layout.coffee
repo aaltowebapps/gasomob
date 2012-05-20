@@ -9,7 +9,7 @@ templatesversion = "'#{@config.version}'" if productionEnv
 
 
 doctype 5
-html ->
+html manifest: '/cache.appcache', ->
   head ->
     meta charset: 'utf-8'
 
