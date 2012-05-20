@@ -72,6 +72,8 @@ script type: 'text/template', id: 'menu-page', ->
     ul 'data-role': 'listview', 'data-inset': 'true', 'data-theme': 'a', 'data-dividertheme': 'a', ->
       li 'data-role': 'list-divider', ->
         'Find gas near you'
+      li 'data-role': 'list-divider', ->
+        'test'
       li ->
         a href:'#map'
           'Map view'
@@ -105,9 +107,9 @@ script type: 'text/template', id: 'search-page', ->
   div 'data-role': 'content', ->
     form id: 'searchform', class: 'form ui-body-b ui-corner-all', ->
       # h2 'Please type in an address.'
-      div 'data-role': "fieldcontain", ->
-        label 'for': 'field-address', 'Find stations near'
-        input 'type': 'search', 'name': 'field-address', 'id': 'field-address'
+      # div 'data-role': "fieldcontain", ->
+      h2 'Find stations'
+      input 'type': 'search', 'name': 'field-address', 'id': 'field-address', 'placeholder': 'Search for address, place, ...'
       button id: 'address-search', type: 'button', 'GO!'
   gasofooter ->
     partial 'navigation'

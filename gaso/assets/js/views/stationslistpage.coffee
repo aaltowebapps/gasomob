@@ -58,16 +58,22 @@ class Gaso.StationsListPage extends Backbone.View
     $othersDivider = null
     $nearbyDivider = null
 
+    sortedOnlyByPrice = @user.get('distancePriceFactor') == 0
+    sortedOnlyByDistance = @user.get('distancePriceFactor') == 100
     # Create list items from stations collection.
     for station, i in @collection.models
       $temp = $('<div/>')
-      distance = station.getDistance()
-      if i == 0 and distance <= 10
-        $nearbyDivider = @createListDivider 'stations-nearby', 'Stations nearby'
-        $temp.append $nearbyDivider
-      else if $nearbyDivider and not $othersDivider and distance > 10
-        $othersDivider = @createListDivider 'stations-others', 'Other stations'
-        $temp.append $othersDivider
+      if sortedOnlyByPrice
+        if i == 0
+          $temp.append @createListDivider 'stations-by-price', 'Cheapest stations'
+      else if sortedOnlyByDistance
+        distance = station.getDistance()
+        if i == 0 and distance <= 10
+          $nearbyDivider = @createListDivider 'stations-nearby', 'Stations nearby'
+          $temp.append $nearbyDivider
+        else if $nearbyDivider and not $othersDivider and distance > 10
+          $othersDivider = @createListDivider 'stations-others', 'Other stations'
+          $temp.append $othersDivider
       $temp.append @addStationListItem(station).$el
       itemsHTML.push $temp.html()
 

@@ -272,6 +272,8 @@ for s in stations
 
 /* SEARCH PAGE */
 #page-search
+  h2
+    text-align center
   .form
     padding 1em
 /* /SEARCH PAGE */
@@ -305,6 +307,7 @@ for s in stations
   .distance-direct
     background url("../images/distance_direct_24.png") no-repeat
     padding-left 30px
+    
   .address
     float right
 
@@ -331,9 +334,32 @@ for s in stations
       list-style-type: none
 /* /STATION PAGE */
 
-
 /* iPads (portrait and landscape) */
-//@media screen and (min-device-width : 768px) and (max-device-width : 1024px)
+// @media screen and (min-width : 768px) // For debugging/developing with normal browser
+@media screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  #page-list
+    li.ui-btn
+      //.clear
+      //  clear none
+      .station-info
+        line-height 24px
+        font-size 100%
+
+      .station-info-name
+        float left
+
+      .distance-direct
+        background url("../images/distance_direct_24.png") no-repeat
+        padding-left 30px
+        display inline-block
+
+      .currency
+        font-size 22px
+
+  #navigation
+    .ui-btn-inner
+      font-size 16px
+      padding 1.2em
 
 /* iPads (landscape)  */
 //@media screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)
