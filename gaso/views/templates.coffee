@@ -192,14 +192,11 @@ script type: 'text/template', id: 'comments-list', ->
   div class: 'commentarea', 'data-role': 'collapsible', 'data-theme': 'a', 'data-content-theme': 'a', ->
     h3 'Comments'
     
-    div 'data-role': 'fieldcontain', ->
+    div ->
       form ->
-        label 'for': 'newcomment', 'id': 'ownid', ->
-          '{{ curuser.id }}: '
+        label 'for': 'newcomment', 'id': 'ownid', '{{ curuser.id }}: '
         textarea id: 'newcomment', name: 'newcomment', placeholder: 'Your review or comment...'
         button 'type': 'submit', 'data-inline': 'true', 'Shout!'
-        # a 'href': '#', 'data-role': 'button', 'data-inline': 'true', 'Shout!'
-    hr ->
     ul id: 'list-comments'
 
 
@@ -214,15 +211,12 @@ script type: 'text/template', id: 'feedback-message-container', ->
 
 # Station comment
 script type: 'text/template', id: 'comment-list-item', ->
-  h4 class: 'comment-title', ->
-    '{{ title }}'
-  p class: 'comment-author', ->
-    '{{ userId }}'
+  div class: 'ui-grid-a', ->
+    p class: 'ui-block-a comment-title', '{{ title }}'
+    p class: 'ui-block-b comment-author', '{{ userId }}'
   p class: 'comment-publish-date', ->
     time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
-  p class: 'comment-content', -> 
-    '{{ body }}'
-
+  p class: 'comment-content', '{{ body }}'
 
 
 # Stations-list list-item
