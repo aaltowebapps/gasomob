@@ -14,6 +14,7 @@ class Gaso.StationDetailsView extends Backbone.View
     @outTransition = 
       transition: 'slide'
       reverse: true
+    
   
   getTemplateData: ->
     templateData = @station.toJSON()
@@ -45,7 +46,7 @@ class Gaso.StationDetailsView extends Backbone.View
       @addPriceEdit price
     
     @bindEvents()
-    
+
     return @
 
   bindEvents: ->

@@ -16,8 +16,8 @@ class Gaso.CommentListView extends Backbone.View
     @$el.html @template collection
     
     @$list = @$el.find 'ul#list-comments'
+    # @renderList()
     @bindEvents()
-    @renderList()
 
     return @
 
