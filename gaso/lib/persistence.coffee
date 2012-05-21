@@ -175,7 +175,7 @@ LatestPriceSchema.statics.searchLatestPrices = (stationDBids, fields..., callbac
   COMMENT SCHEMA
 ###
 CommentSchema = new Schema
-  by      : ObjectId
+  by      : String
   title   : String
   body    : String
   date    :

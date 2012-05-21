@@ -23,7 +23,7 @@ addPrice = (station, type, value, date) ->
 # Mock comments.
 
 c = new db.Comment
-  by : ''
+  by : 'i<3Gaso'
   title : 'Lipsum'
   body : '''
   Ten years ago a crack commando unit was sent to prison by a military court for a crime they didn't commit. 
@@ -34,7 +34,7 @@ c = new db.Comment
   date : now().addMinutes -3
 comments.push c
 c = new db.Comment
-  by : ''
+  by : 'Mr. X'
   title : 'Lorem'
   body : '''
   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -47,7 +47,7 @@ c = new db.Comment
   date : now().addDays -1
 comments.push c
 c = new db.Comment
-  by : ''
+  by : 'Little Piglet'
   title : 'Bacon!'
   body : '''
   Tail short loin shankle leberkas biltong turducken, ball tip capicola ham ground round.

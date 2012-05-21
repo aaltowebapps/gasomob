@@ -8,3 +8,6 @@ class Gaso.Comment extends Backbone.Model
     publishDate: ''
     title: ''
     userId: ''
+
+  initialize: (data) ->
+    @set 'userId', data.by if data.by?
