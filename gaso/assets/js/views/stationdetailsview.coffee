@@ -144,5 +144,6 @@ class Gaso.StationDetailsView extends Backbone.View
     Gaso.app.router.navigate "stationmap/#{ @station.id }", trigger: true
     @outTransition.reverse = true
 
-  makeComment: ->
+  makeComment: (event) ->
+    event.preventDefault()
     Gaso.helper.message 'Not implemented yet, sorry!'
