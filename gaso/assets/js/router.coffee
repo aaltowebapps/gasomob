@@ -97,7 +97,9 @@ class Gaso.AppRouter extends Backbone.Router
   stationMap: (id, noFetch) ->
     station = @stations.get(id)
     if station?
-      @changePage new Gaso.StationMapPage(model: station)
+      stationMapPage = new Gaso.StationMapPage(model: station)
+      stationMapPage.setUser @user
+      @changePage stationMapPage
     else if noFetch
       Gaso.error "The station #{id} isn't still in the collection, it probably doesn't exist in the DB. Redirect to working page."
       @navigate "map",
