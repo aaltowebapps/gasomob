@@ -23,7 +23,7 @@ addPrice = (station, type, value, date) ->
 # Mock comments.
 
 c = new db.Comment
-  by : ''
+  by : 'user1'
   title : 'Lipsum'
   body : '''
   Ten years ago a crack commando unit was sent to prison by a military court for a crime they didn't commit. 
