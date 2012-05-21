@@ -196,7 +196,7 @@ script type: 'text/template', id: 'comments-list', ->
       form ->
         label 'for': 'newcomment', 'id': 'ownid', '{{ curuser.id }}: '
         textarea id: 'newcomment', name: 'newcomment', placeholder: 'Your review or comment...'
-        button 'type': 'submit', 'data-inline': 'true', 'Shout!'
+        button 'type': 'button', 'data-inline': 'true', 'Shout!'
     ul id: 'list-comments'
 
 

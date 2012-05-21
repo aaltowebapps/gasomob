@@ -6,6 +6,7 @@ class Gaso.StationDetailsView extends Backbone.View
     "tap #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
     'tap #small-map-canvas': 'openLargeMap'
+    'click .commentarea form button' : 'makeComment'
 
   constructor: (@station, @user, @comments) ->
     @template = _.template Gaso.util.getTemplate 'station-details'
@@ -142,3 +143,6 @@ class Gaso.StationDetailsView extends Backbone.View
     @outTransition.reverse = false
     Gaso.app.router.navigate "stationmap/#{ @station.id }", trigger: true
     @outTransition.reverse = true
+
+  makeComment: ->
+    Gaso.helper.message 'Not implemented yet, sorry!'
