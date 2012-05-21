@@ -118,6 +118,7 @@ script type: 'text/template', id: 'station-details', ->
   header 'data-role': 'header', ->
     h1 '{{ name }}'
   div 'data-role': 'content', ->
+    div class: 'hint', 'Click on map to see route'
     div id: 'small-map-canvas'
 
     h3 ->
