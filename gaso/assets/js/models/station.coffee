@@ -34,7 +34,9 @@ class Gaso.Station extends Backbone.Model
     @set 'location', [] unless initData.location?
     @set 'services', [] unless initData.services?
     defaultPrices = [
-      type: "95E10"
+      type    : "95E10"
+      # value : ...
+      # date  : ...
     ,
       type: "98E5"
     ,
@@ -99,8 +101,11 @@ class Gaso.Station extends Backbone.Model
     d = @get('drivingDistance') ? @get('directDistance')
     parseFloat d
 
+  getPrice: (type) ->
+    _.find @get('prices'), (p) -> p.type == type
+
   identifyBrand: (name) =>
-    Gaso.log "Identify brand from", name
+    # Gaso.log "Identify brand from", name
     if (/abc/ig).test name
       @set 'brand', 'abc' 
     else if (/neste/ig).test name

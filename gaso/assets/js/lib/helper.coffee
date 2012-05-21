@@ -19,10 +19,18 @@ class Gaso.Helper
     dist = @calculateDistanceToUser station.get 'location'
     station.set 'directDistance', dist
 
-
+  distancesLastUpdatedAt = null
   updateStationDistancesToUser: =>
-    for station in @stations.models
-      dist = @setDistanceToUser station
+    shouldUpdateDistances = true
+    userpos = @user.get 'position'
+    if distancesLastUpdatedAt?
+      distMeters = Gaso.geo.calculateDistanceBetween distancesLastUpdatedAt, userpos
+      shouldUpdateDistances = distMeters >= 100
+      Gaso.log "Should we update station distances? Distance from last update spot: ", distMeters
+    if shouldUpdateDistances
+      for station in @stations.models
+        dist = @setDistanceToUser station
+      distancesLastUpdatedAt = _.extend {}, userpos
 
   findStationByOsmId: (osmId, callback) =>
     @stations.fetch
@@ -65,10 +73,7 @@ class Gaso.Helper
       if settings.update
         Gaso.log "TODO update station model with possible new/extra data we don't have yet"
     else
-      # Calculate direct distance to user before adding to collection.
-      # This way we avoid extra re-renderings and make collection sort initially better.
       station = new Gaso.Station(stationData)
-      @setDistanceToUser station
       @stations.add station
 
   message: (msg, options) =>

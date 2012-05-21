@@ -11,6 +11,7 @@ exports.env =
   staging: false
   test: false
   development: false
+  current: currentEnv
 exports.env[currentEnv] = true
 exports.log =
   path: __dirname + "/var/log/app_#{currentEnv}.log"

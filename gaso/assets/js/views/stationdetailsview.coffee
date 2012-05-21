@@ -3,9 +3,8 @@ stationdetailsview.coffee
 ###
 class Gaso.StationDetailsView extends Backbone.View
   events:
-    "click #saveButton": "savePrices"
+    "tap #saveButton": "savePrices"
     'change #addOtherPrice select': "addOtherPriceEdit"
-    'click #small-map-canvas': 'openLargeMap'
     'tap #small-map-canvas': 'openLargeMap'
 
   constructor: (@station, @user, @comments) ->
@@ -50,19 +49,19 @@ class Gaso.StationDetailsView extends Backbone.View
     return @
 
   bindEvents: ->
-    google.maps.event.clearInstanceListeners @map
-
-    @$el.off 'pageshow.stationdetailsview'
     @$el.on 'pageshow.stationdetailsview', (event) =>
       google.maps.event.trigger @map, 'resize'
       @map.setCenter new google.maps.LatLng(@station.get('location')[1], @station.get('location')[0])
-    @$el.on 'swiperight.stationdetailsview', (event) =>
-      window.history.back()
+    if @user.get 'useSwipeToGoBack'
+      @$el.on 'swiperight.stationdetailsview', (event) =>
+        window.history.back()
 
     @station.on 'change:address', @displayAddress
     @station.on 'sync', @displaySaveSuccess
 
   close: =>
+    google.maps.event.clearInstanceListeners @map
+    @map = null
     @off()
     @$el.off '.stationdetailsview'
     @station.off 'change:address', @displayAddress
@@ -72,11 +71,11 @@ class Gaso.StationDetailsView extends Backbone.View
     @commentsView.close()
 
   getMapSettings: =>
-    zoom: 16
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-    disableDefaultUI: true
-    draggable: false
-    disableDoubleClickZoom: true
+    zoom                   : 16
+    mapTypeId              : google.maps.MapTypeId.ROADMAP
+    disableDefaultUI       : true
+    draggable              : false
+    disableDoubleClickZoom : true
     
   savePrices: ->
     for input in @priceEdits

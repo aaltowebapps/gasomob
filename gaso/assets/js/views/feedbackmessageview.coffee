@@ -59,7 +59,6 @@ class Gaso.FeedbackMessage extends Backbone.View
     unless $msgs.length
       tpl = _.template Gaso.util.getTemplate 'feedback-message-container'
       $msgs = $ tpl()
-      console.log $msgs.html(), 
       $msgs.hide()
       $msgs.appendTo messagesParent
     return $msgs

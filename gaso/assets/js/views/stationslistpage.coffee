@@ -4,8 +4,14 @@ Stations list
 class Gaso.StationsListPage extends Backbone.View
 
   events:
-    'click #fueltypes button' : 'onSelectFuelType'
-    'click .divider'          : 'toggleItems'
+    'tap #fueltypes button'        : 'onSelectFuelType'
+    'change #fueltypes select'     : 'onSelectFuelType'
+    'mousedown .divider'           : 'toggleItems'
+    'change #money-vs-distance'    : 'onSliderChange'
+    'tap #list-stations li.ui-btn' : 'activate'
+
+  activate: (event) ->
+    $(event.target).closest('.ui-btn').addClass 'ui-btn-active'
 
   constructor: (@collection, @user) ->
     @template = _.template Gaso.util.getTemplate 'list-page'
@@ -15,6 +21,7 @@ class Gaso.StationsListPage extends Backbone.View
   render: (eventName) ->
     @pageInitialized = false
     @$el.html @template @collection.toJSON()
+    @.$('#money-vs-distance').attr 'value', @user.get('distancePriceFactor')
     @$list = @$el.find 'ul#list-stations'
     @bindEvents()
     @renderList()
@@ -23,38 +30,59 @@ class Gaso.StationsListPage extends Backbone.View
     @delegateEvents()
     return @
 
+
   createListDivider: (id, text) ->
-    # TODO add some icon to say that "hey i'm clickable divider"
-    $ '<li/>',
+    $li = $ '<li/>',
       id          : id
-      text        : text
       class       : 'divider'
       'data-role' : 'list-divider'
+    $icon = $ "<span/>",
+        class: 'dir ui-icon ui-icon-arrow-d'
+    $icon.appendTo $li
+    $text = $ "<span/>",
+      text: text
+    $text.appendTo $li
+    return $li
     
   toggleItems: (event) ->
-    $items = $(event.target).nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
+    $divider = $(event.target).closest('li')
+    $items = $divider.nextUntil('.ui-li-divider').toggleClass('ui-custom-hidden')
+    itemsVisible = $items.is(':visible')
+    $divider.find('.dir').toggleClass('ui-icon-arrow-r', !itemsVisible).toggleClass('ui-icon-arrow-d', itemsVisible)
+
+
 
   # Avoid repeated rendering e.g. when getting multiple 'add' events -> use debouncing
   renderList: (refresh) =>
     @closeListItems()
     @listItems = []
-    Gaso.log "DEBUG collection distances during list render()", @collection.models.map (n) -> n.get 'directDistance'
+    if Gaso.loggingEnabled()
+      fueltype = @user.get('myFuelType')
+      Gaso.log "DEBUG collection distances during list render(), distances", @collection.models.map (n) -> n.getDistance()
+      Gaso.log "DEBUG collection prices during list render(), prices", @collection.models.map (n) -> n.getPrice(fueltype)?.value
+      Gaso.log "DEBUG collection prices during list render(), rankings", @collection.models.map (n) -> n.ranking
 
     # Helper variables
     itemsHTML = []
     $othersDivider = null
     $nearbyDivider = null
 
+    sortedOnlyByPrice = @user.get('distancePriceFactor') == 0
+    sortedOnlyByDistance = @user.get('distancePriceFactor') == 100
     # Create list items from stations collection.
     for station, i in @collection.models
       $temp = $('<div/>')
-      distance = station.getDistance()
-      if i == 0 and distance <= 10
-        $nearbyDivider = @createListDivider 'stations-nearby', 'Stations nearby'
-        $temp.append $nearbyDivider
-      else if $nearbyDivider and not $othersDivider and distance > 10
-        $othersDivider = @createListDivider 'stations-others', 'Other stations'
-        $temp.append $othersDivider
+      if sortedOnlyByPrice
+        if i == 0
+          $temp.append @createListDivider 'stations-by-price', 'Cheapest stations'
+      else if sortedOnlyByDistance
+        distance = station.getDistance()
+        if i == 0 and distance <= 10
+          $nearbyDivider = @createListDivider 'stations-nearby', 'Stations nearby'
+          $temp.append $nearbyDivider
+        else if $nearbyDivider and not $othersDivider and distance > 10
+          $othersDivider = @createListDivider 'stations-others', 'Other stations'
+          $temp.append $othersDivider
       $temp.append @addStationListItem(station).$el
       itemsHTML.push $temp.html()
 
@@ -70,6 +98,7 @@ class Gaso.StationsListPage extends Backbone.View
         @$list.listview 'refresh' 
         @$list.show()
 
+
   rateLimitedRenderFunc = null
   renderListRateLimited: (refresh) =>
     if rateLimitedRenderFunc?
@@ -77,54 +106,73 @@ class Gaso.StationsListPage extends Backbone.View
     rateLimitedRenderFunc = _.debounce(@renderList,100)
     @renderListRateLimited(refresh);
 
+
   bindEvents: ->
     @$el.on 'pageinit', @onPageInit
     # Updates top-page fuel type selection buttons to reflect current user choice. Initial selection must be set
     # after jQM has enhanced the page content, therefore we listen to 'pagebeforeshow' event.
-    @$el.on 'pagebeforeshow', @setActiveFuelTypeButton
+    @$el.on 'pagebeforeshow', @setActiveFuelTypeInput
 
     @collection.on 'add', @onCollectionAdd
     @collection.on 'reset', @onCollectionReset
 
     @user.on 'change:myFuelType', @onUserFuelTypeChanged
 
+
   close: =>
     rateLimitedRenderFunc = null
+    rateLimitedSliderValueSaveFunc = null
     @off()
     @$el.off 'pageinit', @onPageInit
-    @$el.off 'pagebeforeshow', @setActiveFuelTypeButton
+    @$el.off 'pagebeforeshow', @setActiveFuelTypeInput
     @collection.off 'add', @onCollectionAdd
     @collection.off 'reset', @onCollectionReset
     @user.off 'change:myFuelType', @onUserFuelTypeChanged
     @closeListItems()
+
 
   closeListItems: =>
     if @listItems?
       for item in @listItems
         item.close()
 
-  setActiveFuelTypeButton: =>
+
+  setActiveFuelTypeInput: =>
     currentFuelType = @user.get 'myFuelType'
-    $btns = @$el.find("#fueltypes .ui-btn")
-    $btnToActivate = $btns.filter(":has([data-fueltype='#{currentFuelType}'])")
-    $btns.not($btnToActivate).removeClass('ui-btn-active')
-    $btnToActivate.addClass('ui-btn-active')
+    $inputs = @$el.find("#fueltypes").find('.ui-btn, #otherType')
+    $inputToActivate = $inputs.filter(":has([data-fueltype='#{currentFuelType}'])")
+    $inputs.not($inputToActivate).removeClass('ui-btn-active')
+    $inputToActivate.addClass('ui-btn-active')
+
+    # Make sure correct select option is selected on initial page render.
+    $otherType = $('#otherType')
+    optVal = $otherType.find("[data-fueltype='#{currentFuelType}']").val()
+    $otherType.val(optVal)
+    $otherType.selectmenu 'refresh'
+
 
   onPageInit: =>
     Gaso.log "Stations page initialized by jQM"
     @pageInitialized = true
 
+
   onUserFuelTypeChanged: =>
-    @setActiveFuelTypeButton()
-    newType = @user.get 'myFuelType'
-    @renderList true
+    @setActiveFuelTypeInput()
+
 
   onSelectFuelType: (event) ->
-    @user.set 'myFuelType', $(event.target).attr('data-fueltype')
-    @user.save()
+    tgtType = $(event.target).attr('data-fueltype')
+    unless tgtType
+      # Check if some fuel type was selected from the select box
+      tgtType = $(event.target).find(':selected').attr('data-fueltype')
+    if tgtType
+      @user.set 'myFuelType', tgtType
+      @user.save()
+
 
   onCollectionReset: =>
     @renderListRateLimited true
+
 
   onCollectionAdd: (data) =>
     item = @addStationListItem data
@@ -133,7 +181,23 @@ class Gaso.StationsListPage extends Backbone.View
     # This is simpler, but lets see if this works performance-wise.
     @renderListRateLimited true
 
+
+  rateLimitedSliderValueSaveFunc = null
+  onSliderChange: (event) =>
+    if rateLimitedSliderValueSaveFunc?
+      return rateLimitedSliderValueSaveFunc(event);
+    rateLimitedSliderValueSaveFunc = _.debounce(@saveDistancePriceFactor,300)
+    @onSliderChange(event);
+
+
+  saveDistancePriceFactor: (event) =>
+    @user.set 'distancePriceFactor', parseFloat $(event.target).val()
+    @user.save()
+
+
   addStationListItem: (station) =>
     newItem = new Gaso.StationListItem model: station
     @listItems.push newItem
     newItem.render()
+
+

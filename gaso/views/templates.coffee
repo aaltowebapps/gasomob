@@ -21,8 +21,8 @@ fuelTypeSelect = (options) ->
     selOpts['data-mini'] = true
   select selOpts, ->
     option value: '', firstOptionLabel
-    option value: 'E85', 'E85'
-    option value: 'Unleaded', 'Unleaded'
+    option 'data-fueltype': 'E85', value: 'E85', 'E85'
+    option 'data-fueltype': 'Unleaded', value: 'Unleaded', 'Unleaded'
 
 conditionalStationDistance = (options) ->
   text '<% if (drivingDistance) { %>'
@@ -31,6 +31,15 @@ conditionalStationDistance = (options) ->
   span class: 'distance-direct', "{{ directDistance }} km"
   if not options?.leaveOpen
     text '<% } %>'
+
+flipSwitch = (options, text) ->
+  return unless options?.for
+  id = options.id or options.for
+  div 'data-role': "fieldcontain", ->
+    label for: id, text
+    select id: id, name: options.for, 'data-role': "slider", 'data-theme': "a", ->
+      option value: "", 'No'
+      option value: "yes", 'Yes'
 
 ###
   PAGE TEMPLATES
@@ -41,7 +50,8 @@ script type: 'text/template', id: 'map-page', ->
   div 'data-role': 'content', ->
     div id: 'map-canvas'
     div id: 'map-buttons', ->
-      a href: '#', 'data-role': 'button', 'data-icon': 'centermap', 'data-iconpos': 'notext', 'Center on location'
+      a href: '#', id: 'center-user', 'data-role': 'button', 'class': 'ui-shadow ui-icon ui-icon-centermap', 'data-iconpos': 'notext', 'Center on location'
+      # button type: 'button', id: 'center-user', 'data-role': 'button', 'class': 'ui-icon ui-icon-centermap'
   gasofooter ->
     partial 'navigation'
 
@@ -80,8 +90,10 @@ script type: 'text/template', id: 'menu-page', ->
 script type: 'text/template', id: 'user-settings-page', ->
   header 'data-role': 'header', ->
     h1 'Settings'
-  div 'data-role': 'content', ->
-    # TODO content
+  div 'data-role': 'content', 'data-theme': 'c', ->
+    # Note: Use directly to property name in user model for 'for' option.
+    flipSwitch for: 'useSpecialTransitions', 'Use special transitions between pages'
+    flipSwitch for: 'useSwipeToGoBack', 'Allow swipe for Back-navigation'
   gasofooter ->
     partial 'navigation'
 
@@ -93,9 +105,9 @@ script type: 'text/template', id: 'search-page', ->
   div 'data-role': 'content', ->
     form id: 'searchform', class: 'form ui-body-b ui-corner-all', ->
       # h2 'Please type in an address.'
-      div 'data-role': "fieldcontain", ->
-        label 'for': 'field-address', 'Find stations near'
-        input 'type': 'search', 'name': 'field-address', 'id': 'field-address'
+      # div 'data-role': "fieldcontain", ->
+      h2 'Find stations'
+      input 'type': 'search', 'name': 'field-address', 'id': 'field-address', 'placeholder': 'Search for address, place, ...'
       button id: 'address-search', type: 'button', 'GO!'
   gasofooter ->
     partial 'navigation'
@@ -165,7 +177,7 @@ script type: 'text/template', id: 'list-page', ->
       div class : 'slidericon money', ->
         img src: 'images/euro.png', alt: '&euro;'
       div id: 'filterslider', ->
-        input 'type':'range', 'name':'slider', 'id':'slider-0', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
+        input 'type':'range', 'name':'slider', 'id':'money-vs-distance', 'value':'25', 'min':'0', 'max':'100', 'data-theme':'b'
       div class : 'slidericon distance', ->
         img src:'images/distance.png', alt: 'km'
     partial 'navigation'
@@ -192,6 +204,8 @@ script type: 'text/template', id: 'comments-list', ->
 
 script type: 'text/template', id: 'feedback-message-container', ->
   div id: 'messages', class: 'ui-corner-all ui-shadow'
+
+
 ###
   MODEL TEMPLATES
 ###
@@ -208,21 +222,6 @@ script type: 'text/template', id: 'comment-list-item', ->
   p class: 'comment-content', -> 
     '{{ body }}'
 
-# Price-edit for station-details form
-script type: 'text/template', id: 'price-edit', ->
-  text '<% if (typeof value === "undefined") { value = ""; } %>'
-  text '<% ptype = "price"+type; %>'
-
-  text '<% if (typeof date !== "undefined") { %>'
-  div class: 'timeago-info', ->
-    span 'Updated '
-    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
-  text '<% } %>'
-
-  label for: "{{ptype}}", ->
-    span class: 'fueltype', "{{type}}"
-
-  input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
 
 
 # Stations-list list-item
@@ -259,3 +258,31 @@ script type: 'text/template', id: 'station-list-item', ->
       span class: 'price-value', '{{ _priceToDisplay }}'
       span class: 'fuel-type', '{{ "(" + _ftype + ")" }}'
       text '<% } %>'
+
+
+###
+  OTHER / PARTIALS
+###
+
+# Price-edit for station-details form
+script type: 'text/template', id: 'price-edit', ->
+  text '<% if (typeof value === "undefined") { value = ""; } %>'
+  text '<% ptype = "price"+type; %>'
+
+  text '<% if (typeof date !== "undefined") { %>'
+  div class: 'timeago-info', ->
+    span 'Updated '
+    time class: 'timeago', 'datetime': '{{ date }}', '{{ date }}'
+  text '<% } %>'
+
+  label for: "{{ptype}}", ->
+    span class: 'fueltype', "{{type}}"
+
+  input class: 'price-input', type: "number", name: "{{ptype}}", id: "{{ptype}}", value: "{{value}}", placeholder: "Price of {{type}}"
+
+
+# Online users display
+script type: 'text/template', id: 'online-users', ->
+  div id: 'online-users', 'data-theme': 'a', ->
+    span class: 'ui-icon-person'
+    span class: 'user-count', '{{ allUsersCount }}'

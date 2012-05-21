@@ -8,20 +8,23 @@ $doc.bind 'mobileinit', (event) ->
     linkBindingEnabled   : false
     hashListeningEnabled : false
     pushStateEnabled     : false
+  # Disable native select menus for better UX.
+  $.mobile.selectmenu.prototype.options.nativeMenu = false
 
   # For phonegap
   # $.mobile.allowCrossDomainPages = true
   # $.support.cors = true
 
   # Tryigng to get rid of flickering between page transitions.
+  # The flickering doesn't seem to happen when viewing the site in Safari, but only with Web Clips.
   # However, flickering still seems to be an issue even with this fix. :/ --Markus
   # See e.g. https://github.com/jquery/jquery-mobile/issues/455
   if navigator.userAgent.match /iPhone|iPad|iPod/i
     $ '<link/>',
       rel   : 'stylesheet'
-      # text  : '.ui-page {-webkit-backface-visibility: hidden !important;}'
+      text  : '.ui-page {-webkit-backface-visibility: hidden !important;}'
       # Trying to set style for body instead of .ui-page, any luck?
-      text  : 'body {-webkit-backface-visibility: hidden !important;}'
+      # text  : 'body {-webkit-backface-visibility: hidden !important;}'
     .appendTo 'head'
 
 

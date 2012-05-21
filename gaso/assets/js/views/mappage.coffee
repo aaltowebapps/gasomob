@@ -11,10 +11,13 @@ class Gaso.MapPage extends Backbone.View
     @setElement $('<div id="page-map"/>')
     @mapReady = false
 
+  events:
+    'tap #center-user' : 'onCenterToUser'
 
   render: =>
     @$el.html @template @stations.toJSON()
 
+    Gaso.log "Render new Google Map"
     @map = new google.maps.Map @$el.find("#map-canvas")[0], @getInitialMapSettings()
 
     # New marker for user position as View.
@@ -71,9 +74,15 @@ class Gaso.MapPage extends Backbone.View
       marker.close()
 
   getInitialMapSettings: =>
-    zoom: @user.get 'mapZoom'
-    mapTypeId: google.maps.MapTypeId[@user.get 'mapTypeId']
-    disableDefaultUI: productionEnv
+    zoom             : @user.get 'mapZoom'
+    mapTypeId        : google.maps.MapTypeId[@user.get 'mapTypeId']
+    disableDefaultUI : productionEnv
+    mapTypeControl   : false
+
+  onCenterToUser: (event) ->
+    event.preventDefault()
+    @user.set 'mapCenter', @user.get('position')
+    @changeMapLocation()
 
   changeMapLocation: =>
     coords = @user.get 'mapCenter'

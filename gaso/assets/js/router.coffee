@@ -23,16 +23,23 @@ class Gaso.AppRouter extends Backbone.Router
     # Init helper controller.
     Gaso.helper = new Gaso.Helper(@user, @stations, @searchContext)
     @bindEvents()
+    @initStaticViews()
     return
 
   initModels: ->
+    @user               = new Gaso.User()
     @comments           = new Gaso.CommentsList()
     @searchContext      = new Gaso.SearchContext()
     @stations           = new Gaso.StationsList()
-    @user               = new Gaso.User()
+    @stations.setUser @user
+    @notifications      = new Gaso.Notifications()
+    @notifications.setUser @user
     # Load cached user data directly from localstorage.
     @user.fetch()
 
+  initStaticViews: ->
+    @onlineUsersView    = new Gaso.OnlineUsersView(collection: @notifications).render()
+    @notificationsView  = new Gaso.NotificationView().render()
 
   bindEvents: ->
     # Helper variables.
@@ -40,7 +47,7 @@ class Gaso.AppRouter extends Backbone.Router
     $doc = $ document
 
     # Fix jQM back-button behaviour.
-    $doc.on 'click', '.back, [data-rel="back"]', (event) ->
+    $doc.on 'tap', '.back, [data-rel="back"]', (event) ->
       window.history.back()
       event.preventDefault()
 
@@ -136,19 +143,35 @@ class Gaso.AppRouter extends Backbone.Router
     $p.attr 'data-role', 'page'
     page.render()
     $('body').append $p
+    @fixNavBar page
 
     # Don't animate the first page. Use default JQM transition if nothing else defined in view.
-    transition = if not @currentPage? then 'none' else page.transition or $.mobile.defaultPageTransition
+    transition = if not @currentPage? then 'none' else $.mobile.defaultPageTransition
     pageChangeOptions =
       changeHash: false
       transition: transition
-    if @currentPage?.outTransition?
-      _.extend pageChangeOptions, @currentPage.outTransition
+    if @user.get 'useSpecialTransitions'
+      if page.transition?
+        pageChangeOptions.transition = page.transition
+      if @currentPage?.outTransition?
+        _.extend pageChangeOptions, @currentPage.outTransition
     
     Gaso.log "Page change options", JSON.stringify pageChangeOptions if Gaso.loggingEnabled()
     # Change the JQM page.
     @currentPage = page
     $.mobile.changePage $p, pageChangeOptions
 
+  fixNavBar: (page) ->
+    # Check if the page we are navigating to is one of the 'root' pages. If not found, keep the active navbar state as it is.
+    if page instanceof Gaso.SearchPage
+      @latestRoute = 'search'
+    else if page instanceof Gaso.MapPage
+      @latestRoute = 'map'
+    else if page instanceof Gaso.StationsListPage
+      @latestRoute = 'list'
+    else if page instanceof Gaso.MenuPage
+      @latestRoute = 'menu'
 
+    # Fix the navbar in the DOM.
+    page.$("#navigation a[href='##{@latestRoute}']").addClass('ui-btn-active') if @latestRoute
     

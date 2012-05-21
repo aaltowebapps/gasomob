@@ -20,9 +20,11 @@ class GeoLib
   findAddress: (address, callback) ->
     @gooGeocoder.geocode address: address, (results, status) ->
       if status == google.maps.GeocoderStatus.OK
-        callback results[0].geometry.location
+        callback null, results[0].geometry.location
+      else if status == google.maps.GeocoderStatus.ZERO_RESULTS
+        Gaso.fatal "Couldn't find what your were looking for. Try a different search."
       else
-        Gaso.fatal "Finding the address failed. Error code: " + status
+        Gaso.fatal "Search failed. Error code: " + status
 
 
   ###

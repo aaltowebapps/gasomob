@@ -7,10 +7,12 @@ class Gaso.User extends Backbone.Model
 
 
   defaults:
-    id: 'localUser'
+    id: 'anonymous'
     myFuelType: '95E10'
+    distancePriceFactor: 50
 
     positionAccuracy: null
+    city: null
     position:
       lat: null
       lon: null
@@ -20,6 +22,10 @@ class Gaso.User extends Backbone.Model
       lon: 24.955
     mapZoom: 14
     mapTypeId: 'ROADMAP'
+
+    # Some UI-related settings
+    useSwipeToGoBack: false
+    useSpecialTransitions: false
 
   initialize: ->
     @set 'refills', []
